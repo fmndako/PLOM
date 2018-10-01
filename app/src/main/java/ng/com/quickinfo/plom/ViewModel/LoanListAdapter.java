@@ -36,7 +36,7 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
         }
     }
 
-    void setLoans(List<Loan> loans){
+    public void setLoans(List<Loan> loans){
         mLoans = loans;
         notifyDataSetChanged();
     }

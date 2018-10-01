@@ -4,6 +4,8 @@ import android.arch.persistence.room.TypeConverter;
 import java.util.Date;
 
 public class DateConverter {
+    /*class converts date for the entity manager
+    room database*/
 
     @TypeConverter
     public static Date toDate(Long timestamp) {

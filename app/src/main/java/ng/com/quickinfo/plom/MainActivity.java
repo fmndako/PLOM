@@ -1,7 +1,10 @@
 package ng.com.quickinfo.plom;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -11,11 +14,23 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import java.util.List;
+
+import ng.com.quickinfo.plom.Model.Loan;
 import ng.com.quickinfo.plom.ViewModel.LoanListAdapter;
+import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
+
+import static ng.com.quickinfo.plom.Utils.Utilities.stringToDate;
 
 public class MainActivity extends LifecycleLoggingActivity {
 
+
+    //initiate viewmodel
+    LoanViewModel mLoanViewModel;
+    //required for start activity
+    public static final int NEW_WORD_ACTIVITY_REQUEST_CODE = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,8 +44,7 @@ public class MainActivity extends LifecycleLoggingActivity {
             public void onClick(View view) {
                 goToHome();
 
-                /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();*/
+
             }
         });
 
@@ -39,8 +53,8 @@ public class MainActivity extends LifecycleLoggingActivity {
     }
 
     private void goToHome() {
-        Intent intent = new Intent(this, HomeActivity.class);
-        startActivity(intent);
+        Intent intent = new Intent(this, AddLoanActivity.class);
+        startActivityForResult(intent, NEW_WORD_ACTIVITY_REQUEST_CODE);
     }
 
     private void loadRV() {
@@ -48,6 +62,15 @@ public class MainActivity extends LifecycleLoggingActivity {
         final LoanListAdapter adapter = new LoanListAdapter(this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mLoanViewModel = ViewModelProviders.of(this).get(LoanViewModel.class);
+
+        mLoanViewModel.getAllLoans().observe(this, new Observer<List<Loan>>() {
+            @Override
+            public void onChanged(@Nullable final List<Loan> words) {
+                // Update the cached copy of the words in the adapter.
+                adapter.setLoans(words);
+            }
+        });
     }
 
     @Override
@@ -70,5 +93,21 @@ public class MainActivity extends LifecycleLoggingActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == NEW_WORD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+            Loan loan = new Loan(data.getStringExtra(AddLoanActivity.EXTRA_REPLY), "222",
+                    "ti@dsf", 22, stringToDate("11/11/1111"), stringToDate("11/11/1111"),
+                    1, "terms", 0,0,2);
+            mLoanViewModel.insert(loan);
+        } else {
+            Toast.makeText(
+                    getApplicationContext(),
+                    R.string.empty_not_saved,
+                    Toast.LENGTH_LONG).show();
+        }
     }
 }

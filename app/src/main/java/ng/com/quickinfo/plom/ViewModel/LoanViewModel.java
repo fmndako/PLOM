@@ -22,7 +22,7 @@ public class LoanViewModel extends AndroidViewModel {
 
     }
 
-    LiveData<List<Loan>> getAllLoans() { return mAllLoans; }
+    public LiveData<List<Loan>> getAllLoans() { return mAllLoans; }
 
     public void insert(Loan loan) { mRepository.insert(loan); }
 }
