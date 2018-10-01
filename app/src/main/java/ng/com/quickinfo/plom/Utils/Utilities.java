@@ -1,5 +1,8 @@
 package ng.com.quickinfo.plom.Utils;
 
+import android.content.Context;
+import android.widget.Toast;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -26,5 +29,9 @@ public class Utilities {
         String strDate = dateFormat.format(date);
         return strDate;
 
+    }
+
+    public static void makeToast(Context context, String string){
+        Toast.makeText(context, string, Toast.LENGTH_LONG).show();
     }
 }

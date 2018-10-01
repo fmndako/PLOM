@@ -162,13 +162,16 @@ public class AddLoanActivity extends AppCompatActivity {
 
         Intent replyIntent = new Intent();
         if (TextUtils.isEmpty(actvName.getText())) {
-            setResult(RESULT_CANCELED, replyIntent);
+            actvName.setError("Most not be empty");
+            actvName.hasFocus();
+            //setResult(RESULT_CANCELED, replyIntent);
         } else {
             String loan_name = actvName.getText().toString();
             replyIntent.putExtra(EXTRA_REPLY, loan_name);
             setResult(RESULT_OK, replyIntent);
+            finish();
         }
-        finish();
+
         //Loan loan = new Loan(name, number, email, amount, dateTaken);
 
     }

@@ -8,21 +8,42 @@ import java.util.List;
 
 import ng.com.quickinfo.plom.Model.Loan;
 import ng.com.quickinfo.plom.Model.LoanRepo;
+import ng.com.quickinfo.plom.Model.User;
+import ng.com.quickinfo.plom.Model.UserRepo;
 
 public class LoanViewModel extends AndroidViewModel {
+    /*Class that helps with view activities*/
 
-    private LoanRepo mRepository;
+    //instantiate repo classes
+    private LoanRepo mLoanRepo;
+    private UserRepo mUserRepo;
+    //private OffsetRepo mOffsetRepo
 
     private LiveData<List<Loan>> mAllLoans;
+    private LiveData<List<User>> mAllUsers;
 
     public LoanViewModel (Application application) {
         super(application);
-        mRepository = new LoanRepo(application);
-        mAllLoans = mRepository.getAllLoans();
+        //instantiate
+        mUserRepo = new UserRepo(application);
+        mLoanRepo = new LoanRepo(application);
+
+        mAllLoans = mLoanRepo.getAllLoans();
+        mAllUsers = mUserRepo.getAllUsers();
 
     }
-
+    //loans
     public LiveData<List<Loan>> getAllLoans() { return mAllLoans; }
+    public void insert(Loan loan) { mLoanRepo.insert(loan); }
 
-    public void insert(Loan loan) { mRepository.insert(loan); }
+    //users
+    public void insert(User user){mUserRepo.insert(user);}
+    public User getUser(String email){
+        //repo first returns the user with the email address
+        return mUserRepo.getUser(email);
+
+
+    }
+    public LiveData<List<User>> getAllUsers() { return mAllUsers; }
+
 }

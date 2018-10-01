@@ -1,5 +1,6 @@
 package ng.com.quickinfo.plom;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,24 +21,38 @@ import android.widget.Toast;
 import java.util.List;
 
 import ng.com.quickinfo.plom.Model.Loan;
+import ng.com.quickinfo.plom.Model.User;
 import ng.com.quickinfo.plom.ViewModel.LoanListAdapter;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
 
+import static ng.com.quickinfo.plom.Utils.Utilities.makeToast;
 import static ng.com.quickinfo.plom.Utils.Utilities.stringToDate;
 
 public class MainActivity extends LifecycleLoggingActivity {
+    public static String ACTION_SIGN_OUT = "ng.com.quickinfo.loanmanager.ACTION_SIGN_OUT";
+    public static String ACTION_DELETE_ACCOUNT = "ng.com.quickinfo.loanmanager.ACTION_DELETE_ACCOUNT";
 
 
     //initiate viewmodel
     LoanViewModel mLoanViewModel;
-    //required for start activity
-    public static final int NEW_WORD_ACTIVITY_REQUEST_CODE = 1;
+    long userID;
+    //required for start new activity
+    public static final int NEW_LOAN_ACTIVITY_REQUEST_CODE = 1;
+    public static final int NEW_USER_ACTIVITY_REQUEST_CODE = 2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //load View Model
+        mLoanViewModel = ViewModelProviders.of(this).get(LoanViewModel.class);
+
+        //intent
+        String mEmail = getIntent().getStringExtra("email");
+        //get user
+        getUser(mEmail);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -52,9 +68,68 @@ public class MainActivity extends LifecycleLoggingActivity {
         loadRV();
     }
 
+    private void getUser(String mEmail) {
+        User user = mLoanViewModel.getUser(mEmail);
+        if (user!=null){
+            userID = user.getUserId();
+
+        }else{
+            startSignUpActivity(mEmail);
+
+        }
+
+        /*
+        //get all users from database
+        LiveData<List<User>> mUsers = mLoanViewModel.getAllUsers();
+        //Check if list is not empty
+        List<User> allUsers = mUsers.getValue();
+        Log.d(TAG, allUsers.get(1).getEmail());
+
+        Boolean isPresent = false;
+        if (allUsers != null){
+            //get all users
+            //List<User> allUsers = mUsers.getValue();
+            //check if mEmail is a part
+            for(int count = 0; count< allUsers.size(); count++ ){
+                // if Email alreaddy in db, continue i.e. load loanlist fragment
+                Log.d(TAG, allUsers.get(count).getEmail());
+                if (allUsers.get(count).getEmail().equals(mEmail)){
+                    // if Email alreaddy in db, continue i.e. load loanlist fragment
+                    //userId
+                     isPresent = true;
+                     break;
+
+                }
+
+            }
+        }
+
+        //if list is empty
+        else{
+            // load signup fragment
+            startSignUpActivity(mEmail);
+
+        }
+        if (!isPresent)
+        {
+            startSignUpActivity(mEmail);
+        }
+*/
+    }
+
+    private void loadListFragment() {
+    }
+
+    private void startSignUpActivity(String mEmail) {
+        Intent intent = new Intent(this, SignUpActivity.class);
+        intent.putExtra("email", mEmail);
+        startActivityForResult(intent, NEW_USER_ACTIVITY_REQUEST_CODE);
+
+    }
+
     private void goToHome() {
         Intent intent = new Intent(this, AddLoanActivity.class);
-        startActivityForResult(intent, NEW_WORD_ACTIVITY_REQUEST_CODE);
+        startActivityForResult(intent, NEW_LOAN_ACTIVITY_REQUEST_CODE);
     }
 
     private void loadRV() {
@@ -62,13 +137,12 @@ public class MainActivity extends LifecycleLoggingActivity {
         final LoanListAdapter adapter = new LoanListAdapter(this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mLoanViewModel = ViewModelProviders.of(this).get(LoanViewModel.class);
 
         mLoanViewModel.getAllLoans().observe(this, new Observer<List<Loan>>() {
             @Override
-            public void onChanged(@Nullable final List<Loan> words) {
+            public void onChanged(@Nullable final List<Loan> loans) {
                 // Update the cached copy of the words in the adapter.
-                adapter.setLoans(words);
+                adapter.setLoans(loans);
             }
         });
     }
@@ -98,16 +172,28 @@ public class MainActivity extends LifecycleLoggingActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == NEW_WORD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+        if (requestCode == NEW_LOAN_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
             Loan loan = new Loan(data.getStringExtra(AddLoanActivity.EXTRA_REPLY), "222",
                     "ti@dsf", 22, stringToDate("11/11/1111"), stringToDate("11/11/1111"),
                     1, "terms", 0,0,2);
             mLoanViewModel.insert(loan);
-        } else {
-            Toast.makeText(
-                    getApplicationContext(),
-                    R.string.empty_not_saved,
-                    Toast.LENGTH_LONG).show();
+            makeToast(this, "loan saved");
         }
+
+        if (requestCode== NEW_USER_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK){
+            User user = new User(data.getStringExtra("user"),
+                    "34354354", data.getStringExtra("email"), ";lsfl;f");
+            mLoanViewModel.insert(user);
+            makeToast(this, "User successfully added");
+            //getuser id of registered U
+            //getUserID()
+            //wait(11);ser
+            //getUser(data.getStringExtra("email"));
+
+
+        }
+       /* else{
+            Toast.makeText(getApplicationContext(), "user not saved", Toast.LENGTH_LONG).show();
+        }*/
     }
 }
