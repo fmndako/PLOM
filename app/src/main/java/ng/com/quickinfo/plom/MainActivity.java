@@ -14,7 +14,7 @@ import android.view.MenuItem;
 
 import ng.com.quickinfo.plom.ViewModel.LoanListAdapter;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends LifecycleLoggingActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
