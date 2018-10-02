@@ -32,6 +32,10 @@ public class MainActivity extends LifecycleLoggingActivity {
     public static String ACTION_SIGN_OUT = "ng.com.quickinfo.loanmanager.ACTION_SIGN_OUT";
     public static String ACTION_DELETE_ACCOUNT = "ng.com.quickinfo.loanmanager.ACTION_DELETE_ACCOUNT";
 
+    //UI ref
+    private View mProgressView;
+    private View mRVView;
+
 
     //initiate viewmodel
     LoanViewModel mLoanViewModel;
@@ -51,8 +55,6 @@ public class MainActivity extends LifecycleLoggingActivity {
 
         //intent
         String mEmail = getIntent().getStringExtra("email");
-        //get user
-        getUser(mEmail);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -66,55 +68,6 @@ public class MainActivity extends LifecycleLoggingActivity {
 
         //set adapter
         loadRV();
-    }
-
-    private void getUser(String mEmail) {
-        User user = mLoanViewModel.getUser(mEmail);
-        if (user!=null){
-            userID = user.getUserId();
-
-        }else{
-            startSignUpActivity(mEmail);
-
-        }
-
-        /*
-        //get all users from database
-        LiveData<List<User>> mUsers = mLoanViewModel.getAllUsers();
-        //Check if list is not empty
-        List<User> allUsers = mUsers.getValue();
-        Log.d(TAG, allUsers.get(1).getEmail());
-
-        Boolean isPresent = false;
-        if (allUsers != null){
-            //get all users
-            //List<User> allUsers = mUsers.getValue();
-            //check if mEmail is a part
-            for(int count = 0; count< allUsers.size(); count++ ){
-                // if Email alreaddy in db, continue i.e. load loanlist fragment
-                Log.d(TAG, allUsers.get(count).getEmail());
-                if (allUsers.get(count).getEmail().equals(mEmail)){
-                    // if Email alreaddy in db, continue i.e. load loanlist fragment
-                    //userId
-                     isPresent = true;
-                     break;
-
-                }
-
-            }
-        }
-
-        //if list is empty
-        else{
-            // load signup fragment
-            startSignUpActivity(mEmail);
-
-        }
-        if (!isPresent)
-        {
-            startSignUpActivity(mEmail);
-        }
-*/
     }
 
     private void loadListFragment() {

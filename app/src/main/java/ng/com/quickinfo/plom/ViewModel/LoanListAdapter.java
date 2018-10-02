@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 import ng.com.quickinfo.plom.Model.Loan;
@@ -30,6 +32,8 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
         if (mLoans != null) {
             Loan current = mLoans.get(position);
             holder.loanItemView.setText(current.getName());
+            holder.IdItemView.setText(current.getId()+ "");
+            holder.userIdView.setText(current.getUser_id() + "");
         } else {
             // Covers the case of data not being ready yet.
             holder.loanItemView.setText("No Loan");
@@ -52,10 +56,15 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
 
     class LoanViewHolder extends RecyclerView.ViewHolder {
         private final TextView loanItemView;
+        private TextView IdItemView;
+        private TextView userIdView;
 
         private LoanViewHolder(View itemView) {
             super(itemView);
             loanItemView = itemView.findViewById(R.id.textView);
+            IdItemView = itemView.findViewById(R.id.age);
+            userIdView = itemView.findViewById(R.id.occupation);
+
         }
     }
 }

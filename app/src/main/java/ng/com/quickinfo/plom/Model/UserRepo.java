@@ -24,8 +24,12 @@ public class UserRepo {
         return mAllUsers;
     }
     public User getUser(String email){
-       new getUserAsyncTask( mUserDao).execute(email);
-        return getUserAsyncTask
+        try{
+       return new getUserAsyncTask( mUserDao).execute(email).get();}
+       catch (Exception e){
+            return null;
+
+       }
     }
 
     public void insert (User user) {
@@ -33,12 +37,12 @@ public class UserRepo {
     }
 
 
-    private static class getUserAsyncTask extends AsyncTask<String, Void, Void>{
+    private static class getUserAsyncTask extends AsyncTask<String, Void, User>{
         private UserDao mAsyncTaskDao;
         getUserAsyncTask(UserDao dao){mAsyncTaskDao = dao;}
 
         @Override
-        protected Void doInBackground(final String... params){
+        protected User doInBackground(final String... params){
             mAsyncTaskDao.getUserbyEmail(params[0]);
             return null;
         }
