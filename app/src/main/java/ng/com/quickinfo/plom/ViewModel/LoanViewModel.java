@@ -3,6 +3,7 @@ package ng.com.quickinfo.plom.ViewModel;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
+import android.content.Context;
 
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class LoanViewModel extends AndroidViewModel {
     public void insert(Loan loan) { mLoanRepo.insert(loan); }
 
     //users
-    public void insert(User user){mUserRepo.insert(user);}
+    public void insert(User user, Context context){mUserRepo.insert(user, context);}
     public User getUser(String email){
         //repo first returns the user with the email address
         return mUserRepo.getUser(email);

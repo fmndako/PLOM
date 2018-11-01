@@ -24,7 +24,7 @@ public interface UserDao {
     User getUserbyEmail(String email);
 
     @Insert(onConflict = REPLACE)
-    void addUser(User user);
+    long addUser(User user);
     //void insert(Loan loan);
 
     @Delete

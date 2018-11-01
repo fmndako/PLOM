@@ -1,12 +1,14 @@
 package ng.com.quickinfo.plom;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
 
@@ -19,16 +21,27 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import java.util.List;
+
+import ng.com.quickinfo.plom.Model.User;
+import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
+
 import static com.google.android.gms.auth.api.signin.GoogleSignInStatusCodes.getStatusCodeString;
 
 public class SignInActivity extends LifecycleLoggingActivity {
 
+    //ViewModel
+    LoanViewModel mLoanViewModel;
     public GoogleSignInClient mGoogleSignInClient;
     private static final int RC_SIGN_IN = 9;
 
-    //intent for signout and revoke access
-    SignOutReceiver signoutReceiver;
-    IntentFilter intentfilter;
+
+    //UI referennce
+    private View mProgressView;
+    private View mSignInView;
+
+    //List of all users
+    LiveData<List<User>> mAllUsers;
 
 
     @Override
@@ -36,18 +49,23 @@ public class SignInActivity extends LifecycleLoggingActivity {
         super.onStart();
         // Check for existing Google Sign In account, if the user is already signed in
         // the GoogleSignInAccount will be non-null.
+        //view model
+        //load View Model
+        mLoanViewModel = ViewModelProviders.of(this).get(LoanViewModel.class);
+
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         if (account != null){
             Log.d(TAG, "account is not  null"+account.getObfuscatedIdentifier());
             //updateUI(account.getEmail());
            // registerMyReceivers();
-           // startActivity(new Intent(this, MainActivity.class));
+           startActivity(new Intent(this, MainActivity2.class));
             //register receivers
 
         }
         else {
             //updateUI();
             Log.d(TAG, "account is  null");
+            mAllUsers = getAllUsers(mLoanViewModel, TAG);
         }
     }
     @Override
@@ -62,6 +80,7 @@ public class SignInActivity extends LifecycleLoggingActivity {
                 .build();
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
 
         // Set the dimensions of the sign-in button.
         SignInButton signInButton = findViewById(R.id.sign_in_button);
@@ -79,25 +98,20 @@ public class SignInActivity extends LifecycleLoggingActivity {
                     }
                     }
         });
+        mSignInView = findViewById(R.id.signin_form);
+        mProgressView = findViewById(R.id.signin_progress);
 
-        //register receiver
-        registerMyReceivers();
+
 
 
     }
 
-    private void registerMyReceivers() {
-        signoutReceiver = new SignOutReceiver();
-        intentfilter = new IntentFilter(MainActivity.ACTION_SIGN_OUT);
-        intentfilter.addAction(MainActivity.ACTION_DELETE_ACCOUNT);
 
-        //registers receivers
-        LocalBroadcastManager.getInstance(this).registerReceiver(signoutReceiver, intentfilter);
-    }
 
 
 
     private void signIn() {
+        showProgress(true);
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
@@ -121,23 +135,47 @@ public class SignInActivity extends LifecycleLoggingActivity {
                 GoogleSignInAccount account = completedTask.getResult(ApiException.class);
                 Log.d(TAG, account.getEmail());
                 // Signed in successfully, show authenticated UI.
-                updateUI(account.getEmail());
+                showProgress(false);
+                //updateUI(account.getEmail());
             } catch (ApiException e) {
                 // The ApiException status code indicates the detailed failure reason.
                 // Please refer to the GoogleSignInStatusCodes class reference for more information.
                 Log.w(TAG, "signInResult:failed code=" + getStatusCodeString(e.getStatusCode()));
-                updateUI("timatme@hhhh.com");
+                //updateUI("timatme@hhhh.com");
+                //showProgress(false);
 
             }
+            //TODO remove after successful login
+
+        long user_id = updateUI("timatme@h4545hhhl.com", mAllUsers);
+        startMainIntent("timatme@h4545hhhl.com", user_id );
 
     }
 
-    private void updateUI(String email){
-        Intent intent = new Intent(this, MainActivity.class);
+    private static long updateUI(String email, LiveData<List<User>> mAllUsers ){
+        long user_id = -1L;
+        if (mAllUsers == null){
+            List<User> allUsers = mAllUsers.getValue();
+            for(int count = 0; count<allUsers.size();count++){
+                if (allUsers.get(count).getEmail().equals(email)){
+                    user_id = allUsers.get(count).getUserId();
+                    break;
+
+                }
+
+            }
+        }
+        return user_id;
+
+    }
+    private void startMainIntent(String email, long user_id){
+        Intent intent = new Intent(this, MainActivity2.class);
         intent.putExtra("email", email);
+        intent.putExtra("user_id", user_id);
         startActivity(intent);
-
+        finish();
     }
+
 
     private void signOut() {
        mGoogleSignInClient.signOut()
@@ -145,7 +183,7 @@ public class SignInActivity extends LifecycleLoggingActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         // ...
-                        unRegisterMyReceivers();
+
                     }
                 });
     }
@@ -155,7 +193,7 @@ public class SignInActivity extends LifecycleLoggingActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         // ...
-                        unRegisterMyReceivers();
+
                     }
                 });
     }
@@ -163,35 +201,58 @@ public class SignInActivity extends LifecycleLoggingActivity {
     @Override
     public void onDestroy(){
         super.onDestroy();
-        //unregister receivers
-        unRegisterMyReceivers();
 
     }
 
-    private void unRegisterMyReceivers() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(signoutReceiver);
 
+
+    public static LiveData getAllUsers(LoanViewModel mLoanViewModel, String TAG) {
+        LiveData<List<User>> mAllUsers = mLoanViewModel.getAllUsers();
+        List<User> allUsers = mAllUsers.getValue();
+        if (mAllUsers == null){Log.d(TAG, "allusers is null obj");}
+        else {Log.d(TAG, "allusers is not null obj");}
+        return  mAllUsers;
     }
+    /**
+     * Shows the progress UI and hides the login form.
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    private void showProgress(final boolean show) {
+        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+        // for very easy animations. If available, use these APIs to fade-in
+        // the progress spinner.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-    public class SignOutReceiver extends BroadcastReceiver{
+            mSignInView.setVisibility(show ? View.GONE : View.VISIBLE);
+            mSignInView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mSignInView.setVisibility(show ? View.GONE : View.VISIBLE);
+                }
+            });
 
-
-        @Override
-        public void onReceive(Context context, Intent intent){
-            Log.d(TAG, intent.getAction());
-            if (intent.getAction().equals(MainActivity.ACTION_SIGN_OUT)){
-                Log.d(TAG, "sign out");
-
-                signOut();
-
-            }else if (intent.getAction().equals(MainActivity.ACTION_DELETE_ACCOUNT)){
-                Log.d(TAG, "delete account");
-                revokeAccess();
-
-            }
-
-
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mProgressView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
+            });
+        } else {
+            // The ViewPropertyAnimator APIs are not available, so simply show
+            // and hide the relevant UI components.
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mSignInView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+        showProgress(false);
+    }
+
 }
 

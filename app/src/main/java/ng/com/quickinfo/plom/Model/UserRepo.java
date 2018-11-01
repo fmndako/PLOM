@@ -3,9 +3,15 @@ package ng.com.quickinfo.plom.Model;
 
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
+import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import java.util.List;
+
+import ng.com.quickinfo.plom.MainActivity2;
 
 public class UserRepo {
 
@@ -32,8 +38,8 @@ public class UserRepo {
        }
     }
 
-    public void insert (User user) {
-        new insertAsyncTask(mUserDao).execute(user);
+    public void insert (User user, Context context) {
+        new insertAsyncTask(mUserDao, context).execute(user);
     }
 
 
@@ -49,19 +55,30 @@ public class UserRepo {
 
     }
 
-    private static class insertAsyncTask extends AsyncTask<User, Void, Void> {
+    private static class insertAsyncTask extends AsyncTask<User, Void,Long> {
 
         private UserDao mAsyncTaskDao;
+        //mine added
+        private Context mContext;
 
-        insertAsyncTask(UserDao dao) {
+        insertAsyncTask(UserDao dao, Context context) {
             mAsyncTaskDao = dao;
+            mContext = context;
         }
 
         @Override
-        protected Void doInBackground(final User... params) {
+        protected Long doInBackground(final User... params) {
             mAsyncTaskDao.addUser(params[0]);
             //mAsyncTaskDao.insert(params[0]);
             return null;
         }
+
+        protected void onPostExecute(){
+            Intent intent = new Intent();
+            intent.setAction(MainActivity2.ACTION_USER_SIGN_IN);
+            Log.d("Repo", "sending intent");
+            LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
+        }
     }
+
 }
