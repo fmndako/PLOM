@@ -22,6 +22,10 @@ public class LoanRepo {
         return mAllLoans;
     }
 
+    private LiveData<List<Loan>> getLoanByUserId(long user_id){
+        return mLoanDao.getItembyUserId(user_id);
+    }
+
     public void insert (Loan Loan) {
         new insertAsyncTask(mLoanDao).execute(Loan);
     }

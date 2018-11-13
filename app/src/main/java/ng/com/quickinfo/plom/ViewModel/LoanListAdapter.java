@@ -1,6 +1,7 @@
 package ng.com.quickinfo.plom.ViewModel;
 
 import android.content.Context;
+import android.graphics.SumPathEffect;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,9 +11,12 @@ import android.widget.TextView;
 import org.w3c.dom.Text;
 
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import ng.com.quickinfo.plom.Model.Loan;
 import ng.com.quickinfo.plom.R;
+import ng.com.quickinfo.plom.Utils.Utilities;
 
 public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanViewHolder> {
 
@@ -33,6 +37,7 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
             Loan current = mLoans.get(position);
             holder.loanItemView.setText(current.getName());
             holder.IdItemView.setText(current.getId()+ "");
+
             holder.userIdView.setText(current.getUser_id() + "");
         } else {
             // Covers the case of data not being ready yet.
@@ -52,6 +57,20 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
         if (mLoans != null)
             return mLoans.size();
         else return 0;
+    }
+
+    public int getTotalLends(){
+        int sum = 0;
+        if (mLoans != null){
+
+            for (int x = 0; x<mLoans.size(); x++ ){
+            sum += mLoans.get(x).getAmount();
+            }
+            return sum;
+        }
+        else
+            {return sum;}
+        //Utilities.log("LoanListAdpater", sum + "");
     }
 
     class LoanViewHolder extends RecyclerView.ViewHolder {

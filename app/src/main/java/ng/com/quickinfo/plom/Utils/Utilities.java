@@ -1,6 +1,7 @@
 package ng.com.quickinfo.plom.Utils;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.text.DateFormat;
@@ -33,5 +34,9 @@ public class Utilities {
 
     public static void makeToast(Context context, String string){
         Toast.makeText(context, string, Toast.LENGTH_LONG).show();
+    }
+
+    public static void log(String TAG, String text){
+        Log.d(TAG, text);
     }
 }

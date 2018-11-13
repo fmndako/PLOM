@@ -29,6 +29,12 @@ public class UserRepo {
     public LiveData<List<User>> getAllUsers() {
         return mAllUsers;
     }
+
+    //try getting user without asynctask
+    public User getSimpleUser(String email){
+        return mUserDao.getUserbyEmail(email);
+    }
+
     public User getUser(String email){
         try{
        return new getUserAsyncTask( mUserDao).execute(email).get();}

@@ -1,5 +1,6 @@
 package ng.com.quickinfo.plom;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.BroadcastReceiver;
@@ -46,7 +47,6 @@ public class MainActivity2 extends LifecycleLoggingActivity {
 
     //initiate viewmodel
     LoanViewModel mLoanViewModel;
-    long userID;
     String mEmail;
     //required for start new activity
     public static final int NEW_LOAN_ACTIVITY_REQUEST_CODE = 1;
@@ -63,11 +63,11 @@ public class MainActivity2 extends LifecycleLoggingActivity {
         mLoanViewModel = ViewModelProviders.of(this).get(LoanViewModel.class);
 
         //intent
-        userID = getIntent().getLongExtra("user_id", -1L);
         mEmail = getIntent().getStringExtra("email");
         //register receiver
         registerMyReceivers();
-        loginOrSignup(mEmail, userID);
+        //set collapsing tool bar
+        setToolBar(mEmail);
         ////unregister receivers
         //        unRegisterMyReceivers();
 
@@ -85,19 +85,19 @@ public class MainActivity2 extends LifecycleLoggingActivity {
 
     }
 
-    private void loginOrSignup(String email, long user_id) {
-        //if user is present
-        if (user_id != -1L) {
+    private void setToolBar(String mEmail) {
+        //TODO start : correct. cant access database on main thread
+        //get id
+        //long user_id = mLoanViewModel.getUser(mEmail).getUserId();
+        //Utilities.log(TAG, user_id + "");
+        //get total lends
 
-            //set adapter
-            loadRV();
-        } else {
-            Utilities.makeToast(this, "Email not registered, Sign Up");
-            startSignUpActivity(email);
-
-
-        }
+        //get total borrow
+        //set tool bar
+        //loadRV(user_id);
+        loadRV(2);
     }
+
 
     private void startSignUpActivity(String mEmail) {
         Intent intent = new Intent(this, SignUpActivity.class);
@@ -111,12 +111,18 @@ public class MainActivity2 extends LifecycleLoggingActivity {
         startActivityForResult(intent, NEW_LOAN_ACTIVITY_REQUEST_CODE);
     }
 
-    private void loadRV() {
+    private void loadRV(long user_id) {
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
         final LoanListAdapter adapter = new LoanListAdapter(this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        //TODO 1 trying to access components
+        LiveData<List<Loan>> loans = mLoanViewModel.getAllLoans();
+        Utilities.makeToast(getApplicationContext(), getTotalLends(loans.getValue())+"");
+
+
+        //observer
         mLoanViewModel.getAllLoans().observe(this, new Observer<List<Loan>>() {
             @Override
             public void onChanged(@Nullable final List<Loan> loans) {
@@ -126,6 +132,19 @@ public class MainActivity2 extends LifecycleLoggingActivity {
         });
     }
 
+    public int getTotalLends(List<Loan> mLoans){
+        int sum = 0;
+        if (mLoans != null){
+
+            for (int x = 0; x<mLoans.size(); x++ ){
+                sum += mLoans.get(x).getAmount();
+            }
+            return 6;
+        }
+        else
+        {return sum;}
+        //Utilities.log("LoanListAdpater", sum + "");
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -196,7 +215,7 @@ public class MainActivity2 extends LifecycleLoggingActivity {
             Log.d(TAG, intent.getAction());
             if (intent.getAction().equals(MainActivity2.ACTION_USER_SIGN_IN)){
                 Log.d("Sup", "user in");
-                loadRV();
+                //loadRV();
                 //signOut();
 
             }else if (intent.getAction().equals(MainActivity2.ACTION_DELETE_ACCOUNT)){

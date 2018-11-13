@@ -5,7 +5,9 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,18 +26,20 @@ import com.google.android.gms.tasks.Task;
 import java.util.List;
 
 import ng.com.quickinfo.plom.Model.User;
+import ng.com.quickinfo.plom.Utils.Utilities;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
 
 import static com.google.android.gms.auth.api.signin.GoogleSignInStatusCodes.getStatusCodeString;
 
-public class SignInActivity extends LifecycleLoggingActivity {
+public class MainActivity extends LifecycleLoggingActivity {
 
     //ViewModel
     LoanViewModel mLoanViewModel;
     public GoogleSignInClient mGoogleSignInClient;
     private static final int RC_SIGN_IN = 9;
 
-
+    //shared pref
+    private SharedPreferences sharedPref;
     //UI referennce
     private View mProgressView;
     private View mSignInView;
@@ -58,20 +62,29 @@ public class SignInActivity extends LifecycleLoggingActivity {
             Log.d(TAG, "account is not  null"+account.getObfuscatedIdentifier());
             //updateUI(account.getEmail());
            // registerMyReceivers();
-           startActivity(new Intent(this, MainActivity2.class));
+            //TODO pass in the account email to the intent
+            loadAccount(account.getEmail());
+           //startActivity(new Intent(this, MainActivity2.class));
             //register receivers
 
         }
         else {
+            //continue
             //updateUI();
-            Log.d(TAG, "account is  null");
+            Log.d(TAG, "account is  null, load signin fragment");
             mAllUsers = getAllUsers(mLoanViewModel, TAG);
         }
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signin_layout);
+
+
+        //shared pref
+        sharedPref = getApplicationContext().getSharedPreferences("myPref", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
 
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
@@ -92,7 +105,9 @@ public class SignInActivity extends LifecycleLoggingActivity {
             public void onClick(View view) {
                     switch (view.getId()) {
                         case R.id.sign_in_button:
-                            signIn();
+                            //TODO uncomment signin and comment loadaccout
+                            loadAccount("Email@email.com");
+                            //signIn();
                             break;
                         // ...
                     }
@@ -147,31 +162,47 @@ public class SignInActivity extends LifecycleLoggingActivity {
             }
             //TODO remove after successful login
 
-        long user_id = updateUI("timatme@h4545hhhl.com", mAllUsers);
-        startMainIntent("timatme@h4545hhhl.com", user_id );
+        updateUI("timatme@h4545hhhl.com", mAllUsers);
+        //startMainIntent("timatme@h4545hhhl.com", user_id );
 
     }
 
-    private static long updateUI(String email, LiveData<List<User>> mAllUsers ){
-        long user_id = -1L;
-        if (mAllUsers == null){
-            List<User> allUsers = mAllUsers.getValue();
-            for(int count = 0; count<allUsers.size();count++){
-                if (allUsers.get(count).getEmail().equals(email)){
-                    user_id = allUsers.get(count).getUserId();
-                    break;
+    private void updateUI(String email, LiveData<List<User>> mAllUsers ){
+        //TODO check if first timer
 
-                }
+        //if first timer
+        boolean userFirstLogin = sharedPref.getBoolean("first_timer", true);
+        if (userFirstLogin) {
 
-            }
+            //TODO
+            //register
+            //change first timer = false
+            Utilities.log(TAG, "user first login");
+            loadAccount(email);
         }
-        return user_id;
+
+        //else
+        else {
+            Utilities.log(TAG, "not user first login");
+            //enter system
+            loadAccount(email);
+        }
+//        if (mAllUsers == null){
+//            List<User> allUsers = mAllUsers.getValue();
+//            for(int count = 0; count<allUsers.size();count++){
+//                if (allUsers.get(count).getEmail().equals(email)){
+//                    user_id = allUsers.get(count).getUserId();
+//                    break;
+//
+//                }
+//
+//            }
+//        }
 
     }
-    private void startMainIntent(String email, long user_id){
+    private void loadAccount(String email){
         Intent intent = new Intent(this, MainActivity2.class);
         intent.putExtra("email", email);
-        intent.putExtra("user_id", user_id);
         startActivity(intent);
         finish();
     }

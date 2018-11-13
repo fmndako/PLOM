@@ -39,9 +39,12 @@ public class LoanViewModel extends AndroidViewModel {
 
     //users
     public void insert(User user, Context context){mUserRepo.insert(user, context);}
+
     public User getUser(String email){
-        //repo first returns the user with the email address
-        return mUserRepo.getUser(email);
+        //repo first returns the user with the email address without asynctask
+        return mUserRepo.getSimpleUser(email);
+        //with async task
+        //return mUserRepo.getUser(email);
 
 
     }
