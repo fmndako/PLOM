@@ -1,0 +1,6 @@
+<resources>
+<attr name="textColorLend" format="reference"/>
+<attr name="textColorBorrow" format="reference"/>
+    <attr name="themeColorPrimary" format="reference"/>
+    <attr name="textColorPrimary" format="reference"/>
+</resources>

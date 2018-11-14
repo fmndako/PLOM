@@ -45,4 +45,21 @@ public class LoanRepo {
             return null;
         }
     }
+
+    //class for accessing user obj
+    private static class LoanAsyncTask extends AsyncTask<Long, Void, Void> {
+
+        private LoanDao mAsyncTaskDao;
+
+        LoanAsyncTask(LoanDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final Long... params) {
+            mAsyncTaskDao.getItembyId(params[0]);
+            return null;
+        }
+
+    }
 }

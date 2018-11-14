@@ -19,8 +19,8 @@
         android:inputType="textAutoComplete"
         android:padding="10dp"
         android:singleLine="true"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white"
+        android:textColor="@color/add_loan_text_color"
+        android:textColorHint="@color/add_loan_hint_color"
         android:textSize="16sp"/>
     <AutoCompleteTextView
         android:id="@+id/actvNumber"
@@ -35,8 +35,8 @@
         android:inputType="textAutoComplete"
         android:padding="10dp"
         android:singleLine="true"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white"
+        android:textColor="@color/add_loan_text_color"
+        android:textColorHint="@color/add_loan_hint_color"
         android:textSize="16sp"/>
     <View
         android:layout_width="fill_parent"
@@ -56,8 +56,8 @@
         android:inputType="numberDecimal"
         android:padding="10dp"
         android:singleLine="true"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white"
+        android:textColor="@color/add_loan_text_color"
+        android:textColorHint="@color/add_loan_hint_color"
         android:textSize="16sp"/>
 
     <LinearLayout
@@ -67,24 +67,12 @@
 
         <AutoCompleteTextView
             android:id="@+id/actvDateTaken"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:drawableLeft="@android:drawable/ic_menu_camera"
-            android:drawablePadding="8dp"
-            android:gravity="center_vertical"
-            android:hint="@string/loan_date_taken"
-            android:inputType="date"
-            android:padding="10dp"
-            android:singleLine="true"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
-            android:textSize="16sp" />
+            style="@style/heading_text_style"
+            />
 
         <AutoCompleteTextView
             android:id="@+id/actvDatePromised"
+            style="@style/ACVStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
@@ -97,8 +85,8 @@
             android:inputType="textEmailAddress"
             android:padding="10dp"
             android:singleLine="true"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
+            android:textColor="@color/add_loan_text_color"
+            android:textColorHint="@color/add_loan_hint_color"
             android:textSize="16sp" />
     </LinearLayout>
 
@@ -126,8 +114,8 @@
         android:inputType="textEmailAddress"
         android:padding="10dp"
         android:singleLine="true"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white"
+        android:textColor="@color/add_loan_text_color"
+        android:textColorHint="@color/add_loan_hint_color"
         android:textSize="16sp" />
 
     <LinearLayout
@@ -141,7 +129,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="7dp"
             android:text="@string/loan_set_reminder"
-            android:textColor="@color/white"
+            android:textColor="@color/add_loan_text_color"
             android:textSize="14sp" />
 
         <FrameLayout

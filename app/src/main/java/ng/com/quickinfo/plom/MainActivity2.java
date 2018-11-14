@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.Date;
 import java.util.List;
 
 import ng.com.quickinfo.plom.Model.Loan;
@@ -30,7 +31,8 @@ import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
 import static ng.com.quickinfo.plom.Utils.Utilities.makeToast;
 import static ng.com.quickinfo.plom.Utils.Utilities.stringToDate;
 
-public class MainActivity2 extends LifecycleLoggingActivity {
+public class MainActivity2 extends LifecycleLoggingActivity implements
+        LoanListAdapter.OnHandlerInteractionListener {
 
     //intent for signout and revoke access
     SignOutReceiver signoutReceiver;
@@ -85,6 +87,11 @@ public class MainActivity2 extends LifecycleLoggingActivity {
 
     }
 
+    public void onHandlerInteraction(long total){
+
+       Utilities.makeToast(this, "" + total);
+       Utilities.log(TAG, ""+"viewkink");
+    }
     private void setToolBar(String mEmail) {
         //TODO start : correct. cant access database on main thread
         //get id
@@ -112,39 +119,40 @@ public class MainActivity2 extends LifecycleLoggingActivity {
     }
 
     private void loadRV(long user_id) {
+        //loads the RV
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
         final LoanListAdapter adapter = new LoanListAdapter(this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         //TODO 1 trying to access components
-        LiveData<List<Loan>> loans = mLoanViewModel.getAllLoans();
-        Utilities.makeToast(getApplicationContext(), getTotalLends(loans.getValue())+"");
+        //LiveData<List<Loan>> loans = mLoanViewModel.getAllLoans();
+        //Utilities.makeToast(getApplicationContext(), getTotalLends(loans.getValue())+"");
 
 
         //observer
         mLoanViewModel.getAllLoans().observe(this, new Observer<List<Loan>>() {
             @Override
             public void onChanged(@Nullable final List<Loan> loans) {
-                // Update the cached copy of the words in the adapter.
+                // Update the cached copy of the loans in the adapter.
                 adapter.setLoans(loans);
             }
         });
     }
 
-    public int getTotalLends(List<Loan> mLoans){
-        int sum = 0;
-        if (mLoans != null){
-
-            for (int x = 0; x<mLoans.size(); x++ ){
-                sum += mLoans.get(x).getAmount();
-            }
-            return 6;
-        }
-        else
-        {return sum;}
-        //Utilities.log("LoanListAdpater", sum + "");
-    }
+//    public int getTotalLends(List<Loan> mLoans){
+//        int sum = 0;
+//        if (mLoans != null){
+//
+//            for (int x = 0; x<mLoans.size(); x++ ){
+//                sum += mLoans.get(x).getAmount();
+//            }
+//            return 6;
+//        }
+//        else
+//        {return sum;}
+//        //Utilities.log("LoanListAdpater", sum + "");
+//    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -171,11 +179,24 @@ public class MainActivity2 extends LifecycleLoggingActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == NEW_LOAN_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-            Loan loan = new Loan(data.getStringExtra(AddLoanActivity.EXTRA_REPLY), "222",
-                    "ti@dsf", 22, stringToDate("11/11/1111"), stringToDate("11/11/1111"),
-                    1, "terms", 0, 0, 2);
+
+             String name = data.getStringExtra(AddLoanActivity.EXTRA_REPLY);
+             Integer amount = data.getIntExtra("", 22);
+             Integer loanType = data.getIntExtra("", 1);
+             String remarks = data.getStringExtra(AddLoanActivity.EXTRA_REPLY);
+             String number = data.getStringExtra(AddLoanActivity.EXTRA_REPLY);
+             Integer clearStatus = data.getIntExtra("", 1);
+             Integer offset = data.getIntExtra("", 9);
+             String email = data.getStringExtra(AddLoanActivity.EXTRA_REPLY);
+             Date dateTaken =  stringToDate("11/11/1111");
+             Date dateToRepay = stringToDate("11/11/1111");
+             long user_id = data.getLongExtra("", 2L);
+
+            Loan loan = new Loan(name, number, email, amount,dateTaken, dateToRepay, loanType,
+                    remarks,clearStatus,offset, user_id);
             mLoanViewModel.insert(loan);
             makeToast(this, "loan saved");
+
         }
 
         if (requestCode == NEW_USER_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {

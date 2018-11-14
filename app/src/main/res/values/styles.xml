@@ -1,3 +1,4 @@
+
 <resources>
 
     <!-- Base application theme. -->
@@ -23,11 +24,62 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAppearance">
             @android:style/TextAppearance.Large</item>
-        <item name="android:background">@color/colorPrimaryLight</item>
+        <item name="android:background">@color/background_color</item>
         <item name="android:layout_marginTop">8dp</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:padding">16dp</item>
         <item name="android:textColor">@color/colorTextPrimary</item>
     </style>
+
+
+    <!--my own styles-->
+    <style name="heading_text_style">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">18dp</item>
+        <item name="android:layout_marginLeft">8dp</item>
+        <item name="android:layout_marginRight">8dp</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <!--bigger master-->
+    <style name="MyAppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+         <item name="textColorPrimary">@color/black</item>
+
+    </style>
+    <!--indigo-->
+    <style name="ThemeIndigo" parent="MyAppTheme">
+        <item name="themeColorPrimary">@color/gray</item>
+                </style>
+    <!--pink-->
+    <style name="ThemePink" parent="MyAppTheme">
+        <item name="themeColorPrimary">@color/gray</item>
+    </style>
+
+    <!--attribute definition-->
+    <style name="ACVStyle">
+        <item name="textColorLend">@color/green</item>
+        <item name="textColorBorrow">@color/red</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:drawableLeft">@android:drawable/ic_menu_camera</item>
+        <item name="android:drawablePadding">8dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:hint">@string/loan_date_taken</item>
+        <item name="android:inputType">date</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColorHint">@color/add_loan_hint_color</item>
+        <item name=" android:textSize">16sp</item>
+    </style>
+
+
+
+
 
 </resources>
