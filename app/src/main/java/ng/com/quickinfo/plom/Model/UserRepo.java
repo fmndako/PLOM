@@ -44,11 +44,29 @@ public class UserRepo {
        }
     }
 
-    public void insert (User user, Context context) {
-        new insertAsyncTask(mUserDao, context).execute(user);
+    public void insert (User User) {
+        new insertAsyncTask(mUserDao).execute(User);
     }
 
 
+    //insert async task
+    private static class insertAsyncTask extends AsyncTask<User, Void, Void> {
+
+        private UserDao mAsyncTaskDao;
+
+        insertAsyncTask(UserDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final User... params) {
+            mAsyncTaskDao.addUser(params[0]);
+           // mAsyncTaskDao.insert(params[0]);
+            return null;
+        }
+    }
+
+        //get user async task
     private static class getUserAsyncTask extends AsyncTask<String, Void, User>{
         private UserDao mAsyncTaskDao;
         getUserAsyncTask(UserDao dao){mAsyncTaskDao = dao;}
@@ -61,13 +79,14 @@ public class UserRepo {
 
     }
 
-    private static class insertAsyncTask extends AsyncTask<User, Void,Long> {
+    // insert user async task that includes a lot of other stuff(trial version)
+    private static class TryerInsertAsyncTask extends AsyncTask<User, Void,Long> {
 
         private UserDao mAsyncTaskDao;
         //mine added
         private Context mContext;
 
-        insertAsyncTask(UserDao dao, Context context) {
+        TryerInsertAsyncTask(UserDao dao, Context context) {
             mAsyncTaskDao = dao;
             mContext = context;
         }

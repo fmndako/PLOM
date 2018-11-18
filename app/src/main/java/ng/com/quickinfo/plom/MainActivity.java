@@ -40,6 +40,7 @@ public class MainActivity extends LifecycleLoggingActivity {
 
     //shared pref
     private SharedPreferences sharedPref;
+    private SharedPreferences.Editor editor;
     //UI referennce
     private View mProgressView;
     private View mSignInView;
@@ -84,7 +85,7 @@ public class MainActivity extends LifecycleLoggingActivity {
 
         //shared pref
         sharedPref = getApplicationContext().getSharedPreferences("myPref", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
+        editor = sharedPref.edit();
 
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
@@ -105,8 +106,8 @@ public class MainActivity extends LifecycleLoggingActivity {
             public void onClick(View view) {
                     switch (view.getId()) {
                         case R.id.sign_in_button:
-                            //TODO uncomment signin and comment loadaccout
-                            loadAccount("Email@email.com");
+                            //TODO uncomment signin and comment updateui
+                            updateUI("trewcj");
                             //signIn();
                             break;
                         // ...
@@ -162,23 +163,26 @@ public class MainActivity extends LifecycleLoggingActivity {
             }
             //TODO remove after successful login
 
-        updateUI("timatme@h4545hhhl.com", mAllUsers);
+        updateUI("timatme@h4545hhhl.com");
         //startMainIntent("timatme@h4545hhhl.com", user_id );
 
     }
 
-    private void updateUI(String email, LiveData<List<User>> mAllUsers ){
+    private void updateUI(String email ){
         //TODO check if first timer
 
         //if first timer
-        boolean userFirstLogin = sharedPref.getBoolean("first_timer", true);
+        boolean userFirstLogin = sharedPref.getBoolean(email, true);
         if (userFirstLogin) {
+
 
             //TODO
             //register
+            registerUser(email);
+
             //change first timer = false
             Utilities.log(TAG, "user first login");
-            loadAccount(email);
+
         }
 
         //else
@@ -200,6 +204,18 @@ public class MainActivity extends LifecycleLoggingActivity {
 //        }
 
     }
+
+    private void registerUser(String email) {
+        User user = new User("username", "333", email, "jjjj");
+        mLoanViewModel.insert(user);
+        Utilities.makeToast(this, email + " added");
+        //change shared pref to false if successfull
+        editor.putBoolean(email, false);
+        editor.apply();
+        //enter system
+        loadAccount(email);
+    }
+
     private void loadAccount(String email){
         Intent intent = new Intent(this, MainActivity2.class);
         intent.putExtra("email", email);

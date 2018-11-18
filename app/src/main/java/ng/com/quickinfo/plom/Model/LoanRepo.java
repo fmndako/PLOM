@@ -40,8 +40,8 @@ public class LoanRepo {
 
         @Override
         protected Void doInBackground(final Loan... params) {
-            mAsyncTaskDao.addLoan(params[0]);
-            //mAsyncTaskDao.insert(params[0]);
+            //mAsyncTaskDao.addLoan(params[0]);
+            mAsyncTaskDao.insert(params[0]);
             return null;
         }
     }

@@ -27,8 +27,8 @@ public interface LoanDao {
     LiveData<List<Loan>>  getItembyUserId(long id);
 
     @Insert(onConflict = REPLACE)
-    void addLoan(Loan loan);
-    //void insert(Loan loan);
+    //void addLoan(Loan loan);
+    void insert(Loan loan);
 
     @Delete
     void deleteLoan(Loan loan);

@@ -1,12 +1,15 @@
 package ng.com.quickinfo.plom;
 
-import android.arch.lifecycle.LiveData;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -15,13 +18,16 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import java.util.Date;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import ng.com.quickinfo.plom.Model.Loan;
 import ng.com.quickinfo.plom.Model.User;
 import ng.com.quickinfo.plom.Utils.Utilities;
@@ -41,6 +47,8 @@ public class MainActivity2 extends LifecycleLoggingActivity implements
     public static String ACTION_USER_SIGN_IN = "ng.com.quickinfo.plom.ACTION_USER_SIGN_IN";
     public static String ACTION_SIGN_OUT = "ng.com.quickinfo.loanmanager.ACTION_SIGN_OUT";
     public static String ACTION_DELETE_ACCOUNT = "ng.com.quickinfo.loanmanager.ACTION_DELETE_ACCOUNT";
+    @BindView(R.id.register_progress)
+    ProgressBar mRegisterProgress;
 
     //UI ref
     private View mProgressView;
@@ -58,6 +66,7 @@ public class MainActivity2 extends LifecycleLoggingActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -66,6 +75,8 @@ public class MainActivity2 extends LifecycleLoggingActivity implements
 
         //intent
         mEmail = getIntent().getStringExtra("email");
+
+
         //register receiver
         registerMyReceivers();
         //set collapsing tool bar
@@ -87,12 +98,15 @@ public class MainActivity2 extends LifecycleLoggingActivity implements
 
     }
 
-    public void onHandlerInteraction(long total){
+    public void onHandlerInteraction(long total) {
 
-       Utilities.makeToast(this, "" + total);
-       Utilities.log(TAG, ""+"viewkink");
+        Utilities.makeToast(this, "" + total);
+        Utilities.log(TAG, "" + "viewkink");
     }
+
     private void setToolBar(String mEmail) {
+        showProgress(true);
+
         //TODO start : correct. cant access database on main thread
         //get id
         //long user_id = mLoanViewModel.getUser(mEmail).getUserId();
@@ -102,9 +116,44 @@ public class MainActivity2 extends LifecycleLoggingActivity implements
         //get total borrow
         //set tool bar
         //loadRV(user_id);
-        loadRV(2);
+        loadRV(1L);
     }
 
+    /**
+     * Shows the progress UI and hides the login form.
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    private void showProgress(final boolean show) {
+        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+        // for very easy animations. If available, use these APIs to fade-in
+        // the progress spinner.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+//            mSignInView.setVisibility(show ? View.GONE : View.VISIBLE);
+//            mSignInView.animate().setDuration(shortAnimTime).alpha(
+//                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+//                @Override
+//                public void onAnimationEnd(Animator animation) {
+//                    mSignInView.setVisibility(show ? View.GONE : View.VISIBLE);
+//                }
+//            });
+
+            mRegisterProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+            mRegisterProgress.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mRegisterProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
+            });
+        } else {
+            // The ViewPropertyAnimator APIs are not available, so simply show
+            // and hide the relevant UI components.
+            mRegisterProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+            //mSignInView.setVisibility(show ? View.GONE : View.VISIBLE);
+        }
+    }
 
     private void startSignUpActivity(String mEmail) {
         Intent intent = new Intent(this, SignUpActivity.class);
@@ -140,7 +189,7 @@ public class MainActivity2 extends LifecycleLoggingActivity implements
         });
     }
 
-//    public int getTotalLends(List<Loan> mLoans){
+    //    public int getTotalLends(List<Loan> mLoans){
 //        int sum = 0;
 //        if (mLoans != null){
 //
@@ -180,20 +229,20 @@ public class MainActivity2 extends LifecycleLoggingActivity implements
 
         if (requestCode == NEW_LOAN_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
 
-             String name = data.getStringExtra(AddLoanActivity.EXTRA_REPLY);
-             Integer amount = data.getIntExtra("", 22);
-             Integer loanType = data.getIntExtra("", 1);
-             String remarks = data.getStringExtra(AddLoanActivity.EXTRA_REPLY);
-             String number = data.getStringExtra(AddLoanActivity.EXTRA_REPLY);
-             Integer clearStatus = data.getIntExtra("", 1);
-             Integer offset = data.getIntExtra("", 9);
-             String email = data.getStringExtra(AddLoanActivity.EXTRA_REPLY);
-             Date dateTaken =  stringToDate("11/11/1111");
-             Date dateToRepay = stringToDate("11/11/1111");
-             long user_id = data.getLongExtra("", 2L);
+            String name = data.getStringExtra(AddLoanActivity.EXTRA_REPLY);
+            Integer amount = 33;
+            Integer loanType = 1;
+            String remarks = "loan";
+            String number = "090";
+            Integer clearStatus = 1;
+            Integer offset = 1;
+            String email = "email";
+            Date dateTaken = stringToDate("11/11/1111");
+            Date dateToRepay = stringToDate("11/11/1111");
+            long user_id = 1L;
 
-            Loan loan = new Loan(name, number, email, amount,dateTaken, dateToRepay, loanType,
-                    remarks,clearStatus,offset, user_id);
+            Loan loan = new Loan(name, number, email, amount, dateTaken, dateToRepay, loanType,
+                    remarks, clearStatus, offset, user_id);
             mLoanViewModel.insert(loan);
             makeToast(this, "loan saved");
 
@@ -202,7 +251,7 @@ public class MainActivity2 extends LifecycleLoggingActivity implements
         if (requestCode == NEW_USER_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
             User user = new User(data.getStringExtra("user"),
                     "34354354", data.getStringExtra("email"), ";lsfl;f");
-            mLoanViewModel.insert(user, this);
+            mLoanViewModel.insert(user);
             makeToast(this, "User successfully added");
             //getuser id of registered U
             //getUserID()
@@ -224,22 +273,24 @@ public class MainActivity2 extends LifecycleLoggingActivity implements
         //registers receivers
         LocalBroadcastManager.getInstance(this).registerReceiver(signoutReceiver, intentfilter);
     }
+
     private void unRegisterMyReceivers() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(signoutReceiver);
 
     }
+
     public class SignOutReceiver extends BroadcastReceiver {
 
 
         @Override
-        public void onReceive(Context context, Intent intent){
+        public void onReceive(Context context, Intent intent) {
             Log.d(TAG, intent.getAction());
-            if (intent.getAction().equals(MainActivity2.ACTION_USER_SIGN_IN)){
+            if (intent.getAction().equals(MainActivity2.ACTION_USER_SIGN_IN)) {
                 Log.d("Sup", "user in");
                 //loadRV();
                 //signOut();
 
-            }else if (intent.getAction().equals(MainActivity2.ACTION_DELETE_ACCOUNT)){
+            } else if (intent.getAction().equals(MainActivity2.ACTION_DELETE_ACCOUNT)) {
                 Log.d(TAG, "delete account");
                 //revokeAccess();
 
