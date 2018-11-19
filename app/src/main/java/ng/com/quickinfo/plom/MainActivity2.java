@@ -183,34 +183,18 @@ public class MainActivity2 extends LifecycleLoggingActivity implements
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        //TODO 1 trying to access components
-        //LiveData<List<Loan>> loans = mLoanViewModel.getAllLoans();
-        //Utilities.makeToast(getApplicationContext(), getTotalLends(loans.getValue())+"");
-
-
         //observer
         mLoanViewModel.getLoanByUserId(user_id).observe(this, new Observer<List<Loan>>() {
             @Override
             public void onChanged(@Nullable final List<Loan> loans) {
                 // Update the cached copy of the loans in the adapter.
                 adapter.setLoans(loans);
+                //TODO update other UI
+                Utilities.log(TAG, adapter.getItemCount()+"");
             }
         });
     }
 
-    //    public int getTotalLends(List<Loan> mLoans){
-//        int sum = 0;
-//        if (mLoans != null){
-//
-//            for (int x = 0; x<mLoans.size(); x++ ){
-//                sum += mLoans.get(x).getAmount();
-//            }
-//            return 6;
-//        }
-//        else
-//        {return sum;}
-//        //Utilities.log("LoanListAdpater", sum + "");
-//    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -308,6 +292,7 @@ public class MainActivity2 extends LifecycleLoggingActivity implements
 
         }
     }
+
     private class GetUserAsyncTAsk extends AsyncTask<String, Void, User>{
 
         @Override
