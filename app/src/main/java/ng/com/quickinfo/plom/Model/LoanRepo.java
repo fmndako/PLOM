@@ -18,11 +18,13 @@ public class LoanRepo {
         mAllLoans = mLoanDao.getAllLoanItems();
     }
 
+    //return all loans
     public LiveData<List<Loan>> getAllLoans() {
         return mAllLoans;
     }
 
-    private LiveData<List<Loan>> getLoanByUserId(long user_id){
+    //return loan by user_id
+    public LiveData<List<Loan>> getLoanByUserId(long user_id){
         return mLoanDao.getItembyUserId(user_id);
     }
 

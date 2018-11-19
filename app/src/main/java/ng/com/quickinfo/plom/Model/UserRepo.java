@@ -23,33 +23,19 @@ public class UserRepo {
         LoanRoomDatabase db = LoanRoomDatabase.getDatabase(application);
         mUserDao = db.userDao();
         mAllUsers = mUserDao.getAllUsers();
-
     }
 
+    //get all users
     public LiveData<List<User>> getAllUsers() {
         return mAllUsers;
     }
 
-    //try getting user without asynctask
-    public User getSimpleUser(String email){
-        return mUserDao.getUserbyEmail(email);
-    }
-
-    public User getUser(String email){
-        try{
-       return new getUserAsyncTask( mUserDao).execute(email).get();}
-       catch (Exception e){
-            return null;
-
-       }
-    }
-
+    //insert user
     public void insert (User User) {
         new insertAsyncTask(mUserDao).execute(User);
     }
 
-
-    //insert async task
+    //insert asynctask class
     private static class insertAsyncTask extends AsyncTask<User, Void, Void> {
 
         private UserDao mAsyncTaskDao;
@@ -61,12 +47,28 @@ public class UserRepo {
         @Override
         protected Void doInBackground(final User... params) {
             mAsyncTaskDao.addUser(params[0]);
-           // mAsyncTaskDao.insert(params[0]);
+            // mAsyncTaskDao.insert(params[0]);
             return null;
         }
     }
 
-        //get user async task
+    //get a  particular user without asynctask
+    public User getUserByEmail(String email){
+        return mUserDao.getUserbyEmail(email);
+    }
+
+    //TODO remove is getUserByEmailWorks
+    public User getUser(String email){
+
+        try{
+       return new getUserAsyncTask( mUserDao).execute(email).get();}
+       catch (Exception e){
+            return null;
+
+       }
+    }
+
+    //getuser asynctask class
     private static class getUserAsyncTask extends AsyncTask<String, Void, User>{
         private UserDao mAsyncTaskDao;
         getUserAsyncTask(UserDao dao){mAsyncTaskDao = dao;}
@@ -76,7 +78,6 @@ public class UserRepo {
             mAsyncTaskDao.getUserbyEmail(params[0]);
             return null;
         }
-
     }
 
     // insert user async task that includes a lot of other stuff(trial version)

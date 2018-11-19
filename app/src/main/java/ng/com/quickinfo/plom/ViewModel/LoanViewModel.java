@@ -34,7 +34,14 @@ public class LoanViewModel extends AndroidViewModel {
 
     }
     //loans
+    //get allloans
     public LiveData<List<Loan>> getAllLoans() { return mAllLoans; }
+    //getloanbyuser
+
+    public LiveData<List<Loan>> getLoanByUserId(long user_id) {
+        return mLoanRepo.getLoanByUserId(user_id);
+    }
+
     public void insert(Loan loan) { mLoanRepo.insert(loan); }
 
     //users
@@ -42,9 +49,9 @@ public class LoanViewModel extends AndroidViewModel {
 
     public User getUser(String email){
         //repo first returns the user with the email address without asynctask
-        return mUserRepo.getSimpleUser(email);
+        //return mUserRepo.getSimpleUser(email);
         //with async task
-        //return mUserRepo.getUser(email);
+        return mUserRepo.getUserByEmail(email);
 
 
     }

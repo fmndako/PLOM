@@ -9,6 +9,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -30,6 +31,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ng.com.quickinfo.plom.Model.Loan;
 import ng.com.quickinfo.plom.Model.User;
+import ng.com.quickinfo.plom.Model.UserDao;
 import ng.com.quickinfo.plom.Utils.Utilities;
 import ng.com.quickinfo.plom.ViewModel.LoanListAdapter;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
@@ -50,10 +52,15 @@ public class MainActivity2 extends LifecycleLoggingActivity implements
     @BindView(R.id.register_progress)
     ProgressBar mRegisterProgress;
 
+    //context
+    private Context mContext;
+
     //UI ref
     private View mProgressView;
     private View mRVView;
 
+    //user
+    private User mUser;
 
     //initiate viewmodel
     LoanViewModel mLoanViewModel;
@@ -73,10 +80,13 @@ public class MainActivity2 extends LifecycleLoggingActivity implements
         //load View Model
         mLoanViewModel = ViewModelProviders.of(this).get(LoanViewModel.class);
 
+        //context
+        mContext = getApplicationContext();
         //intent
         mEmail = getIntent().getStringExtra("email");
 
-
+        //get user id fromm db
+        getUser();
         //register receiver
         registerMyReceivers();
         //set collapsing tool bar
@@ -98,6 +108,15 @@ public class MainActivity2 extends LifecycleLoggingActivity implements
 
     }
 
+    private void getUser() {
+        //get user from database using getUserAsyncTask
+        GetUserAsyncTAsk task = new GetUserAsyncTAsk();
+        task.execute(mEmail);
+
+        Utilities.log(TAG, "user id = ");
+
+    }
+
     public void onHandlerInteraction(long total) {
 
         Utilities.makeToast(this, "" + total);
@@ -105,18 +124,8 @@ public class MainActivity2 extends LifecycleLoggingActivity implements
     }
 
     private void setToolBar(String mEmail) {
-        showProgress(true);
+        //set toolbar string to mEmail
 
-        //TODO start : correct. cant access database on main thread
-        //get id
-        //long user_id = mLoanViewModel.getUser(mEmail).getUserId();
-        //Utilities.log(TAG, user_id + "");
-        //get total lends
-
-        //get total borrow
-        //set tool bar
-        //loadRV(user_id);
-        loadRV(1L);
     }
 
     /**
@@ -180,7 +189,7 @@ public class MainActivity2 extends LifecycleLoggingActivity implements
 
 
         //observer
-        mLoanViewModel.getAllLoans().observe(this, new Observer<List<Loan>>() {
+        mLoanViewModel.getLoanByUserId(user_id).observe(this, new Observer<List<Loan>>() {
             @Override
             public void onChanged(@Nullable final List<Loan> loans) {
                 // Update the cached copy of the loans in the adapter.
@@ -239,7 +248,7 @@ public class MainActivity2 extends LifecycleLoggingActivity implements
             String email = "email";
             Date dateTaken = stringToDate("11/11/1111");
             Date dateToRepay = stringToDate("11/11/1111");
-            long user_id = 1L;
+            long user_id = mUser.getUserId();
 
             Loan loan = new Loan(name, number, email, amount, dateTaken, dateToRepay, loanType,
                     remarks, clearStatus, offset, user_id);
@@ -298,6 +307,35 @@ public class MainActivity2 extends LifecycleLoggingActivity implements
 
 
         }
+    }
+    private class GetUserAsyncTAsk extends AsyncTask<String, Void, User>{
+
+        @Override
+        protected void onPreExecute(){
+            Utilities.log(TAG, "preexecute");
+            showProgress(true);
+        }
+
+        protected User doInBackground(final String... params) {
+          return mLoanViewModel.getUser(params[0]);
+
+
+
+        }
+
+
+        protected void onPostExecute(User result){
+
+            Utilities.log(TAG, "postexecute");
+            //save result as mUser
+            mUser = result;
+            //stop progress bar
+            showProgress(false);
+            Utilities.makeToast(mContext, mUser.getUserId()+"");
+            //load recycler view
+            loadRV(mUser.getUserId());
+        }
+
     }
 
 }
