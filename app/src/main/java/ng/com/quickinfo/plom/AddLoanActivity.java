@@ -21,6 +21,7 @@ import java.util.Calendar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import ng.com.quickinfo.plom.Utils.Utilities;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
 
 public class AddLoanActivity extends AppCompatActivity {
@@ -28,6 +29,7 @@ public class AddLoanActivity extends AppCompatActivity {
     //for activity
     public static final String EXTRA_REPLY =
             "ng.com.quickinfo.plom.REPLY";
+    private String TAG = getClass().getSimpleName();
 
     @BindView(R.id.actvName)
     AutoCompleteTextView actvName;
@@ -153,6 +155,7 @@ public class AddLoanActivity extends AppCompatActivity {
         String dateToRepay =  actvDatePromised.getText().toString();
         String remarks =  actvRemarks.getText().toString();
         String amount = actvAmount.getText().toString();
+        String loanType = spLoanType.toString();
         //get userId long userID =  mUserID;
         if (cbSetReminder.isChecked()){
             //get reminder parameters
@@ -165,9 +168,11 @@ public class AddLoanActivity extends AppCompatActivity {
             actvName.setError("Most not be empty");
             actvName.hasFocus();
             //setResult(RESULT_CANCELED, replyIntent);
+            Utilities.log(TAG,loanType + ":" + dateToRepay );
         } else {
-            String loan_name = actvName.getText().toString();
-            replyIntent.putExtra(EXTRA_REPLY, loan_name);
+            replyIntent.putExtra(EXTRA_REPLY, name);
+            replyIntent.putExtra("loanType", remarks.length());
+            replyIntent.putExtra("dateToRepay", dateToRepay);
             setResult(RESULT_OK, replyIntent);
             finish();
         }

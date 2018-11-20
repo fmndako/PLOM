@@ -24,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -192,6 +193,8 @@ public class MainActivity2 extends LifecycleLoggingActivity implements
                 //TODO update other UI
                 Utilities.log(TAG, adapter.getItemCount()+"");
                 Utilities.log(TAG, adapter.getTotalLends()+"");
+                Date date = Calendar.getInstance().getTime();
+                Utilities.log(TAG, Utilities.dateToString(date));
             }
         });
     }
@@ -225,14 +228,14 @@ public class MainActivity2 extends LifecycleLoggingActivity implements
 
             String name = data.getStringExtra(AddLoanActivity.EXTRA_REPLY);
             Integer amount = 33;
-            Integer loanType = 1;
+            Integer loanType = data.getIntExtra("loanType", 0);
             String remarks = "loan";
             String number = "090";
             Integer clearStatus = 0;
             Integer offset = 1;
             String email = "email";
             Date dateTaken = stringToDate("11/11/1111");
-            Date dateToRepay = stringToDate("11/11/1111");
+            Date dateToRepay = stringToDate(data.getStringExtra("dateToRepay"));
             long user_id = mUser.getUserId();
 
             Loan loan = new Loan(name, number, email, amount, dateTaken, dateToRepay, loanType,

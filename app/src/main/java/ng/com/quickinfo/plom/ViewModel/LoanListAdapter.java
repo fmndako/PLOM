@@ -67,6 +67,7 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
             @Override
             public void onClick(View v){
                 Utilities.log(TAG, "onclick name");
+
             }
                                                });
 
