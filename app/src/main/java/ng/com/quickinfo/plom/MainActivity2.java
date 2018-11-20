@@ -191,6 +191,7 @@ public class MainActivity2 extends LifecycleLoggingActivity implements
                 adapter.setLoans(loans);
                 //TODO update other UI
                 Utilities.log(TAG, adapter.getItemCount()+"");
+                Utilities.log(TAG, adapter.getTotalLends()+"");
             }
         });
     }
@@ -227,7 +228,7 @@ public class MainActivity2 extends LifecycleLoggingActivity implements
             Integer loanType = 1;
             String remarks = "loan";
             String number = "090";
-            Integer clearStatus = 1;
+            Integer clearStatus = 0;
             Integer offset = 1;
             String email = "email";
             Date dateTaken = stringToDate("11/11/1111");
