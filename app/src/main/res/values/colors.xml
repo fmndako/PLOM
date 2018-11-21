@@ -7,10 +7,11 @@
     <color name="colorPrimary">#2196F3</color>
     <color name="colorPrimaryLight">#64b5f6</color>
     <color name="colorPrimaryDark">#1976D2</color>
-    <color name="colorAccent">#FFFF9800</color>
+    <color name="colorAccent">#0092FF</color>
     <color name="colorTextPrimary">@android:color/white</color>
     <color name="colorScreenBackground">#fff3e0</color>
     <color name="colorTextHint">#E0E0E0</color>
+    <color name="some_red">#ff0080</color>
 
     <!--sign up-->
     <color name="background_color">#B2B2FF</color>

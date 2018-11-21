@@ -32,7 +32,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ng.com.quickinfo.plom.Model.Loan;
 import ng.com.quickinfo.plom.Model.User;
-import ng.com.quickinfo.plom.Model.UserDao;
 import ng.com.quickinfo.plom.Utils.Utilities;
 import ng.com.quickinfo.plom.ViewModel.LoanListAdapter;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
@@ -40,7 +39,7 @@ import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
 import static ng.com.quickinfo.plom.Utils.Utilities.makeToast;
 import static ng.com.quickinfo.plom.Utils.Utilities.stringToDate;
 
-public class MainActivity2 extends LifecycleLoggingActivity implements
+public class HomeActivity extends LifecycleLoggingActivity implements
         LoanListAdapter.OnHandlerInteractionListener {
 
     //intent for signout and revoke access
@@ -264,8 +263,8 @@ public class MainActivity2 extends LifecycleLoggingActivity implements
 
     private void registerMyReceivers() {
         signoutReceiver = new SignOutReceiver();
-        intentfilter = new IntentFilter(MainActivity2.ACTION_USER_SIGN_IN);
-        //intentfilter.addAction(MainActivity2.ACTION_DELETE_ACCOUNT);
+        intentfilter = new IntentFilter(HomeActivity.ACTION_USER_SIGN_IN);
+        //intentfilter.addAction(HomeActivity.ACTION_DELETE_ACCOUNT);
 
         //registers receivers
         LocalBroadcastManager.getInstance(this).registerReceiver(signoutReceiver, intentfilter);
@@ -282,12 +281,12 @@ public class MainActivity2 extends LifecycleLoggingActivity implements
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d(TAG, intent.getAction());
-            if (intent.getAction().equals(MainActivity2.ACTION_USER_SIGN_IN)) {
+            if (intent.getAction().equals(HomeActivity.ACTION_USER_SIGN_IN)) {
                 Log.d("Sup", "user in");
                 //loadRV();
                 //signOut();
 
-            } else if (intent.getAction().equals(MainActivity2.ACTION_DELETE_ACCOUNT)) {
+            } else if (intent.getAction().equals(HomeActivity.ACTION_DELETE_ACCOUNT)) {
                 Log.d(TAG, "delete account");
                 //revokeAccess();
 

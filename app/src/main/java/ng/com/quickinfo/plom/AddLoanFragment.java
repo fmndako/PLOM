@@ -81,7 +81,7 @@ public class AddLoanFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // NOTE : We are calling the onFragmentInteraction() declared in the MainActivity
+        // NOTE : We are calling the onFragmentInteraction() declared in the SignInActivity
         // ie we are sending "Fragment 1" as title parameter when fragment1 is activated
         if (mListener != null) {
             mListener.onFragmentInteraction("Fragment 1");

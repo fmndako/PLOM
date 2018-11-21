@@ -9,6 +9,12 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!--for sign in button or all red buttons-->
+    <style name="AppTheme.SignInButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">@color/some_red</item>
+        <item name="android:textColor">@color/gray</item>
+     </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

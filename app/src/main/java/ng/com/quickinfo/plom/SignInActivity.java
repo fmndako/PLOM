@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -31,7 +30,7 @@ import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
 
 import static com.google.android.gms.auth.api.signin.GoogleSignInStatusCodes.getStatusCodeString;
 
-public class MainActivity extends LifecycleLoggingActivity {
+public class SignInActivity extends LifecycleLoggingActivity {
 
     //ViewModel
     LoanViewModel mLoanViewModel;
@@ -65,7 +64,7 @@ public class MainActivity extends LifecycleLoggingActivity {
            // registerMyReceivers();
             //TODO pass in the account email to the intent
             loadAccount(account.getEmail());
-           //startActivity(new Intent(this, MainActivity2.class));
+           //startActivity(new Intent(this, HomeActivity.class));
             //register receivers
 
         }
@@ -107,8 +106,8 @@ public class MainActivity extends LifecycleLoggingActivity {
                     switch (view.getId()) {
                         case R.id.sign_in_button:
                             //TODO uncomment signin and comment updateui
-                            updateUI("trewcj");
-                            //signIn();
+                           // updateUI("trewcj");
+                            signIn();
                             break;
                         // ...
                     }
@@ -217,7 +216,7 @@ public class MainActivity extends LifecycleLoggingActivity {
     }
 
     private void loadAccount(String email){
-        Intent intent = new Intent(this, MainActivity2.class);
+        Intent intent = new Intent(this, HomeActivity.class);
         intent.putExtra("email", email);
         startActivity(intent);
         finish();
