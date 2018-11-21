@@ -159,11 +159,12 @@ public class SignInActivity extends LifecycleLoggingActivity {
                 Log.w(TAG, "signInResult:failed code=" + getStatusCodeString(e.getStatusCode()));
                 //updateUI("timatme@hhhh.com");
                 //showProgress(false);
+                //TODO remove after successful login
+
+                updateUI("timatme@h4545hhhl.com");
 
             }
-            //TODO remove after successful login
 
-        updateUI("timatme@h4545hhhl.com");
 
     }
 

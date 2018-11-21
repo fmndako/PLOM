@@ -54,13 +54,14 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
             holder.IdItemView.setText(current.getId()+ "");
 
             holder.userIdView.setText(current.getUser_id() + "");
+            holder.remarksItemView.setText(Utilities.dateToString(current.getDateToRepay()));
         } else {
             // Covers the case of data not being ready yet.
             holder.loanItemView.setText("No Loan");
         }
         //testing where to insert the interface listener to enable
         //comm between RV and activity
-        Utilities.log(TAG, "onbindview" + "" + getItemCount() + getTotalLends());
+        Utilities.log(TAG, "onbindview" + "" + getItemCount() + getTotalLends(mLoans));
 
         //set onclick listeners
         holder.loanItemView.setOnClickListener(new View.OnClickListener() {
@@ -94,7 +95,7 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
     }
 
     //clear status filters
-    public List<Loan> activeLoans (List<Loan> loans){
+    public static List<Loan> activeLoans (List<Loan> loans){
         //returns all active loans
         List<Loan> activeLoans = new ArrayList<>();
         for (Loan loan: loans){
@@ -106,7 +107,7 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
     }
 
     //loan Type filter filters
-    public List<List<Loan>> loanType (List<Loan> loans){
+    public static List<List<Loan>> loanType (List<Loan> loans){
         //returns a list of list of lends and borrow
         List<List<Loan>> typeLoan = new ArrayList<>();
         List<Loan> lendLoans = new ArrayList<>();
@@ -124,7 +125,7 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
 
     //repayment date filters (due date)
     //loan Type filter filters
-    public List<List<Loan>> dateFilterList (List<Loan> loans){
+    public static List<List<Loan>> dateFilterList (List<Loan> loans){
         //returns a list(3) of list of loans by date filters
         List<List<Loan>> dateList = new ArrayList<>();
         List<Loan> dueSoonLoans = new ArrayList<>();
@@ -148,22 +149,22 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
     }
 
     //filter helper functions (loan type)
-    public boolean typeIsLend(Loan loan){
+    public static boolean typeIsLend(Loan loan){
         return (loan.getLoanType() == 0);
     }
 
     //time filter helper functions
-    public boolean loanIsDue(Loan loan, Date today){
+    public static boolean loanIsDue(Loan loan, Date today){
         //returns true if datetorepay is same as today
         return loan.getDateToRepay().equals(today);
     }
-    public boolean loanIsDueSoon(Loan loan,Date today,  int days){
+    public static boolean loanIsDueSoon(Loan loan,Date today,  int days){
         //returns true if diff between datetorepay and today is less than specified days
          //and not any of the other options
         return (!loanIsDue(loan, today) & !loanIsOverDue(loan, today)) &
                 (loan.getDateToRepay().compareTo(today)) < days;
     }
-    public boolean loanIsOverDue(Loan loan, Date today){
+    public static boolean loanIsOverDue(Loan loan, Date today){
         //returns true if date of repayment is after today
         return (loan.getDateToRepay().after(today));
     }
@@ -179,7 +180,7 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
         else return 0;
     }
 
-    public int getTotalLends(){
+    public static int getTotalLends(List<Loan> mLoans){
         int sum = 0;
         if (mLoans != null){
 
@@ -197,12 +198,14 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
         private final TextView loanItemView;
         private TextView IdItemView;
         private TextView userIdView;
+        private TextView remarksItemView;
 
         private LoanViewHolder(View itemView) {
             super(itemView);
             loanItemView = itemView.findViewById(R.id.textView);
             IdItemView = itemView.findViewById(R.id.age);
             userIdView = itemView.findViewById(R.id.occupation);
+            remarksItemView = itemView.findViewById(R.id.remarks);
 
         }
 

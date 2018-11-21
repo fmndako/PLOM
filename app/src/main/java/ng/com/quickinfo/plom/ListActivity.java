@@ -138,7 +138,6 @@ public class ListActivity extends LifecycleLoggingActivity implements
         // the progress spinner.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
 //            mSignInView.setVisibility(show ? View.GONE : View.VISIBLE);
 //            mSignInView.animate().setDuration(shortAnimTime).alpha(
 //                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
@@ -147,7 +146,6 @@ public class ListActivity extends LifecycleLoggingActivity implements
 //                    mSignInView.setVisibility(show ? View.GONE : View.VISIBLE);
 //                }
 //            });
-
             mRegisterProgress.setVisibility(show ? View.VISIBLE : View.GONE);
             mRegisterProgress.animate().setDuration(shortAnimTime).alpha(
                     show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
@@ -168,7 +166,6 @@ public class ListActivity extends LifecycleLoggingActivity implements
         Intent intent = new Intent(this, SignUpActivity.class);
         intent.putExtra("email", mEmail);
         startActivityForResult(intent, NEW_USER_ACTIVITY_REQUEST_CODE);
-
     }
 
     private void goToHome() {
@@ -306,14 +303,9 @@ public class ListActivity extends LifecycleLoggingActivity implements
 
         protected User doInBackground(final String... params) {
           return mLoanViewModel.getUser(params[0]);
-
-
-
         }
 
-
         protected void onPostExecute(User result){
-
             Utilities.log(TAG, "postexecute");
             //save result as mUser
             mUser = result;
@@ -323,7 +315,5 @@ public class ListActivity extends LifecycleLoggingActivity implements
             //load recycler view
             loadRV(mUser.getUserId());
         }
-
     }
-
 }
