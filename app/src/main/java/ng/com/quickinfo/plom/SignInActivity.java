@@ -62,7 +62,7 @@ public class SignInActivity extends LifecycleLoggingActivity {
             Log.d(TAG, "account is not  null"+account.getObfuscatedIdentifier());
             //updateUI(account.getEmail());
            // registerMyReceivers();
-            //TODO pass in the account email to the intent
+            //start next activity with email
             loadAccount(account.getEmail());
            //startActivity(new Intent(this, HomeActivity.class));
             //register receivers
@@ -163,45 +163,24 @@ public class SignInActivity extends LifecycleLoggingActivity {
             //TODO remove after successful login
 
         updateUI("timatme@h4545hhhl.com");
-        //startMainIntent("timatme@h4545hhhl.com", user_id );
 
     }
 
     private void updateUI(String email ){
-        //TODO check if first timer
-
         //if first timer
         boolean userFirstLogin = sharedPref.getBoolean(email, true);
         if (userFirstLogin) {
-
-
-            //TODO
             //register
             registerUser(email);
-
             //change first timer = false
             Utilities.log(TAG, "user first login");
-
         }
-
         //else
         else {
             Utilities.log(TAG, "not user first login");
             //enter system
             loadAccount(email);
         }
-//        if (mAllUsers == null){
-//            List<User> allUsers = mAllUsers.getValue();
-//            for(int count = 0; count<allUsers.size();count++){
-//                if (allUsers.get(count).getEmail().equals(email)){
-//                    user_id = allUsers.get(count).getUserId();
-//                    break;
-//
-//                }
-//
-//            }
-//        }
-
     }
 
     private void registerUser(String email) {
