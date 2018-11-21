@@ -64,7 +64,7 @@ public class SignInActivity extends LifecycleLoggingActivity {
            // registerMyReceivers();
             //start next activity with email
             loadAccount(account.getEmail());
-           //startActivity(new Intent(this, HomeActivity.class));
+           //startActivity(new Intent(this, ListActivity.class));
             //register receivers
 
         }
@@ -196,7 +196,7 @@ public class SignInActivity extends LifecycleLoggingActivity {
 
     private void loadAccount(String email){
         //TODO change mainactivity3 to homeactivity
-        Intent intent = new Intent(this, Main3Activity.class);
+        Intent intent = new Intent(this, HomeActivity.class);
         intent.putExtra("email", email);
         startActivity(intent);
         finish();

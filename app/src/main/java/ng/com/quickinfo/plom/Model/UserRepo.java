@@ -11,7 +11,7 @@ import android.util.Log;
 
 import java.util.List;
 
-import ng.com.quickinfo.plom.HomeActivity;
+import ng.com.quickinfo.plom.ListActivity;
 
 public class UserRepo {
 
@@ -101,7 +101,7 @@ public class UserRepo {
 
         protected void onPostExecute(){
             Intent intent = new Intent();
-            intent.setAction(HomeActivity.ACTION_USER_SIGN_IN);
+            intent.setAction(ListActivity.ACTION_USER_SIGN_IN);
             Log.d("Repo", "sending intent");
             LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
         }
