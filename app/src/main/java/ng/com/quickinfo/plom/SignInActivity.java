@@ -195,7 +195,8 @@ public class SignInActivity extends LifecycleLoggingActivity {
     }
 
     private void loadAccount(String email){
-        Intent intent = new Intent(this, HomeActivity.class);
+        //TODO change mainactivity3 to homeactivity
+        Intent intent = new Intent(this, Main3Activity.class);
         intent.putExtra("email", email);
         startActivity(intent);
         finish();
