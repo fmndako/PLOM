@@ -20,7 +20,11 @@ import java.util.stream.Collectors;
 
 import ng.com.quickinfo.plom.Model.Loan;
 import ng.com.quickinfo.plom.R;
+import ng.com.quickinfo.plom.Utils.FilterUtils;
 import ng.com.quickinfo.plom.Utils.Utilities;
+
+import static ng.com.quickinfo.plom.Utils.FilterUtils.activeLoans;
+import static ng.com.quickinfo.plom.Utils.FilterUtils.getTotalLends;
 
 public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanViewHolder> {
 
@@ -94,104 +98,12 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
         notifyDataSetChanged();
     }
 
-    //clear status filters
-    public static List<Loan> activeLoans (List<Loan> loans){
-        //returns all active loans
-        List<Loan> activeLoans = new ArrayList<>();
-        for (Loan loan: loans){
-            if (loan.getClearStatus()==0){
-                activeLoans.add(loan);
-            }
-        }
-        return activeLoans;
-    }
-
-    //loan Type filter filters
-    public static List<List<Loan>> loanType (List<Loan> loans){
-        //returns a list of list of lends and borrow
-        List<List<Loan>> typeLoan = new ArrayList<>();
-        List<Loan> lendLoans = new ArrayList<>();
-        List<Loan> borrowLoans = new ArrayList<>();
-
-        for (Loan loan: loans){
-            if (typeIsLend(loan)){
-                lendLoans.add(loan);
-            }else {borrowLoans.add(loan);}
-        }
-        typeLoan.add(lendLoans);
-        typeLoan.add(borrowLoans);
-        return typeLoan;
-    }
-
-    //repayment date filters (due date)
-    //loan Type filter filters
-    public static List<List<Loan>> dateFilterList (List<Loan> loans){
-        //returns a list(3) of list of loans by date filters
-        List<List<Loan>> dateList = new ArrayList<>();
-        List<Loan> dueSoonLoans = new ArrayList<>();
-        List<Loan> dueLoans = new ArrayList<>();
-        List<Loan> overDueLoans = new ArrayList<>();
-
-        Date today = Calendar.getInstance().getTime();
-        for (Loan loan: loans){
-            if (loanIsDueSoon(loan, today, 7)){
-                dueSoonLoans.add(loan);
-            }else if (loanIsDue(loan, today)){
-                dueLoans.add(loan);}
-                else if (loanIsOverDue(loan, today)){
-                overDueLoans.add(loan);
-            }
-        }
-        dateList.add(dueSoonLoans);
-        dateList.add(dueLoans);
-        dateList.add(overDueLoans);
-        return dateList;
-    }
-
-    //filter helper functions (loan type)
-    public static boolean typeIsLend(Loan loan){
-        return (loan.getLoanType() == 0);
-    }
-
-    //time filter helper functions
-    public static boolean loanIsDue(Loan loan, Date today){
-        //returns true if datetorepay is same as today
-        return loan.getDateToRepay().equals(today);
-    }
-    public static boolean loanIsDueSoon(Loan loan,Date today,  int days){
-        //returns true if diff between datetorepay and today is less than specified days
-         //and not any of the other options
-        return (!loanIsDue(loan, today) & !loanIsOverDue(loan, today)) &
-                (loan.getDateToRepay().compareTo(today)) < days;
-    }
-    public static boolean loanIsOverDue(Loan loan, Date today){
-        //returns true if date of repayment is after today
-        return (loan.getDateToRepay().after(today));
-    }
-
-
 
     // getItemCount() is called many times, and when it is first called,
     // mLoans has not been updated (means initially, it's null, and we can't return null).
     @Override
     public int getItemCount() {
-        if (mLoans != null)
-            return mLoans.size();
-        else return 0;
-    }
-
-    public static int getTotalLends(List<Loan> mLoans){
-        int sum = 0;
-        if (mLoans != null){
-
-            for (int x = 0; x<mLoans.size(); x++ ){
-            sum += mLoans.get(x).getAmount();
-            }
-            return sum;
-        }
-        else
-            {return sum;}
-        //Utilities.log("LoanListAdpater", sum + "");
+        return FilterUtils.getItemCount(mLoans);
     }
 
     class LoanViewHolder extends RecyclerView.ViewHolder {
@@ -206,10 +118,9 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
             IdItemView = itemView.findViewById(R.id.age);
             userIdView = itemView.findViewById(R.id.occupation);
             remarksItemView = itemView.findViewById(R.id.remarks);
-
         }
-
     }
+
     public interface OnHandlerInteractionListener{
         //interface to handle interation with the activity
         public void onHandlerInteraction(long total);

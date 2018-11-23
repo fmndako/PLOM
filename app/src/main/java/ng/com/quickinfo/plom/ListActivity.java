@@ -55,16 +55,10 @@ public class ListActivity extends LifecycleLoggingActivity implements
     //context
     private Context mContext;
 
-    //UI ref
-    private View mProgressView;
-    private View mRVView;
-
-    //user
-    private User mUser;
-
     //initiate viewmodel
     LoanViewModel mLoanViewModel;
-    String mEmail;
+    private String mEmail;
+    private long mUserId;
     //required for start new activity
     public static final int NEW_LOAN_ACTIVITY_REQUEST_CODE = 1;
     public static final int NEW_USER_ACTIVITY_REQUEST_CODE = 2;
@@ -82,12 +76,12 @@ public class ListActivity extends LifecycleLoggingActivity implements
 
         //context
         mContext = getApplicationContext();
+
         //intent
         mEmail = getIntent().getStringExtra("email");
+        mUserId = getIntent().getLongExtra("user_id", 1);
 
-        //get user id fromm db
-        getUser();
-        //register receiver
+       //register receiver
         registerMyReceivers();
         //set collapsing tool bar
         setToolBar(mEmail);
@@ -100,32 +94,21 @@ public class ListActivity extends LifecycleLoggingActivity implements
             @Override
             public void onClick(View view) {
                 goToHome();
-
-
             }
         });
-
-
-    }
-
-    private void getUser() {
-        //get user from database using getUserAsyncTask
-        GetUserAsyncTAsk task = new GetUserAsyncTAsk();
-        task.execute(mEmail);
-
-        Utilities.log(TAG, "user id = ");
-
     }
 
     public void onHandlerInteraction(long total) {
-
+        //my own listener created in the loanadapter class
         Utilities.makeToast(this, "" + total);
         Utilities.log(TAG, "" + "viewkink");
     }
 
     private void setToolBar(String mEmail) {
-        //set toolbar string to mEmail
 
+        //set toolbar string to mEmail
+        //load rV
+        loadRV();
     }
 
     /**
@@ -173,7 +156,7 @@ public class ListActivity extends LifecycleLoggingActivity implements
         startActivityForResult(intent, NEW_LOAN_ACTIVITY_REQUEST_CODE);
     }
 
-    private void loadRV(long user_id) {
+    private void loadRV() {
         //loads the RV
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
         final LoanListAdapter adapter = new LoanListAdapter(this);
@@ -181,14 +164,14 @@ public class ListActivity extends LifecycleLoggingActivity implements
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         //observer
-        mLoanViewModel.getLoanByUserId(user_id).observe(this, new Observer<List<Loan>>() {
+        mLoanViewModel.getLoanByUserId(mUserId).observe(this, new Observer<List<Loan>>() {
             @Override
             public void onChanged(@Nullable final List<Loan> loans) {
                 // Update the cached copy of the loans in the adapter.
                 adapter.setLoans(loans);
                 //TODO update other UI
                 Utilities.log(TAG, adapter.getItemCount()+"");
-                Utilities.log(TAG, adapter.getTotalLends()+"");
+                //Utilities.log(TAG, getTotalLends(loans)+"");
                 Date date = Calendar.getInstance().getTime();
                 Utilities.log(TAG, Utilities.dateToString(date));
             }
@@ -221,7 +204,6 @@ public class ListActivity extends LifecycleLoggingActivity implements
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == NEW_LOAN_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-
             String name = data.getStringExtra(AddLoanActivity.EXTRA_REPLY);
             Integer amount = 33;
             Integer loanType = data.getIntExtra("loanType", 0);
@@ -232,7 +214,7 @@ public class ListActivity extends LifecycleLoggingActivity implements
             String email = "email";
             Date dateTaken = stringToDate("11/11/1111");
             Date dateToRepay = stringToDate(data.getStringExtra("dateToRepay"));
-            long user_id = mUser.getUserId();
+            long user_id = mUserId;
 
             Loan loan = new Loan(name, number, email, amount, dateTaken, dateToRepay, loanType,
                     remarks, clearStatus, offset, user_id);
@@ -253,27 +235,21 @@ public class ListActivity extends LifecycleLoggingActivity implements
 
 
         }
-       /* else{
-            Toast.makeText(getApplicationContext(), "user not saved", Toast.LENGTH_LONG).show();
-        }*/
     }
 
     private void registerMyReceivers() {
         signoutReceiver = new SignOutReceiver();
         intentfilter = new IntentFilter(ListActivity.ACTION_USER_SIGN_IN);
         //intentfilter.addAction(ListActivity.ACTION_DELETE_ACCOUNT);
-
         //registers receivers
         LocalBroadcastManager.getInstance(this).registerReceiver(signoutReceiver, intentfilter);
     }
 
     private void unRegisterMyReceivers() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(signoutReceiver);
-
     }
 
     public class SignOutReceiver extends BroadcastReceiver {
-
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -293,27 +269,4 @@ public class ListActivity extends LifecycleLoggingActivity implements
         }
     }
 
-    private class GetUserAsyncTAsk extends AsyncTask<String, Void, User>{
-
-        @Override
-        protected void onPreExecute(){
-            Utilities.log(TAG, "preexecute");
-            showProgress(true);
-        }
-
-        protected User doInBackground(final String... params) {
-          return mLoanViewModel.getUser(params[0]);
-        }
-
-        protected void onPostExecute(User result){
-            Utilities.log(TAG, "postexecute");
-            //save result as mUser
-            mUser = result;
-            //stop progress bar
-            showProgress(false);
-            Utilities.makeToast(mContext, mUser.getUserId()+"");
-            //load recycler view
-            loadRV(mUser.getUserId());
-        }
     }
-}
