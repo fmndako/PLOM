@@ -93,22 +93,32 @@ public class FilterUtils {
     //time filter helper functions
     public static boolean loanIsDue(Loan loan, Date today){
         //returns true if datetorepay is same as today
-        Utilities.log("date:due", dateToString(loan.getDateToRepay())+ ""
-                +dateToString(today) + ": "  +":"+ loan.getDateToRepay().compareTo(today) + "");
+        Date repay = loan.getDateToRepay();
+        Calendar calToday = Calendar.getInstance();
+        Calendar calRepay = Calendar.getInstance();
+        calToday.setTime(today);
+        calRepay.setTime(repay);
+        Utilities.log("date:due", calToday.toString()+ calRepay.toString()
+                + ": "+ calToday.equals(calRepay) + "");
         return loan.getDateToRepay().compareTo(today)==1;
     }
     public static boolean loanIsDueSoon(Loan loan,Date today,  int reminderDays){
         //returns true if date is before today and after reminder number of days
         Date daysAgo = new Date(today.getTime() - reminderDays*24*60*60);
+
+        Date repay =    loan.getDateToRepay();
+        Calendar calToday = Calendar.getInstance();
+        Calendar calRepay = Calendar.getInstance();
+        calToday.setTime(today);
+        calRepay.setTime(repay);
+
+
         Utilities.log("duesoondate:", dateToString(today) + ": " +
                 dateToString(loan.getDateToRepay())
                 +":"+reminderDays+
                 (loan.getDateToRepay().before(today) & !(loan.getDateToRepay().getTime() <  daysAgo.getTime())) + "");
-        Date dateToRepay =    loan.getDateToRepay();
-        Calendar calToday = Calendar.getInstance();
-        calToday.setTime(today);
 
-            //today is not less than days ago
+        //today is not less than days ago
         return (loan.getDateToRepay().before(today) & !(loan.getDateToRepay().getTime() <  daysAgo.getTime()));
 
 

@@ -32,6 +32,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ng.com.quickinfo.plom.Model.Loan;
 import ng.com.quickinfo.plom.Model.User;
+import ng.com.quickinfo.plom.Utils.FilterUtils;
 import ng.com.quickinfo.plom.Utils.Utilities;
 import ng.com.quickinfo.plom.ViewModel.LoanListAdapter;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
@@ -71,15 +72,20 @@ public class ListActivity extends LifecycleLoggingActivity implements
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //show progress
         //load View Model
         mLoanViewModel = ViewModelProviders.of(this).get(LoanViewModel.class);
 
         //context
         mContext = getApplicationContext();
+        Utilities.showProgress(true, mRegisterProgress, mContext);
+
 
         //intent
         mEmail = getIntent().getStringExtra("email");
         mUserId = getIntent().getLongExtra("user_id", 1);
+        int loanType = getIntent().getIntExtra("loanType", 1);
+
 
        //register receiver
         registerMyReceivers();
@@ -87,7 +93,7 @@ public class ListActivity extends LifecycleLoggingActivity implements
         setToolBar(mEmail);
         ////unregister receivers
         //        unRegisterMyReceivers();
-
+        loadRV(loanType);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -96,6 +102,7 @@ public class ListActivity extends LifecycleLoggingActivity implements
                 goToHome();
             }
         });
+
     }
 
     public void onHandlerInteraction(long total) {
@@ -108,7 +115,7 @@ public class ListActivity extends LifecycleLoggingActivity implements
 
         //set toolbar string to mEmail
         //load rV
-        loadRV();
+        //loadRV();
     }
 
     /**
@@ -156,7 +163,7 @@ public class ListActivity extends LifecycleLoggingActivity implements
         startActivityForResult(intent, NEW_LOAN_ACTIVITY_REQUEST_CODE);
     }
 
-    private void loadRV() {
+    private void loadRV(final int loanType) {
         //loads the RV
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
         final LoanListAdapter adapter = new LoanListAdapter(this);
@@ -168,7 +175,32 @@ public class ListActivity extends LifecycleLoggingActivity implements
             @Override
             public void onChanged(@Nullable final List<Loan> loans) {
                 // Update the cached copy of the loans in the adapter.
-                adapter.setLoans(loans);
+                List<Loan> mLoans;
+                mLoans = loans;
+                switch (loanType) {
+                    case 1:
+                        mLoans = FilterUtils.activeLoans(loans);
+                        break;
+                    case 2:
+                        mLoans = FilterUtils.loanType(loans).get(0);
+                        break;
+                    case 3:
+                        mLoans = FilterUtils.loanType(loans).get(1);
+
+                        break;
+                    case 4:
+                        mLoans = FilterUtils.dateFilterList(loans).get(0);
+
+                        break;
+                    case 5:
+                        mLoans = FilterUtils.dateFilterList(loans).get(1);
+                        break;
+                    case 6:
+                        mLoans = FilterUtils.dateFilterList(loans).get(2);
+
+                        break;
+                }
+                adapter.setLoans(mLoans);
                 //TODO update other UI
                 Utilities.log(TAG, adapter.getItemCount()+"");
                 //Utilities.log(TAG, getTotalLends(loans)+"");
@@ -176,6 +208,7 @@ public class ListActivity extends LifecycleLoggingActivity implements
                 Utilities.log(TAG, Utilities.dateToString(date));
             }
         });
+        Utilities.showProgress(false, mRegisterProgress, mContext);
     }
 
     @Override

@@ -12,18 +12,217 @@
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone" />
-
-    <TextView
-        android:id="@+id/message"
-        android:layout_width="94dp"
-        android:layout_height="19dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:text="@string/title_home"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guideline"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/flAll"
+        android:layout_width="340dp"
+        android:layout_height="164dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="214dp">
+
+        <ImageView
+            android:id="@+id/ivAll"
+            android:layout_width="158dp"
+            android:layout_height="66dp"
+            android:layout_gravity="top|center_vertical|center"
+            app:srcCompat="@drawable/account_box" />
+
+        <TextView
+            android:id="@+id/tvTotalAll"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/tvSizeAll"
+            android:layout_width="94dp"
+            android:layout_height="44dp"
+            android:layout_gravity="bottom|center"
+            android:gravity="center"
+            android:text="TextView" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/flOthers"
+        android:layout_width="337dp"
+        android:layout_height="155dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.516"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/flAll"
+        app:layout_constraintVertical_bias="0.0">
+
+        <FrameLayout
+            android:id="@+id/flOverdue"
+            android:layout_width="105dp"
+            android:layout_height="94dp"
+            android:layout_gravity="right|center">
+
+            <TextView
+                android:id="@+id/tvTotalOverdue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="TextView" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fabOverSoon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|center"
+                android:clickable="true"
+                app:srcCompat="@android:drawable/sym_contact_card" />
+
+            <TextView
+                android:id="@+id/tvSizeOverdue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center"
+                android:text="TextView" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/flDue"
+            android:layout_width="94dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center">
+
+            <TextView
+                android:id="@+id/tvTotalDue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="TextView" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fabDue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|center"
+                android:clickable="true"
+                app:srcCompat="@android:drawable/sym_contact_card" />
+
+            <TextView
+                android:id="@+id/tvSizeDue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center"
+                android:text="TextView" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/flDueSoon"
+            android:layout_width="106dp"
+            android:layout_height="99dp"
+            android:layout_gravity="left|center">
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fabDueSoon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|center"
+                android:clickable="true"
+                app:srcCompat="@android:drawable/sym_contact_card" />
+
+            <TextView
+                android:id="@+id/tvSizeDueSoon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center"
+                android:text="TextView" />
+
+            <TextView
+                android:id="@+id/tvTotalDueSoon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="TextView" />
+        </FrameLayout>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/flBorrow"
+        android:layout_width="175dp"
+        android:layout_height="200dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/flLends">
+
+        <ImageView
+            android:id="@+id/ivBorrow"
+            android:layout_width="158dp"
+            android:layout_height="66dp"
+            android:layout_gravity="top|center_vertical|center"
+            app:srcCompat="@drawable/account_box" />
+
+        <TextView
+            android:id="@+id/tvTotalBorrows"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/tvSizeBorrows"
+            android:layout_width="94dp"
+            android:layout_height="44dp"
+            android:layout_gravity="bottom|center"
+            android:gravity="center"
+            android:text="TextView" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/flLends"
+        android:layout_width="176dp"
+        android:layout_height="200dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="0dp">
+
+        <ImageView
+            android:id="@+id/ivLends"
+            android:layout_width="153dp"
+            android:layout_height="68dp"
+            android:layout_gravity="top|center_vertical|center"
+            app:srcCompat="@drawable/account_box" />
+
+        <TextView
+            android:id="@+id/tvLendsTotal"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/tvSizeLends"
+            android:layout_width="94dp"
+            android:layout_height="44dp"
+            android:layout_gravity="bottom|center"
+            android:gravity="center"
+            android:text="TextView" />
+    </FrameLayout>
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation"
@@ -34,58 +233,5 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:menu="@menu/navigation" />
-
-    <EditText
-        android:id="@+id/editText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="77dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:paddingLeft="8dp"
-        android:text="Name"
-        app:layout_constraintStart_toStartOf="@+id/guideline"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_end="343dp" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="148dp"
-        android:text="TextView"
-        app:layout_constraintStart_toStartOf="@+id/guideline"
-        app:layout_constraintTop_toBottomOf="@+id/editText" />
-
-    <android.support.constraint.Barrier
-        android:id="@+id/barrier"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:barrierDirection="top"
-        tools:layout_editor_absoluteY="567dp" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="20dp"
-        android:text="TextView"
-        app:layout_constraintStart_toStartOf="@+id/guideline"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
-
-    <android.support.constraint.Group
-        android:id="@+id/group"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:constraint_referenced_ids="textView3,textView2" />
 
 </android.support.constraint.ConstraintLayout>
