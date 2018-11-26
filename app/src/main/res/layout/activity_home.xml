@@ -38,7 +38,7 @@
             android:layout_width="158dp"
             android:layout_height="66dp"
             android:layout_gravity="top|center_vertical|center"
-            src="@drawable/account_box" />
+            app:srcCompat="@drawable/metro2" />
 
         <TextView
             android:id="@+id/tvTotalAll"
@@ -175,7 +175,7 @@
             android:layout_width="158dp"
             android:layout_height="66dp"
             android:layout_gravity="top|center_vertical|center"
-            app:srcCompat="@drawable/account_box" />
+            app:srcCompat="@drawable/metro2" />
 
         <TextView
             android:id="@+id/tvTotalBorrows"
@@ -207,7 +207,7 @@
             android:layout_width="153dp"
             android:layout_height="68dp"
             android:layout_gravity="top|center_vertical|center"
-            app:srcCompat="@drawable/account_box" />
+            app:srcCompat="@drawable/metro2" />
 
         <TextView
             android:id="@+id/tvLendsTotal"
