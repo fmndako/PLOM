@@ -21,7 +21,7 @@ public interface OffsetDao {
     LiveData<List<Offset>> getAllOffsetItems();
 */
     @Query("select * from offset_table where loan_id = :id")
-    Offset getItembyId(long id);
+    LiveData<List<Offset>> getItembyLoanId(long id);
 
     @Insert(onConflict = REPLACE)
     void addOffset(Offset Offset);
