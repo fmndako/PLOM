@@ -41,6 +41,11 @@ public class LoanViewModel extends AndroidViewModel {
     public LiveData<List<Loan>> getLoanByUserId(long user_id) {
         return mLoanRepo.getLoanByUserId(user_id);
     }
+    //get loan by loan id
+    public Loan getLoan(long id){
+        return mLoanRepo.getLoan(id);
+
+    }
 
     public void insert(Loan loan) { mLoanRepo.insert(loan); }
 

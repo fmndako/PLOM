@@ -42,6 +42,7 @@ import static ng.com.quickinfo.plom.Utils.Utilities.stringToDate;
 
 public class ListActivity extends LifecycleLoggingActivity implements
         LoanListAdapter.OnHandlerInteractionListener {
+    //implemented a listener from the adapter to handle layout clicks
 
     //intent for signout and revoke access
     SignOutReceiver signoutReceiver;
@@ -105,10 +106,17 @@ public class ListActivity extends LifecycleLoggingActivity implements
 
     }
 
-    public void onHandlerInteraction(long total) {
+    public void onHandlerInteraction(long loan_id) {
         //my own listener created in the loanadapter class
-        Utilities.makeToast(this, "" + total);
-        Utilities.log(TAG, "" + "viewkink");
+        Utilities.makeToast(this, "" + loan_id);
+        startDetailActivity(loan_id);
+    }
+
+    private void startDetailActivity(long loan_id) {
+        //starts detail activity
+        Intent detailIntent = new Intent (this, DetailActivity.class);
+        detailIntent.putExtra("loan_id", loan_id);
+        startActivity(detailIntent);
     }
 
     private void setToolBar(String mEmail) {

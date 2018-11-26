@@ -1,25 +1,14 @@
 package ng.com.quickinfo.plom.ViewModel;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.SumPathEffect;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
-import ng.com.quickinfo.plom.DetailActivity;
 import ng.com.quickinfo.plom.Model.Loan;
 import ng.com.quickinfo.plom.R;
 import ng.com.quickinfo.plom.Utils.FilterUtils;
@@ -28,7 +17,7 @@ import ng.com.quickinfo.plom.Utils.Utilities;
 import static ng.com.quickinfo.plom.Utils.FilterUtils.activeLoans;
 import static ng.com.quickinfo.plom.Utils.FilterUtils.getTotalLends;
 
-public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanViewHolder> {
+public class OffsetListAdapter extends RecyclerView.Adapter<OffsetListAdapter.LoanViewHolder> {
 
     private final LayoutInflater mInflater;
     private List<Loan> mLoans; // Cached copy of loans
@@ -39,7 +28,7 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
     //interface to handle interaction with activity
     OnHandlerInteractionListener mListener;
 
-    public LoanListAdapter(Context context) {
+    public OffsetListAdapter(Context context) {
         mContext = context;
         mInflater = LayoutInflater.from(context); }
 
@@ -53,7 +42,7 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
     }
 
     @Override
-    public void onBindViewHolder(LoanViewHolder holder, final int position) {
+    public void onBindViewHolder(LoanViewHolder holder, int position) {
         if (mLoans != null) {
             Loan current = mLoans.get(position);
             holder.loanItemView.setText(current.getName());
@@ -70,11 +59,10 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
         Utilities.log(TAG, "onbindview" + "" + getItemCount() + getTotalLends(mLoans));
 
         //set onclick listeners
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        holder.loanItemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
                 Utilities.log(TAG, "onclick name");
-                startDetailActivity(mLoans.get(position).getId());
 
             }
                                                });
@@ -87,7 +75,10 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
             throw new RuntimeException(mContext.toString()
                     + " must implement OnHandlerInteractionListener");
         }
-
+//        if (mListener != null) {
+//            //TODO include total lends, borrows and total.
+//            mListener.onHandlerInteraction(getTotalLends());
+//        }
     }
 
 
@@ -104,15 +95,6 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
     @Override
     public int getItemCount() {
         return FilterUtils.getItemCount(mLoans);
-    }
-
-    //startactivity
-    private void startDetailActivity(long loan_id){
-        if (mListener != null) {
-            //TODO include total lends, borrows and total.
-        mListener.onHandlerInteraction(loan_id);
-        }
-
     }
 
     class LoanViewHolder extends RecyclerView.ViewHolder {
@@ -132,6 +114,6 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
 
     public interface OnHandlerInteractionListener{
         //interface to handle interation with the activity
-        public void onHandlerInteraction(long loan_id);
+        public void onHandlerInteraction(long total);
     }
 }

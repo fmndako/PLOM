@@ -22,7 +22,8 @@ public class LoanRepo {
     public LiveData<List<Loan>> getAllLoans() {
         return mAllLoans;
     }
-
+    //get loan by loan id
+    public Loan getLoan(long id){return mLoanDao.getItembyId(id);}
     //return loan by user_id
     public LiveData<List<Loan>> getLoanByUserId(long user_id){
         return mLoanDao.getItembyUserId(user_id);

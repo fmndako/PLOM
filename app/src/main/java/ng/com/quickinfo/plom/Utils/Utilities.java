@@ -3,7 +3,9 @@ package ng.com.quickinfo.plom.Utils;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +20,10 @@ import java.util.Date;
 
 public class Utilities {
     /*contains basic tools*/
+
+    public static Intent startIntent(Application mContext, Class mClass){
+        return new Intent(mContext, mClass);
+    }
     public static Date stringToDate(String dateString) {
         Date date;
         try {

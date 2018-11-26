@@ -25,7 +25,10 @@
         <activity android:name=".SignUpActivity" />
         <activity
             android:name=".HomeActivity"
-            android:label="@string/title_activity_main3"></activity>
+            android:label="@string/title_activity_main3" />
+        <activity
+            android:name=".DetailActivity"
+            android:label="@string/title_activity_detail"></activity>
     </application>
 
 </manifest>
