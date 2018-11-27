@@ -18,13 +18,14 @@
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
-        <SearchView
-            android:id="@+id/searchView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:iconifiedByDefault="false"
-            android:queryHint="Search"
-            android:layout_centerHorizontal="true" />
+        <!--<SearchView-->
+            <!--android:id="@+id/searchView"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:iconifiedByDefault="true"-->
+            <!--android:queryHint="Search"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:background="@color/colorAccent"/>-->
     </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>

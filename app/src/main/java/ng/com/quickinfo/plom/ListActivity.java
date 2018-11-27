@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -44,10 +45,18 @@ import static ng.com.quickinfo.plom.Utils.Utilities.stringToDate;
 public class ListActivity extends LifecycleLoggingActivity implements
         LoanListAdapter.OnHandlerInteractionListener {
     //implemented a listener from the adapter to handle layout clicks
-
+    //delare variables
     //intent for signout and revoke access
     SignOutReceiver signoutReceiver;
     IntentFilter intentfilter;
+
+    //adapter
+    //loads the RV
+    private RecyclerView recyclerView;
+    private LoanListAdapter adapter;
+
+    //loan
+    private List<Loan> mLoans;
 
     public static String ACTION_USER_SIGN_IN = "ng.com.quickinfo.plom.ACTION_USER_SIGN_IN";
     public static String ACTION_SIGN_OUT = "ng.com.quickinfo.loanmanager.ACTION_SIGN_OUT";
@@ -57,7 +66,6 @@ public class ListActivity extends LifecycleLoggingActivity implements
 
     //context
     private Context mContext;
-
     //initiate viewmodel
     LoanViewModel mLoanViewModel;
     private String mEmail;
@@ -174,8 +182,8 @@ public class ListActivity extends LifecycleLoggingActivity implements
 
     private void loadRV(final int loanType) {
         //loads the RV
-        RecyclerView recyclerView = findViewById(R.id.recyclerview);
-        final LoanListAdapter adapter = new LoanListAdapter(this);
+        recyclerView = findViewById(R.id.recyclerview);
+        adapter = new LoanListAdapter(this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -184,7 +192,7 @@ public class ListActivity extends LifecycleLoggingActivity implements
             @Override
             public void onChanged(@Nullable final List<Loan> loans) {
                 // Update the cached copy of the loans in the adapter.
-                List<Loan> mLoans;
+
                 mLoans = loans;
                 switch (loanType) {
                     case 1:
@@ -224,6 +232,34 @@ public class ListActivity extends LifecycleLoggingActivity implements
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        //search view
+        MenuItem searchViewItem = menu.findItem(R.id.searchView);
+        SearchView searchView = (SearchView) searchViewItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Utilities.log(TAG, query);
+               // if( ! searchView.isIconified()) {
+//                    searchView.setIconified(true);
+//                }
+//                item.collapseActionView();
+//                return false;
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                Utilities.log(TAG, newText);
+                adapter.setLoans(FilterUtils.searchLoans(mLoans, newText));
+
+                return false;
+            }
+        });
+
+
+
         return true;
     }
 
@@ -235,40 +271,41 @@ public class ListActivity extends LifecycleLoggingActivity implements
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        switch (id){
-            case R.id.action_settings:
-                return true;
-            case R.id.searchView:
-
-
-        //search
-
-
-        final SearchView searchView = (SearchView) item.getActionView();
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                // Toast like print
-                Utilities.makeToast(mContext, "SearchOnQueryTextSubmit: " + query);
-                if( ! searchView.isIconified()) {
-                    searchView.setIconified(true);
-                }
-                item.collapseActionView();
-                return false;
-            }
-            @Override
-            public boolean onQueryTextChange(String s) {
-                // UserFeedback.show( "SearchOnQueryTextChanged: " + s);
-                return false;
-            }
-        });
-                return true;
-
+        if (id  == R.id.action_settings){
+            return true;
         }
 
 
         return super.onOptionsItemSelected(item);
     }
+
+
+        //search
+
+
+//        final SearchView searchView = (SearchView) item.getActionView();
+//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                // Toast like print
+//                Utilities.log(TAG, query);
+//                //Utilities.makeToast(mContext, "SearchOnQueryTextSubmit: " + query);
+//                if( ! searchView.isIconified()) {
+//                    searchView.setIconified(true);
+//                }
+//                item.collapseActionView();
+//                return false;
+//            }
+//            @Override
+//            public boolean onQueryTextChange(String s) {
+//                Utilities.log(TAG, s);
+//                // UserFeedback.show( "SearchOnQueryTextChanged: " + s);
+//                return false;
+//            }
+//        });
+                //return true;
+
+
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

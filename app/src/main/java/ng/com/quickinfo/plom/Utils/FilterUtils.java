@@ -7,9 +7,21 @@ import java.util.List;
 
 import ng.com.quickinfo.plom.Model.Loan;
 
+import static android.service.autofill.Validators.or;
 import static ng.com.quickinfo.plom.Utils.Utilities.dateToString;
 
 public class FilterUtils {
+    //search
+    public static List<Loan> searchLoans(List<Loan> loans, String query){
+        List<Loan> filterLoans = new ArrayList<>();
+        for (Loan loan: loans){
+            if (loan.getName().contains(query) || (loan.getAmount().toString().contains(query)))
+            {
+                filterLoans.add(loan);
+            }
+        }
+        return filterLoans;
+    }
 
     public static int getItemCount(List<Loan> mLoans) {
         if (mLoans != null)
