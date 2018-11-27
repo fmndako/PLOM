@@ -240,12 +240,7 @@ public class ListActivity extends LifecycleLoggingActivity implements
                 return true;
             case R.id.searchView:
 
-                return true;
 
-        }
-        if (id == R.id.action_settings) {
-            return true;
-        }
         //search
 
 
@@ -267,6 +262,10 @@ public class ListActivity extends LifecycleLoggingActivity implements
                 return false;
             }
         });
+                return true;
+
+        }
+
 
         return super.onOptionsItemSelected(item);
     }
