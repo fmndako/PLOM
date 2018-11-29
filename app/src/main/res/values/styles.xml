@@ -25,30 +25,26 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <!--style from gitbook-->
-    <style name="text_view_style">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textAppearance">
-            @android:style/TextAppearance.Large</item>
-        <item name="android:background">@color/background_color</item>
+
+    <style name="text_view">
+         <item name="android:textAppearance">
+            @android:style/TextAppearance.Small</item>
         <item name="android:layout_marginTop">8dp</item>
-        <item name="android:layout_gravity">center</item>
-        <item name="android:padding">16dp</item>
-        <item name="android:textColor">@color/colorTextPrimary</item>
+        <item name="android:layout_gravity">left</item>
+        <item name="android:textColor">@color/some_red</item>
     </style>
 
 
     <!--my own styles-->
-    <style name="heading_text_style">
-        <item name="android:textColor">@color/black</item>
-        <item name="android:textSize">18dp</item>
-        <item name="android:layout_marginLeft">8dp</item>
-        <item name="android:layout_marginRight">8dp</item>
+    <style name="heading_text">
+        <item name="android:textColor">@color/green</item>>
+        <item name="android:textAppearance">
+            @android:style/TextAppearance</item>
+         <item name="android:layout_marginRight">8dp</item>
+        <item name="android:layout_gravity">left</item>
         <item name="android:layout_marginTop">4dp</item>
         <item name="android:layout_marginBottom">4dp</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-    </style>
+        </style>
 
     <!--bigger master-->
     <style name="MyAppTheme" parent="Theme.AppCompat.Light.DarkActionBar">

@@ -123,10 +123,10 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
 
         private LoanViewHolder(View itemView) {
             super(itemView);
-            loanItemView = itemView.findViewById(R.id.textView);
-            IdItemView = itemView.findViewById(R.id.age);
-            userIdView = itemView.findViewById(R.id.occupation);
-            remarksItemView = itemView.findViewById(R.id.remarks);
+            loanItemView = itemView.findViewById(R.id.departure);
+            IdItemView = itemView.findViewById(R.id.departure1);
+            userIdView = itemView.findViewById(R.id.city1);
+            remarksItemView = itemView.findViewById(R.id.city);
         }
     }
 
