@@ -26,22 +26,26 @@
 
     <!--style from gitbook-->
 
-    <style name="text_view">
+    <style name="text_style">
+        <item name="android:layout_gravity">left</item>
+
+    </style>
+
+    <style name="text_view" parent="text_style">
          <item name="android:textAppearance">
             @android:style/TextAppearance.Small</item>
         <item name="android:layout_marginTop">8dp</item>
-        <item name="android:layout_gravity">left</item>
         <item name="android:textColor">@color/some_red</item>
     </style>
 
 
     <!--my own styles-->
-    <style name="heading_text">
+    <style name="heading_text" parent="text_style">
         <item name="android:textColor">@color/green</item>>
         <item name="android:textAppearance">
             @android:style/TextAppearance</item>
          <item name="android:layout_marginRight">8dp</item>
-        <item name="android:layout_gravity">left</item>
+
         <item name="android:layout_marginTop">4dp</item>
         <item name="android:layout_marginBottom">4dp</item>
         </style>

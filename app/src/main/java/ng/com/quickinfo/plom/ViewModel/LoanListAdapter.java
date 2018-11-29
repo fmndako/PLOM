@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
@@ -56,14 +57,14 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
     public void onBindViewHolder(LoanViewHolder holder, final int position) {
         if (mLoans != null) {
             Loan current = mLoans.get(position);
-            holder.loanItemView.setText(current.getName());
-            holder.IdItemView.setText(current.getId()+ "");
+            holder.nameView.setText(current.getName());
+            holder.amountView.setText(current.getId()+ "");
 
-            holder.userIdView.setText(current.getUser_id() + "");
-            holder.remarksItemView.setText(Utilities.dateToString(current.getDateToRepay()));
+            holder.dateTakenView.setText(current.getUser_id() + "");
+            holder.dateRepayView.setText(Utilities.dateToString(current.getDateToRepay()));
         } else {
             // Covers the case of data not being ready yet.
-            holder.loanItemView.setText("No Loan");
+            holder.nameView.setText("No Loan");
         }
         //testing where to insert the interface listener to enable
         //comm between RV and activity
@@ -116,17 +117,15 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
     }
 
     class LoanViewHolder extends RecyclerView.ViewHolder {
-        private final TextView loanItemView;
-        private TextView IdItemView;
-        private TextView userIdView;
-        private TextView remarksItemView;
+        private TextView nameView, amountView,  dateTakenView, dateRepayView, commentView;
+        private ImageView cashView, clearView, notifyView, alertView;
 
         private LoanViewHolder(View itemView) {
             super(itemView);
-            loanItemView = itemView.findViewById(R.id.departure);
-            IdItemView = itemView.findViewById(R.id.departure1);
-            userIdView = itemView.findViewById(R.id.city1);
-            remarksItemView = itemView.findViewById(R.id.city);
+            nameView = itemView.findViewById(R.id.departure);
+            amountView = itemView.findViewById(R.id.departure1);
+            dateTakenView = itemView.findViewById(R.id.city1);
+            dateRepayView = itemView.findViewById(R.id.city);
         }
     }
 
