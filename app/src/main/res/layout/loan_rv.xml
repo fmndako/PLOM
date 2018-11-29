@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:background="@color/gray"
     android:layout_height="wrap_content">
-
+    <!--remove the below layout to remove the color-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
