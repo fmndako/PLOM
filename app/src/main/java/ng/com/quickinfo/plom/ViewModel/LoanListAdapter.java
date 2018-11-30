@@ -58,10 +58,13 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
         if (mLoans != null) {
             Loan current = mLoans.get(position);
             holder.nameView.setText(current.getName());
-            holder.amountView.setText(current.getId()+ "");
+            holder.amountView.setText(current.getAmount()+ "");
 
-            holder.dateTakenView.setText(current.getUser_id() + "");
+            holder.dateTakenView.setText(current.getDateTaken().toString());
             holder.dateRepayView.setText(Utilities.dateToString(current.getDateToRepay()));
+            holder.commentView.setText("comment");
+
+
         } else {
             // Covers the case of data not being ready yet.
             holder.nameView.setText("No Loan");
@@ -122,10 +125,16 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
 
         private LoanViewHolder(View itemView) {
             super(itemView);
-            nameView = itemView.findViewById(R.id.departure);
-            amountView = itemView.findViewById(R.id.departure1);
-            dateTakenView = itemView.findViewById(R.id.city1);
-            dateRepayView = itemView.findViewById(R.id.city);
+            nameView = itemView.findViewById(R.id.tvLRVName);
+            amountView = itemView.findViewById(R.id.tvLRVAmount);
+            dateTakenView = itemView.findViewById(R.id.actvDateTaken);
+            dateRepayView = itemView.findViewById(R.id.tvLRVDateRepay);
+            commentView = itemView.findViewById(R.id.tvLRVtime);
+
+            clearView = itemView.findViewById(R.id.ivLRVClear);
+            cashView = itemView.findViewById(R.id.ivLRVCash);
+            notifyView= itemView.findViewById(R.id.ivLRVNotify);
+               alertView = itemView.findViewById(R.id.ivTLRAlert);
         }
     }
 
