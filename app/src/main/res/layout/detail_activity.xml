@@ -81,7 +81,7 @@
 
                     <customfonts.MyTextView
                         android:visibility="visible"
-                        android:id="@+id/tvDetailName"
+                        android:id="@+id/tvDetailNameValue"
                         android:layout_weight="1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -91,7 +91,7 @@
                         />
 
                     <customfonts.MyTextView
-                        android:id="@+id/tvDetailAmount"
+                        android:id="@+id/tvDetailAmountValue"
                         android:layout_weight="5"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -115,7 +115,7 @@
 
                     <customfonts.MyTextView
 
-                        android:id="@+id/tvDetailLoanTypeText"
+                        android:id="@+id/tvDetailLoanTypeValue"
                         android:layout_width="110dp"
                         android:layout_height="wrap_content"
                         android:background="@drawable/rectangle"
@@ -145,24 +145,24 @@
 
                         <customfonts.MyTextView
                             android:layout_weight="0.8"
-                            android:id="@+id/tvDetailDateTaken"
+                            android:id="@+id/tvDetailDateTakenValue"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Feb 17-20"
-                            android:textSize="13dp"
-                            android:gravity="right"
+                            android:textSize="17dp"
+                            android:gravity="center"
                             android:textColor="@color/colorTex"
                             />
                     </LinearLayout>
                 </LinearLayout>
 
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/colordevider"
-                    android:padding="16dp"
-                    />
+                <!--<View-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="1dp"-->
+                    <!--android:background="@color/colordevider"-->
+                    <!--android:padding="16dp"-->
+                    <!--/>-->
 
                 <!--*********personal details**********-->
 
@@ -591,7 +591,7 @@
                     >
 
                     <customfonts.MyTextView
-                        android:id="@+id/tvDetailCleared"
+                        android:id="@+id/tvDetailClearedText"
 
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -616,7 +616,7 @@
                     >
 
                     <customfonts.MyTextView
-                        android:id="@+id/tvDetailClearedStatus"
+                        android:id="@+id/tvDetailClearedStatusText"
                         android:layout_weight="1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -696,6 +696,7 @@
                         >
 
                         <ImageView
+                            android:id="@+id/ivDetailCall"
                             android:layout_weight="1"
                             android:layout_width="50dp"
                             android:layout_height="50dp"
@@ -738,6 +739,7 @@
                         >
 
                         <ImageView
+                            android:id="@+id/ivDetailEmail"
                             android:layout_weight="1"
                             android:layout_width="50dp"
                             android:layout_height="50dp"
@@ -781,6 +783,7 @@
                         >
 
                         <ImageView
+                            android:id="@+id/ivDetailMessage"
                             android:layout_weight="1"
                             android:layout_width="50dp"
                             android:layout_height="50dp"
@@ -795,7 +798,7 @@
                         <customfonts.MyTextView
                             android:gravity="center"
                             android:layout_weight="1"
-                            android:id="@+id/sell"
+                            android:id="@+id/tvMessage"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:text="Message"
@@ -819,7 +822,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="ABOUT SELLER"
+                        android:text="OFFSET DETAILS"
                         android:padding="16dp"
                         android:textSize="13dp"
                         android:textColor="@color/colorSub"
@@ -852,7 +855,7 @@
                             android:layout_weight="0.5"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="0"
+                            android:text="0 $"
                             android:textColor="@color/colorTex"
 
                             />

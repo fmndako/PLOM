@@ -8,18 +8,52 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.ImageView;
 
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import customfonts.MyTextView;
 import ng.com.quickinfo.plom.Model.Loan;
 import ng.com.quickinfo.plom.Utils.Utilities;
 import ng.com.quickinfo.plom.ViewModel.LoanListAdapter;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
-import ng.com.quickinfo.plom.Model.OffsetListAdapter;
 
 public class DetailActivity extends LifecycleLoggingActivity implements
         LoanListAdapter.OnHandlerInteractionListener {
+    @BindView(R.id.tvDetailNameValue)
+    MyTextView tvDetailNameValue;
+    @BindView(R.id.tvDetailAmountValue)
+    MyTextView tvDetailAmountValue;
+    @BindView(R.id.tvDetailLoanTypeValue)
+    MyTextView tvDetailLoanTypeValue;
+    @BindView(R.id.tvDetailDateTakenValue)
+    MyTextView tvDetailDateTakenValue;
+    @BindView(R.id.tvDetailNumberValue)
+    MyTextView tvDetailNumberValue;
+    @BindView(R.id.tvDetailEmailValue)
+    MyTextView tvDetailEmailValue;
+    @BindView(R.id.tvDetailDateToRepayValue)
+    MyTextView tvDetailDateToRepayValue;
+    @BindView(R.id.tvDetailRepaymentOptionValue)
+    MyTextView tvDetailRepaymentOptionValue;
+    @BindView(R.id.tvDetailRemarksValue)
+    MyTextView tvDetailRemarksValue;
+    @BindView(R.id.tvDetailClearedStatusValue)
+    MyTextView tvDetailClearedStatusValue;
+    @BindView(R.id.tvDetailDateClearedValue)
+    MyTextView tvDetailDateClearedValue;
+    @BindView(R.id.ivDetailCall)
+    ImageView ivDetailCall;
+    @BindView(R.id.ivDetailEmail)
+    ImageView ivDetailEmail;
+    @BindView(R.id.ivDetailMessage)
+    ImageView ivDetailMessage;
+    @BindView(R.id.tvDetailOffsetTotalValue)
+    MyTextView tvDetailOffsetTotalValue;
     private Context mContext;
 
     //adapter
@@ -31,7 +65,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
     private List<Loan> mLoans;
     private Loan mLoan;
 
-     //initiate viewmodel
+    //initiate viewmodel
     LoanViewModel mLoanViewModel;
 
     //TAG
@@ -42,7 +76,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detailnew);
+        setContentView(R.layout.detail_activity);
         ButterKnife.bind(this);
 
         //context
@@ -59,8 +93,6 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         loadRV();
 
 
-
-
     }
 
     private void loadRV() {
@@ -75,11 +107,16 @@ public class DetailActivity extends LifecycleLoggingActivity implements
             @Override
             public void onChanged(@Nullable final List<Loan> loans) {
                 // Update the cached copy of the loans in the adapter.
+                //recyclerView.setVisibility(View.VISIBLE);
+
                 adapter.setLoans(loans);
+                tvDetailOffsetTotalValue.setText(adapter.getItemCount() + "");
+
 
             }
         });
     }
+
     private void getLoan(long loan_id) {
         //get loan details
         GetLoanAsyncTask task = new GetLoanAsyncTask();
@@ -94,27 +131,91 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
     }
 
-    private void updateUI(){
+    private void updateUI() {
         //update UI components
-        if (mLoan!= null) {
+
+
+        if (mLoan != null) {
             Utilities.makeToast(mContext, mLoan.getName());
+            tvDetailNameValue.setText(mLoan.getName());
+            tvDetailAmountValue.setText(mLoan.getAmount() + "");
+            //loan type
+            int loanTypeColor = R.color.green;
+            int loanTypeText = R.string.loan_name;
+            if(mLoan.getLoanType() != 0){
+                loanTypeColor = R.color.red;
+                loanTypeText = R.string.loan_amount;
+
+            }
+            tvDetailLoanTypeValue.setText(loanTypeText);
+            tvDetailLoanTypeValue.setBackgroundColor(loanTypeColor);
+
+            //dates
+            tvDetailDateTakenValue.setText(mLoan.getDateTaken().toString());
+
+            //personal details
+            tvDetailNumberValue.setText(mLoan.getNumber());
+            tvDetailEmailValue.setText(mLoan.getEmail());
+
+            //repayment details
+            tvDetailDateToRepayValue.setText(mLoan.getDateToRepay().toString());
+            if (mLoan.getRepaymentOption() != 0){
+                tvDetailRepaymentOptionValue.setText(R.string.repayment_option_several);}
+            tvDetailRemarksValue.setText(mLoan.getRemarks() + "");
+
+
+            //cleared status
+            if (mLoan.getClearStatus() != 0){
+                tvDetailClearedStatusValue.setText(R.string.cleared_status_cleared);
+                tvDetailDateClearedValue.setText(mLoan.getDateCleared().toString());
+            }
+
+            //offset
+            if (mLoan.getOffset()!=0){
+                //load offset rv and set total and Balance
+
+                loadRV();
+
+            }
+
+
+
+
         }
     }
+
+    // **************** contact lender ********************
+    @OnClick({R.id.ivDetailCall, R.id.ivDetailEmail, R.id.ivDetailMessage})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.ivDetailCall:
+                //startcallintent
+                break;
+            case R.id.ivDetailEmail:
+                //startmailintent
+                break;
+            case R.id.ivDetailMessage:
+                //startmessageintent
+                break;
+        }
+    }
+
     private class GetLoanAsyncTask extends AsyncTask<Long, Void, Loan> {
 
         @Override
         protected void onPreExecute() {
             Utilities.log(TAG, "preexecute");
             //TODO implement a progress bar
-           // Utilities.showProgress(true, progressBar2, mContext);
+            // Utilities.showProgress(true, progressBar2, mContext);
         }
+
         @Override
         protected Loan doInBackground(Long... params) {
             Utilities.log(TAG, "DOINBACK" + params.length + ":" + params[0]);
 
             Loan mloan = mLoanViewModel.getLoan(params[0]);
-                Utilities.log(TAG, "DOINBACK");
-                return mloan;
+            Utilities.log(TAG, "DOINBACK");
+            return mloan;
 
         }
 

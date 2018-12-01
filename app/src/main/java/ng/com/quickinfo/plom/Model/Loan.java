@@ -38,6 +38,7 @@ public class Loan {
     private Integer clearStatus;
     private Integer offset;
     private Integer notify;
+    private Integer repaymentOption;
     private String email;
    @TypeConverters(DateConverter.class)
     private Date dateTaken;
@@ -48,7 +49,7 @@ public class Loan {
 
     public Loan( String name, String number, String email, Integer amount, Date dateTaken,
                 Date dateToRepay, Integer loanType, String remarks, Integer clearStatus,
-                 Integer offset, Integer notify, long user_id) {
+                 Integer offset, Integer notify,Integer repaymentOption, long user_id) {
 
         this.name = name;
         this.number = number;
@@ -61,6 +62,7 @@ public class Loan {
         this.clearStatus = clearStatus;
         this.offset = offset;
         this.notify = notify;
+        this.repaymentOption = repaymentOption;
         this.user_id = user_id;
 
     }
@@ -105,6 +107,9 @@ public class Loan {
         return notify;
     }
 
+    public Integer getRepaymentOption() {
+        return repaymentOption;
+    }
 
     public String getEmail() {
         return email;
@@ -117,6 +122,7 @@ public class Loan {
     public Date getDateToRepay() {
         return dateToRepay;
     }
+
     public Date getDateCleared() {
         return dateCleared;
     }
