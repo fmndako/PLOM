@@ -26,4 +26,11 @@
     <color name="green">#00b200</color>
     <color name="red">#e50000</color>
 
+
+    <!--detail screen colors-->
+    <color name="colorSub">#b0afaf</color>
+    <color name="colorTex">#585858</color>
+    <color name="colordevider">#64dad8d8</color>
+    <color name="colorblue">#4c71f5</color>
+
 </resources>
