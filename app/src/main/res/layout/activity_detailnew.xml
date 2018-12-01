@@ -868,7 +868,6 @@
                         tools:listitem="@layout/offset_rv"
                         />
 
-
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
