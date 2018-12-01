@@ -37,15 +37,18 @@ public class Loan {
     private String number;
     private Integer clearStatus;
     private Integer offset;
+    private Integer notify;
     private String email;
    @TypeConverters(DateConverter.class)
     private Date dateTaken;
     @TypeConverters(DateConverter.class)
     private Date dateToRepay;
+    @TypeConverters(DateConverter.class)
+    private Date dateCleared;
 
     public Loan( String name, String number, String email, Integer amount, Date dateTaken,
                 Date dateToRepay, Integer loanType, String remarks, Integer clearStatus,
-                 Integer offset, long user_id) {
+                 Integer offset, Integer notify, long user_id) {
 
         this.name = name;
         this.number = number;
@@ -57,6 +60,7 @@ public class Loan {
         this.remarks = remarks;
         this.clearStatus = clearStatus;
         this.offset = offset;
+        this.notify = notify;
         this.user_id = user_id;
 
     }
@@ -97,6 +101,11 @@ public class Loan {
         return offset;
     }
 
+    public Integer getNotify() {
+        return notify;
+    }
+
+
     public String getEmail() {
         return email;
     }
@@ -107,5 +116,11 @@ public class Loan {
 
     public Date getDateToRepay() {
         return dateToRepay;
+    }
+    public Date getDateCleared() {
+        return dateCleared;
+    }
+    public void setDateCleared(Date date){
+        this.dateCleared = date;
     }
 }

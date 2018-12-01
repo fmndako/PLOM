@@ -318,13 +318,14 @@ public class ListActivity extends LifecycleLoggingActivity implements
             String number = "090";
             Integer clearStatus = 0;
             Integer offset = 1;
+            Integer notify = 1;
             String email = "email";
             Date dateTaken = stringToDate("11/11/1111");
             Date dateToRepay = stringToDate(data.getStringExtra("dateToRepay"));
             long user_id = mUserId;
 
             Loan loan = new Loan(name, number, email, amount, dateTaken, dateToRepay, loanType,
-                    remarks, clearStatus, offset, user_id);
+                    remarks, clearStatus, offset, notify, user_id);
             mLoanViewModel.insert(loan);
             makeToast(this, "loan saved");
 
