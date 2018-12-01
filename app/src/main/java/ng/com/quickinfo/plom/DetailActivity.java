@@ -20,13 +20,13 @@ public class DetailActivity extends LifecycleLoggingActivity {
     LoanViewModel mLoanViewModel;
     //TAG
     public String TAG = getClass().getSimpleName();
-    @BindView(R.id.progressBar2)
-    ProgressBar progressBar2;
+//    @BindView(R.id.progressBar2)
+//    ProgressBar progressBar2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail);
+        setContentView(R.layout.activity_detailnew);
         ButterKnife.bind(this);
 
         //context
@@ -65,7 +65,7 @@ public class DetailActivity extends LifecycleLoggingActivity {
         protected void onPreExecute() {
             Utilities.log(TAG, "preexecute");
             //TODO implement a progress bar
-            Utilities.showProgress(true, progressBar2, mContext);
+           // Utilities.showProgress(true, progressBar2, mContext);
         }
         @Override
         protected Loan doInBackground(Long... params) {
@@ -82,7 +82,7 @@ public class DetailActivity extends LifecycleLoggingActivity {
             //save result as mUser
             mLoan = result;
             //stop progress bar
-            Utilities.showProgress(false, progressBar2, mContext);
+            //Utilities.showProgress(false, progressBar2, mContext);
 
             //load loans
             updateUI();

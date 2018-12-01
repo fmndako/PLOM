@@ -118,7 +118,7 @@
                         android:id="@+id/free"
                         android:layout_width="110dp"
                         android:layout_height="28dp"
-                        android:background="@drawable/rect"
+                        android:background="@drawable/rectangle"
                         android:text="Loan Type"
                         android:textColor="#fff"
                         android:gravity="center"
@@ -319,7 +319,7 @@
                         android:textColor="#4c71f5"
                         android:textSize="11dp"
                         android:gravity="center"
-                        android:drawableRight="@drawable/arrow"
+                        android:drawableRight="@android:drawable/arrow_down_float"
                         android:drawablePadding="8dp"
 
                         />
@@ -495,7 +495,7 @@
                             android:textColor="#4c71f5"
                             android:textSize="11dp"
                             android:gravity="center"
-                            android:drawableRight="@drawable/arrow1"
+                            android:drawableRight="@android:drawable/arrow_up_float"
                             android:drawablePadding="8dp"
 
                             />
@@ -536,7 +536,7 @@
                         android:layout_height="wrap_content"
                         android:text="Item discription"
                         android:textColor="@color/colorSub"
-                        android:drawableRight="@drawable/arrow2"
+                        android:drawableRight="@android:drawable/arrow_down_float"
 
                         />
 
@@ -580,7 +580,7 @@
                         android:layout_height="wrap_content"
                         android:text="Tue, Feb 17 - Fri, Feb 18"
                         android:textColor="@color/colorTex"
-                        android:drawableRight="@drawable/arrow2"
+                        android:drawableRight="@android:drawable/arrow_up_float"
 
                         />
 
@@ -668,7 +668,7 @@
                         android:layout_height="wrap_content"
                         android:text="Money Back Guarantee"
                         android:textColor="@color/colorTex"
-                        android:drawableRight="@drawable/arrow2"
+                        android:drawableRight="@android:drawable/arrow_up_float"
 
                         />
 
@@ -748,7 +748,7 @@
                             android:layout_weight="1"
                             android:layout_width="50dp"
                             android:layout_height="50dp"
-                            app:srcCompact="@drawable/cash"
+                            android:src="@drawable/cash"
                             android:layout_gravity="center"
                             android:gravity="bottom"
 
