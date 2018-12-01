@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -23,7 +23,7 @@
 
 
 
-    <ScrollView
+    <android.support.v4.widget.NestedScrollView
         android:layout_marginTop="55dp"
         android:layout_marginBottom="49dp"
         android:layout_width="match_parent"
@@ -748,7 +748,7 @@
                             android:layout_weight="1"
                             android:layout_width="50dp"
                             android:layout_height="50dp"
-                            android:src="@drawable/cash"
+                            app:srcCompat="@drawable/cash"
                             android:layout_gravity="center"
                             android:gravity="bottom"
 
@@ -837,11 +837,13 @@
 
 
 
-                    <ExpandableListView
-                        android:id="@+id/listview"
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recyclerview"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="#fff"/>
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        tools:listitem="@layout/offset_rv"
+                        />
 
 
                     <TextView
@@ -871,7 +873,7 @@
 
             </LinearLayout>
         </LinearLayout>
-    </ScrollView>
+    </android.support.v4.widget.NestedScrollView>
 
 
 

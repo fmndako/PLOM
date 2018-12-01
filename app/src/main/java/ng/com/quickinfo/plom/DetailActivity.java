@@ -1,23 +1,39 @@
 package ng.com.quickinfo.plom;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.widget.ProgressBar;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 
-import butterknife.BindView;
+import java.util.List;
+
 import butterknife.ButterKnife;
 import ng.com.quickinfo.plom.Model.Loan;
 import ng.com.quickinfo.plom.Utils.Utilities;
+import ng.com.quickinfo.plom.ViewModel.LoanListAdapter;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
+import ng.com.quickinfo.plom.Model.OffsetListAdapter;
 
-public class DetailActivity extends LifecycleLoggingActivity {
+public class DetailActivity extends LifecycleLoggingActivity implements
+        LoanListAdapter.OnHandlerInteractionListener {
     private Context mContext;
 
-    Loan mLoan;
-    //viewmodel
+    //adapter
+    //loads the RV
+    private RecyclerView recyclerView;
+    private LoanListAdapter adapter;
+
+    //loan
+    private List<Loan> mLoans;
+    private Loan mLoan;
+
+     //initiate viewmodel
     LoanViewModel mLoanViewModel;
+
     //TAG
     public String TAG = getClass().getSimpleName();
 //    @BindView(R.id.progressBar2)
@@ -40,16 +56,41 @@ public class DetailActivity extends LifecycleLoggingActivity {
         long mLoanId = getIntent().getLongExtra("loan_id", 16L);
         getLoan(mLoanId);
 
+        loadRV();
+
 
 
 
     }
 
+    private void loadRV() {
+        //loads the RV
+        recyclerView = findViewById(R.id.recyclerview);
+        adapter = new LoanListAdapter(this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        //observer
+        mLoanViewModel.getLoanByUserId(1).observe(this, new Observer<List<Loan>>() {
+            @Override
+            public void onChanged(@Nullable final List<Loan> loans) {
+                // Update the cached copy of the loans in the adapter.
+                adapter.setLoans(loans);
+
+            }
+        });
+    }
     private void getLoan(long loan_id) {
         //get loan details
         GetLoanAsyncTask task = new GetLoanAsyncTask();
         task.execute(loan_id);
 
+
+    }
+
+    public void onHandlerInteraction(long loan_id) {
+        //my own listener created in the loanadapter class
+        Utilities.makeToast(this, "" + loan_id);
 
     }
 
