@@ -73,8 +73,8 @@
 
 
                     <TextView
-                        android:id="@+id/tvLRVDateTaken"
                         style="@style/heading_text"
+                        android:id="@+id/tvLRVDateTaken"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="3dp"

@@ -60,7 +60,7 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
             holder.nameView.setText(current.getName());
             holder.amountView.setText(current.getAmount()+ "");
 
-            holder.dateTakenView.setText(current.getDateTaken().toString());
+            holder.dateTakenView.setText(current.getDateToRepay().toString());
             holder.dateRepayView.setText(Utilities.dateToString(current.getDateToRepay()));
             holder.commentView.setText("comment");
 
@@ -127,7 +127,7 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
             super(itemView);
             nameView = itemView.findViewById(R.id.tvLRVName);
             amountView = itemView.findViewById(R.id.tvLRVAmount);
-            dateTakenView = itemView.findViewById(R.id.actvDateTaken);
+            dateTakenView = itemView.findViewById(R.id.tvLRVDateTaken);
             dateRepayView = itemView.findViewById(R.id.tvLRVDateRepay);
             commentView = itemView.findViewById(R.id.tvLRVtime);
 
