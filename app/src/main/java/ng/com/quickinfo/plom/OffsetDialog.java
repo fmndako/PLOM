@@ -97,25 +97,6 @@ OnDateSetListener{
     @OnClick(R.id.etOffsetDate)
     public void onViewClicked() {
 
-        showDatePickerDialog()
-    }
-
-    //date
-
-    public void onDateSet(DatePicker view, int yy, int mm, int dd){
-        Date date = stringToDate(mm+"/"+dd+"/"+yy);
-        etOffsetAmount.setText(dateToString1(date));
-
-    }
-    public void pickDate(Bundle args){
-        DialogFragment dateFragment = new DateDialog();
-        dateFragment.setArguments(args);
-        dateFragment.show(getFragmentManager(), "DatePicker");
-
-    }
-    public void onDateClick(Date date){
-        etOffsetDate.setError(dateToString(date));
-
     }
 
 

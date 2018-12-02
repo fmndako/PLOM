@@ -19,9 +19,8 @@ public class DateDialog extends DialogFragment {
         Context mContext;
         int id;
         //Listener
-        DateDialogListener mListener;
 
-        @Override
+    @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             final Calendar calendar = Calendar.getInstance();
             int yy = calendar.get(Calendar.YEAR);
@@ -36,41 +35,11 @@ public class DateDialog extends DialogFragment {
             //id = getArguments().getInt("key");
             //dateView = getActivity().findViewById(id);
 
-            return new DatePickerDialog(mContext, this, yy, mm, dd);
-        }
-
-        public void onDateSet(DatePicker view, int yy, int mm, int dd) {
-
-            populateSetDate(yy, mm+1, dd);
-        }
-
-        public void populateSetDate(int year, int month, int day) {
-
-            mListener.onDateClick(stringToDate(month+"/"+day+"/"+year));
+            return new DatePickerDialog(mContext, listethis, yy, mm, dd);
         }
 
 
-    // Override the Fragment.onAttach() method to instantiate the NoticeDialogListener
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        // Verify that the host activity implements the callback interface
-        try {
-            // Instantiate the NoticeDialogListener so we can send events to the host
-            mListener = (DateDialogListener) context;
-        } catch (ClassCastException e) {
-            // The activity doesn't implement the interface, throw exception
-            throw new ClassCastException(context.toString()
-                    + " must implement NoticeDialogListener");
-        }
-    }
 
-    //*********** interface ********
-    // *****
-    @Override
-    public void onDateSet(DatePicker view, int year, int monthOfYear,
-                          int dayOfMonth) {
-        // TODO Auto-generated method stub
 
-    }
+
 }
