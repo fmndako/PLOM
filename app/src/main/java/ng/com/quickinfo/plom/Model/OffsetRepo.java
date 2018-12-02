@@ -13,6 +13,8 @@ import java.util.List;
 
 import ng.com.quickinfo.plom.ListActivity;
 
+import static ng.com.quickinfo.plom.Utils.Utilities.log;
+
 public class OffsetRepo {
 
     private OffsetDao mOffsetDao;
@@ -29,6 +31,10 @@ public class OffsetRepo {
     public LiveData<List<Offset>> getOffsetsByLoanId( long id) {
         return mOffsetDao.getItembyLoanId(id);
     }
+
+    public Offset getOffset(long id){
+            return mOffsetDao.getItembyId(id);
+            }
 
     //insert Offset
     public void insert(Offset offset) {
@@ -48,6 +54,7 @@ public class OffsetRepo {
         protected Void doInBackground(final Offset... params) {
             mAsyncTaskDao.addOffset(params[0]);
             // mAsyncTaskDao.insert(params[0]);
+            log("Add Offset", "offset added");
             return null;
         }
     }

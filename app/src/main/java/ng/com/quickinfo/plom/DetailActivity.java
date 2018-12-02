@@ -29,6 +29,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import customfonts.MyTextView;
 import ng.com.quickinfo.plom.Model.Loan;
+import ng.com.quickinfo.plom.Model.Offset;
 import ng.com.quickinfo.plom.Utils.Utilities;
 import ng.com.quickinfo.plom.ViewModel.LoanListAdapter;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
@@ -231,8 +232,19 @@ public class DetailActivity extends LifecycleLoggingActivity implements
     // The dialog fragment receives a reference to this Activity through the
     // Fragment.onAttach() callback, which it uses to call the following methods
     // defined by the NoticeDialogFragment.NoticeDialogListener interface
+
     @Override
-    public void onDialogPositiveClick(DialogFragment dialog, int action) {
+    public void onDialogPositiveClick(DialogFragment dialog, Offset offset) {
+        // User touched the offset dialog's positive button
+        makeToast(mContext, "positive offset");
+        offset.setLoan_id(mLoan.getId());
+        mLoanViewModel.insert(offset);
+        dialog.dismiss();
+
+
+    }
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog, int action ) {
         // User touched the dialog's positive button
         switch (action){
             case R.string.action_offset:

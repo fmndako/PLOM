@@ -19,7 +19,12 @@ public interface OffsetDao {
 
     /*@Query("select * from offset_table")
     LiveData<List<Offset>> getAllOffsetItems();
+
 */
+    @Query("select * from offset_table where id = :id")
+    Offset getItembyId(long id);
+
+
     @Query("select * from offset_table where loan_id = :id")
     LiveData<List<Offset>> getItembyLoanId(long id);
 

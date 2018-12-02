@@ -35,7 +35,7 @@ public class DateDialog extends DialogFragment {
             //id = getArguments().getInt("key");
             //dateView = getActivity().findViewById(id);
 
-            return new DatePickerDialog(mContext, listethis, yy, mm, dd);
+            return new DatePickerDialog(mContext, (DatePickerDialog.OnDateSetListener) getActivity(), yy, mm, dd);
         }
 
 

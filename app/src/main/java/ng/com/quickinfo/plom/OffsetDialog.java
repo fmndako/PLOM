@@ -14,21 +14,24 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 
 import java.util.Date;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import ng.com.quickinfo.plom.Model.Offset;
+import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
 
 import static ng.com.quickinfo.plom.Utils.Utilities.dateToString;
 import static ng.com.quickinfo.plom.Utils.Utilities.dateToString1;
 import static ng.com.quickinfo.plom.Utils.Utilities.stringToDate;
 
 
-public class OffsetDialog extends DialogFragment implements DatePickerDialog.
-OnDateSetListener{
+public class OffsetDialog extends DialogFragment {
     //context
     Context mContext;
+    LoanViewModel loanViewModel;
     // Use this instance of the interface to deliver action events
     OffsetDialogListener mListener;
     @BindView(R.id.etOffsetAmount)
@@ -51,14 +54,16 @@ OnDateSetListener{
         //butterknife
         unbinder = ButterKnife.bind(this, view);
 
-
-        // Inflate and set the layout for the dialog
+       // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
         builder.setView(view)
                 .setPositiveButton(R.string.action_offset, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // Send the positive button event back to the host activity
-                        mListener.onDialogPositiveClick(OffsetDialog.this, R.string.action_offset);
+                        //add offset
+                        Offset offset = getValues();
+                        mListener.onDialogPositiveClick(OffsetDialog.this, offset);
+
                     }
                 })
                 .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
@@ -70,10 +75,14 @@ OnDateSetListener{
         return builder.create();
     }
 
+    private Offset getValues(){
+        return new Offset(Integer.valueOf((etOffsetAmount.getText()).toString()), stringToDate(etOffsetDate.getText().toString()),etOffsetRemarks.getText().toString(), 0);
+    }
 
     // Override the Fragment.onAttach() method to instantiate the OffsetDialogListener
     @Override
     public void onAttach(Context context) {
+
         super.onAttach(context);
         // Verify that the host activity implements the callback interface
         try {
@@ -102,7 +111,7 @@ OnDateSetListener{
 
     //*********** interface *************
     public interface OffsetDialogListener {
-        public void onDialogPositiveClick(DialogFragment dialog, int action);
+        public void onDialogPositiveClick(DialogFragment dialog, Offset offset);
 
         public void onDialogNegativeClick(DialogFragment dialog, int action);
     }

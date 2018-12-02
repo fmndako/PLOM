@@ -66,4 +66,8 @@ public class Offset {
     public Date getDateOffset() {
         return dateOffset;
     }
+
+    public void setLoan_id(long id){
+        this.loan_id = id;
+    }
 }
