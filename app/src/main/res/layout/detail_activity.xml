@@ -127,7 +127,7 @@
                         android:layout_width="110dp"
                         android:layout_height="wrap_content"
                         android:background="@drawable/rectangle"
-                        android:text="Lend"
+                        android:text="@string/loan_type_lend"
                         android:textColor="#fff"
                         android:gravity="center"
 

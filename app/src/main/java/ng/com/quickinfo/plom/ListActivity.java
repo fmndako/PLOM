@@ -39,6 +39,7 @@ import ng.com.quickinfo.plom.Utils.Utilities;
 import ng.com.quickinfo.plom.ViewModel.LoanListAdapter;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
 
+import static ng.com.quickinfo.plom.Utils.Utilities.log;
 import static ng.com.quickinfo.plom.Utils.Utilities.makeToast;
 import static ng.com.quickinfo.plom.Utils.Utilities.stringToDate;
 
@@ -192,7 +193,8 @@ public class ListActivity extends LifecycleLoggingActivity implements
             @Override
             public void onChanged(@Nullable final List<Loan> loans) {
                 // Update the cached copy of the loans in the adapter.
-
+                log(TAG, loans.size() +"size");
+                adapter.setLoans(loans);
                 mLoans = loans;
                 switch (loanType) {
                     case 1:
@@ -217,12 +219,12 @@ public class ListActivity extends LifecycleLoggingActivity implements
 
                         break;
                 }
-                adapter.setLoans(mLoans);
+                //adapter.setLoans(loans);
                 //TODO update other UI
-                Utilities.log(TAG, adapter.getItemCount()+"");
+                log(TAG, adapter.getItemCount()+"");
                 //Utilities.log(TAG, getTotalLends(loans)+"");
                 Date date = Calendar.getInstance().getTime();
-                Utilities.log(TAG, Utilities.dateToString(date));
+                log(TAG, Utilities.dateToString(date));
             }
         });
         Utilities.showProgress(false, mRegisterProgress, mContext);
@@ -239,7 +241,7 @@ public class ListActivity extends LifecycleLoggingActivity implements
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Utilities.log(TAG, query);
+                log(TAG, query);
                // if( ! searchView.isIconified()) {
 //                    searchView.setIconified(true);
 //                }
@@ -251,7 +253,7 @@ public class ListActivity extends LifecycleLoggingActivity implements
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                Utilities.log(TAG, newText);
+                log(TAG, newText);
                 adapter.setLoans(FilterUtils.searchLoans(mLoans, newText));
 
                 return false;
@@ -316,10 +318,10 @@ public class ListActivity extends LifecycleLoggingActivity implements
             Integer loanType = data.getIntExtra("loanType", 0);
             String remarks = "loan";
             String number = "090";
-            Integer clearStatus = 0;
-            Integer offset = 1;
-            Integer notify = 1;
-            Integer repaymentOption = 0;
+            Integer clearStatus =  0;
+            Integer offset = 0;
+            Integer notify = 0;
+            Integer repaymentOption = 1;
             String email = "email";
             Date dateTaken = stringToDate("11/11/1111");
             Date dateToRepay = stringToDate(data.getStringExtra("dateToRepay"));

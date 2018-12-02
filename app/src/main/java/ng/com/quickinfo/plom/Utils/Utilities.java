@@ -27,7 +27,7 @@ public class Utilities {
     public static Date stringToDate(String dateString) {
         Date date;
         try {
-            date = new SimpleDateFormat("dd/MM/yyyy").parse(dateString);
+            date = new SimpleDateFormat("E MMM dd yyyy").parse(dateString);
 
         } catch (ParseException e) {
             e.printStackTrace();
@@ -39,6 +39,13 @@ public class Utilities {
 
     public static String dateToString(Date date) {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        String strDate = dateFormat.format(date);
+        return strDate;
+
+    }
+
+    public static String dateToString1(Date date) {
+        DateFormat dateFormat = new SimpleDateFormat("E MMM dd yyyy");
         String strDate = dateFormat.format(date);
         return strDate;
 

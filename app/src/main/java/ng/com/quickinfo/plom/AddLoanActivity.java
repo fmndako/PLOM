@@ -50,11 +50,35 @@ public class AddLoanActivity extends AppCompatActivity {
     @BindView(R.id.signUpBtn)
     Button signUpBtn;
 
+    //contect
+    Context mContext;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_loan_fragment_layout);
         ButterKnife.bind(this);
+
+        //contxt
+        mContext = getApplicationContext();
+
+        //action type check either add or update
+        long loan_id = getIntent().getLongExtra("loan_id", 0);
+
+        if (loan_id != 0){
+            updateAction(loan_id);
+
+        }
+
+
+
+    }
+
+    // ****************update Action **************
+    private void updateAction(long id){
+        //TODO get loan details
+        Utilities.makeToast(mContext, "updateAction");
+        //set UI according
+        //button
 
     }
 

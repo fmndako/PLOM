@@ -98,7 +98,7 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
     public void setLoans(List<Loan> loans){
         //for all loans as returned by livedata from activity, uncomment //mLoans = loans;
         //for active loans with cleared status false i.e 0
-        mLoans = activeLoans(loans);
+        mLoans = loans;
         notifyDataSetChanged();
     }
 

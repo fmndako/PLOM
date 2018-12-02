@@ -3,9 +3,16 @@ package ng.com.quickinfo.plom;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+//import android.graphics.PorterDuff;
+//import android.graphics.PorterDuffColorFilter;
+//import android.graphics.drawable.Drawable;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+
+import android.support.v4.content.ContextCompat;
+//import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -24,6 +31,9 @@ import ng.com.quickinfo.plom.Model.Loan;
 import ng.com.quickinfo.plom.Utils.Utilities;
 import ng.com.quickinfo.plom.ViewModel.LoanListAdapter;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
+
+import static ng.com.quickinfo.plom.Utils.Utilities.dateToString1;
+import static ng.com.quickinfo.plom.Utils.Utilities.log;
 
 public class DetailActivity extends LifecycleLoggingActivity implements
         LoanListAdapter.OnHandlerInteractionListener {
@@ -142,6 +152,14 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
     }
 
+//    // drawable changer
+//    public static Drawable changeDrawableColor(Context context,int icon, int newColor) {
+//        Drawable mDrawable = ContextCompat.getDrawable(context, icon).mutate();
+//        mDrawable.setColorFilter(new PorterDuffColorFilter(newColor, PorterDuff.Mode.SRC_IN));
+//        return mDrawable;
+//    }
+
+
     private void updateUI() {
         //update UI components
 
@@ -150,19 +168,17 @@ public class DetailActivity extends LifecycleLoggingActivity implements
             Utilities.makeToast(mContext, mLoan.getName());
             tvDetailNameValue.setText(mLoan.getName());
             tvDetailAmountValue.setText(mLoan.getAmount() + "");
+
             //loan type
-            int loanTypeColor = R.color.green;
-            int loanTypeText = R.string.loan_name;
-            if(mLoan.getLoanType() != 0){
-                loanTypeColor = R.color.red;
-                loanTypeText = R.string.loan_amount;
+            if(mLoan.getLoanType() != 0) {
 
+
+              tvDetailLoanTypeValue.setText(R.string.loan_type_borrow);
+                tvDetailLoanTypeValue.setBackground(
+                        ContextCompat.getDrawable(mContext, R.drawable.rectangle_red));
             }
-            tvDetailLoanTypeValue.setText(loanTypeText);
-            tvDetailLoanTypeValue.setBackgroundColor(loanTypeColor);
-
             //dates
-            tvDetailDateTakenValue.setText(mLoan.getDateTaken().toString());
+            tvDetailDateTakenValue.setText(dateToString1(mLoan.getDateTaken()));
 
             //personal details
             tvDetailNumberValue.setText(mLoan.getNumber());
@@ -175,15 +191,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
             tvDetailRemarksValue.setText(mLoan.getRemarks() + "");
 
 
-            //cleared status (if cleared)
-            if (mLoan.getClearStatus() != 0){
-                tvDetailClearedStatusValue.setText(R.string.cleared_status_cleared);
-                tvDetailDateClearedValue.setText(mLoan.getDateCleared().toString());
 
-                //remove clear action button and update
-                mMenu.findItem(R.id.action_clear).setVisible(false);
-                mMenu.findItem(R.id.action_update).setVisible(false);
-            }
 
             //offset
             if (mLoan.getOffset()!=0){
@@ -222,8 +230,24 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         getMenuInflater().inflate(R.menu.menu_detail, menu);
 
         mMenu = menu;
+        log(TAG, "menu created");
 
+        //cleared status (if cleared)
+        if (mLoan!=null) {
+            if (mLoan.getClearStatus() != 0) {
+                tvDetailClearedStatusValue.setText(R.string.cleared_status_cleared);
+                //TODO change to date
 
+                tvDetailDateClearedValue.setText("today");
+                log(TAG, "looking for menu");
+                if (mMenu != null) {
+                    //remove clear action button and update
+                    mMenu.findItem(R.id.action_clear).setVisible(false);
+                    mMenu.findItem(R.id.action_update).setVisible(false);
+                    mMenu.findItem(R.id.action_offset).setVisible(false);
+                }
+            }
+        }
 
 
 
@@ -242,12 +266,14 @@ public class DetailActivity extends LifecycleLoggingActivity implements
                 // as a favorite...
                 return true;
             case R.id.action_offset:
-                // User chose the "Favorite" action, mark the current item
+                // TODO dlgUser chose the "Favorite" action, mark the current item
                 // as a favorite...
                 return true;
             case R.id.action_update:
-                MenuItem offset = mMenu.findItem(R.id.action_offset);
-                offset.setVisible(false);
+                Intent updateIntent = new Intent(mContext, AddLoanActivity.class);
+                updateIntent.putExtra("loan_id", mLoan.getId());
+                startActivity(updateIntent);
+
                 // User chose the "Favorite" action, mark the current item
                 // as a favorite...
                 return true;
@@ -276,23 +302,23 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
         @Override
         protected void onPreExecute() {
-            Utilities.log(TAG, "preexecute");
+            log(TAG, "preexecute");
             //TODO implement a progress bar
             // Utilities.showProgress(true, progressBar2, mContext);
         }
 
         @Override
         protected Loan doInBackground(Long... params) {
-            Utilities.log(TAG, "DOINBACK" + params.length + ":" + params[0]);
+            log(TAG, "DOINBACK" + params.length + ":" + params[0]);
 
             Loan mloan = mLoanViewModel.getLoan(params[0]);
-            Utilities.log(TAG, "DOINBACK");
+            log(TAG, "DOINBACK");
             return mloan;
 
         }
 
         protected void onPostExecute(Loan result) {
-            Utilities.log(TAG, "postexecute");
+            log(TAG, "postexecute");
             //save result as mUser
             mLoan = result;
             //stop progress bar
