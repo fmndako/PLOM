@@ -1,5 +1,6 @@
 package ng.com.quickinfo.plom;
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,15 +10,23 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.EditText;
+
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
+import static ng.com.quickinfo.plom.Utils.Utilities.dateToString;
+import static ng.com.quickinfo.plom.Utils.Utilities.dateToString1;
+import static ng.com.quickinfo.plom.Utils.Utilities.stringToDate;
 
-public class OffsetDialog extends DialogFragment {
+
+public class OffsetDialog extends DialogFragment implements DatePickerDialog.
+OnDateSetListener{
     //context
     Context mContext;
     // Use this instance of the interface to deliver action events
@@ -37,10 +46,15 @@ public class OffsetDialog extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         // Get the layout inflater
         LayoutInflater inflater = getActivity().getLayoutInflater();
+        View view = inflater.inflate(R.layout.offset_dialog, null);
+
+        //butterknife
+        unbinder = ButterKnife.bind(this, view);
+
 
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
-        builder.setView(inflater.inflate(R.layout.offset_dialog, null))
+        builder.setView(view)
                 .setPositiveButton(R.string.action_offset, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // Send the positive button event back to the host activity
@@ -72,33 +86,35 @@ public class OffsetDialog extends DialogFragment {
         }
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // TODO: inflate a fragment view
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        unbinder = ButterKnife.bind(this, rootView);
-        return rootView;
-    }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
-    }
+//
+//    @Override
+//    public void onDestroyView() {
+//        super.onDestroyView();
+//        unbinder.unbind();
+//    }
 
     @OnClick(R.id.etOffsetDate)
     public void onViewClicked() {
-        Bundle args = new Bundle();
-        args.putInt("key", R.id.actvDatePromised);
-        pickDate(args);
 
+        showDatePickerDialog()
     }
 
     //date
+
+    public void onDateSet(DatePicker view, int yy, int mm, int dd){
+        Date date = stringToDate(mm+"/"+dd+"/"+yy);
+        etOffsetAmount.setText(dateToString1(date));
+
+    }
     public void pickDate(Bundle args){
         DialogFragment dateFragment = new DateDialog();
         dateFragment.setArguments(args);
         dateFragment.show(getFragmentManager(), "DatePicker");
+
+    }
+    public void onDateClick(Date date){
+        etOffsetDate.setError(dateToString(date));
 
     }
 

@@ -11,12 +11,15 @@ import android.widget.DatePicker;
 import java.util.Calendar;
 import java.util.Date;
 
+import static ng.com.quickinfo.plom.Utils.Utilities.stringToDate;
 
-public class DateDialog extends DialogFragment implements DatePickerDialog.OnDateSetListener {
+
+public class DateDialog extends DialogFragment {
         public AutoCompleteTextView dateView;
-        Context context;
+        Context mContext;
         int id;
-
+        //Listener
+        DateDialogListener mListener;
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -24,26 +27,50 @@ public class DateDialog extends DialogFragment implements DatePickerDialog.OnDat
             int yy = calendar.get(Calendar.YEAR);
             int mm = calendar.get(Calendar.MONTH);
             int dd = calendar.get(Calendar.DAY_OF_MONTH);
-            context = getActivity();
+
+
+            mContext = getActivity();
+
 
             //get the R.id of the textview to set the date from args
             //id = getArguments().getInt("key");
             //dateView = getActivity().findViewById(id);
 
-            return new DatePickerDialog(context, this, yy, mm, dd);
+            return new DatePickerDialog(mContext, this, yy, mm, dd);
         }
 
         public void onDateSet(DatePicker view, int yy, int mm, int dd) {
+
             populateSetDate(yy, mm+1, dd);
         }
 
         public void populateSetDate(int year, int month, int day) {
-            //dateView.setText(month+"/"+day+"/"+year);
+
+            mListener.onDateClick(stringToDate(month+"/"+day+"/"+year));
         }
 
-    //*********** interface *************
-    public interface DateDialogListener {
-        public void onDateSet(Date date);
 
+    // Override the Fragment.onAttach() method to instantiate the NoticeDialogListener
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        // Verify that the host activity implements the callback interface
+        try {
+            // Instantiate the NoticeDialogListener so we can send events to the host
+            mListener = (DateDialogListener) context;
+        } catch (ClassCastException e) {
+            // The activity doesn't implement the interface, throw exception
+            throw new ClassCastException(context.toString()
+                    + " must implement NoticeDialogListener");
         }
+    }
+
+    //*********** interface ********
+    // *****
+    @Override
+    public void onDateSet(DatePicker view, int year, int monthOfYear,
+                          int dayOfMonth) {
+        // TODO Auto-generated method stub
+
+    }
 }

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 
 
@@ -13,6 +14,7 @@ public class DeleteDialog extends DialogFragment{
     Context mContext;
     // Use this instance of the interface to deliver action events
     DeleteDialogListener mListener;
+
 
     //Override on create
     @Override
