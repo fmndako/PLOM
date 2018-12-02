@@ -28,6 +28,7 @@
             android:label="@string/title_activity_main3" />
         <activity
             android:name=".DetailActivity"
+            android:theme="@style/AppTheme.NoActionBar"
             android:label="@string/title_activity_detail"></activity>
     </application>
 

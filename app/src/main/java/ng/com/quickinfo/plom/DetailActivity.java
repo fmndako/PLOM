@@ -8,6 +8,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -61,6 +64,9 @@ public class DetailActivity extends LifecycleLoggingActivity implements
     private RecyclerView recyclerView;
     private LoanListAdapter adapter;
 
+    //toolbar and menu
+    Menu mMenu;
+
     //loan
     private List<Loan> mLoans;
     private Loan mLoan;
@@ -84,6 +90,11 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
         //set loan view model
         mLoanViewModel = ViewModelProviders.of(this).get(LoanViewModel.class);
+
+        //toolbar
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.detail_toolbar);
+        setSupportActionBar(myToolbar);
+
 
 
         //get loan id from intent
@@ -164,10 +175,14 @@ public class DetailActivity extends LifecycleLoggingActivity implements
             tvDetailRemarksValue.setText(mLoan.getRemarks() + "");
 
 
-            //cleared status
+            //cleared status (if cleared)
             if (mLoan.getClearStatus() != 0){
                 tvDetailClearedStatusValue.setText(R.string.cleared_status_cleared);
                 tvDetailDateClearedValue.setText(mLoan.getDateCleared().toString());
+
+                //remove clear action button and update
+                mMenu.findItem(R.id.action_clear).setVisible(false);
+                mMenu.findItem(R.id.action_update).setVisible(false);
             }
 
             //offset
@@ -200,6 +215,63 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         }
     }
 
+    //********************** action bar ***************88
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_detail, menu);
+
+        mMenu = menu;
+
+
+
+
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                // User chose the "Settings" item, show the app settings UI...
+                return true;
+
+            case R.id.action_share:
+                // User chose the "Favorite" action, mark the current item
+                // as a favorite...
+                return true;
+            case R.id.action_offset:
+                // User chose the "Favorite" action, mark the current item
+                // as a favorite...
+                return true;
+            case R.id.action_update:
+                MenuItem offset = mMenu.findItem(R.id.action_offset);
+                offset.setVisible(false);
+                // User chose the "Favorite" action, mark the current item
+                // as a favorite...
+                return true;
+            case R.id.action_delete:
+                // User chose the "Favorite" action, mark the current item
+                // as a favorite...
+                return true;
+            case R.id.action_clear:
+                // User chose the "Favorite" action, mark the current item
+                // as a favorite...
+                return true;
+            case R.id.action_home:
+                // User chose the "Favorite" action, mark the current item
+                // as a favorite...
+                return true;
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
+
+//        ******************** get laon async task ******************
     private class GetLoanAsyncTask extends AsyncTask<Long, Void, Loan> {
 
         @Override
@@ -231,3 +303,4 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         }
     }
 }
+
