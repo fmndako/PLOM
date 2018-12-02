@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 //import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -34,9 +35,11 @@ import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
 
 import static ng.com.quickinfo.plom.Utils.Utilities.dateToString1;
 import static ng.com.quickinfo.plom.Utils.Utilities.log;
+import static ng.com.quickinfo.plom.Utils.Utilities.makeToast;
 
 public class DetailActivity extends LifecycleLoggingActivity implements
-        LoanListAdapter.OnHandlerInteractionListener {
+        LoanListAdapter.OnHandlerInteractionListener, OffsetDialog.OffsetDialogListener,
+            DeleteDialog.DeleteDialogListener{
     @BindView(R.id.tvDetailNameValue)
     MyTextView tvDetailNameValue;
     @BindView(R.id.tvDetailAmountValue)
@@ -145,10 +148,10 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
 
     }
-
+// ***************** offsetadapter listener *******************88
     public void onHandlerInteraction(long loan_id) {
         //my own listener created in the loanadapter class
-        Utilities.makeToast(this, "" + loan_id);
+        makeToast(this, "" + loan_id);
 
     }
 
@@ -165,7 +168,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
 
         if (mLoan != null) {
-            Utilities.makeToast(mContext, mLoan.getName());
+            makeToast(mContext, mLoan.getName());
             tvDetailNameValue.setText(mLoan.getName());
             tvDetailAmountValue.setText(mLoan.getAmount() + "");
 
@@ -206,6 +209,58 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
         }
     }
+
+// ************ offset dlg ************************88
+    public void showDialogs(int action) {
+        // Create an instance of the dialog fragment and show it
+        switch (action){
+            case R.string.action_delete:
+                DialogFragment deleteDialog = new DeleteDialog();
+                deleteDialog.show(getSupportFragmentManager(), "DeleteDialog");
+                return;
+            case R.string.action_offset:
+                DialogFragment offsetDialog = new OffsetDialog();
+                offsetDialog.show(getSupportFragmentManager(), "OffsetDialog");
+                return;
+
+            case R.string.action_clear:
+                return;
+        }
+    }
+
+    // The dialog fragment receives a reference to this Activity through the
+    // Fragment.onAttach() callback, which it uses to call the following methods
+    // defined by the NoticeDialogFragment.NoticeDialogListener interface
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog, int action) {
+        // User touched the dialog's positive button
+        switch (action){
+            case R.string.action_offset:
+                makeToast(mContext, "positive offset");
+                return;
+            case R.string.action_delete:
+                return;
+            case R.string.action_clear:
+                return;
+        }
+    }
+
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog, int action) {
+        // User touched the dialog's negative button
+
+        switch (action){
+            case R.string.action_offset:
+                makeToast(mContext, "negative offset");
+                return;
+            case R.string.action_delete:
+                return;
+            case R.string.action_clear:
+                return;
+        }
+
+    }
+
 
     // **************** contact lender ********************
     @OnClick({R.id.ivDetailCall, R.id.ivDetailEmail, R.id.ivDetailMessage})
@@ -256,7 +311,8 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
+        int id = item.getItemId();
+        switch (id) {
             case R.id.action_settings:
                 // User chose the "Settings" item, show the app settings UI...
                 return true;
@@ -266,7 +322,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
                 // as a favorite...
                 return true;
             case R.id.action_offset:
-                // TODO dlgUser chose the "Favorite" action, mark the current item
+                showDialogs(R.string.action_offset);
                 // as a favorite...
                 return true;
             case R.id.action_update:
@@ -278,8 +334,8 @@ public class DetailActivity extends LifecycleLoggingActivity implements
                 // as a favorite...
                 return true;
             case R.id.action_delete:
-                // User chose the "Favorite" action, mark the current item
-                // as a favorite...
+                // delete lend
+                showDialogs(R.string.action_delete);
                 return true;
             case R.id.action_clear:
                 // User chose the "Favorite" action, mark the current item

@@ -472,9 +472,7 @@
                         android:layout_height="wrap_content"
                         android:text="Repayment Details"
                         android:textColor="@color/colorAccent"
-                        android:drawableRight="@android:drawable/arrow_down_float"
-
-                        />
+                                                />
 
                 </LinearLayout>
 
@@ -605,7 +603,6 @@
                         android:layout_height="wrap_content"
                         android:text="Clear Status"
                         android:textColor="@color/colorAccent"
-                        android:drawableRight="@android:drawable/arrow_down_float"
 
                         />
 

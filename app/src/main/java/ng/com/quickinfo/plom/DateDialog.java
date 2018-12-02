@@ -9,6 +9,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
 
 import java.util.Calendar;
+import java.util.Date;
 
 
 public class DateDialog extends DialogFragment implements DatePickerDialog.OnDateSetListener {
@@ -26,8 +27,8 @@ public class DateDialog extends DialogFragment implements DatePickerDialog.OnDat
             context = getActivity();
 
             //get the R.id of the textview to set the date from args
-            id = getArguments().getInt("key");
-            dateView = getActivity().findViewById(id);
+            //id = getArguments().getInt("key");
+            //dateView = getActivity().findViewById(id);
 
             return new DatePickerDialog(context, this, yy, mm, dd);
         }
@@ -37,8 +38,12 @@ public class DateDialog extends DialogFragment implements DatePickerDialog.OnDat
         }
 
         public void populateSetDate(int year, int month, int day) {
-            dateView.setText(month+"/"+day+"/"+year);
+            //dateView.setText(month+"/"+day+"/"+year);
         }
 
+    //*********** interface *************
+    public interface DateDialogListener {
+        public void onDateSet(Date date);
 
+        }
 }

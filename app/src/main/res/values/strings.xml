@@ -97,6 +97,7 @@
     <string name="repayment_option_once">One Time</string>
     <string name="repayment_option_several">More than once</string>
 
+
     <!--action bar-->
     <string name="action_share">Share</string>
     <string name="action_update">Update</string>
@@ -104,6 +105,11 @@
     <string name="action_delete">Delete</string>
     <string name="action_search">Search</string>
     <string name="action_offset">Offset</string>
+
+    <!--dialog-->
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_delete_message">Are you sure you want to delete?</string>
+    <string name="offset_date">Enter date</string>
 
 
 
