@@ -12,13 +12,13 @@
         app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/action_home"
-        android:icon="@android:drawable/ic_menu_share"
-        android:title="@string/action_share"
+        android:icon="@drawable/home_outline"
+        android:title="@string/action_home"
         app:showAsAction="ifRoom"/>
 
     <!-- Settings, should always be in the overflow -->
     <item android:id="@+id/action_offset"
-        android:icon="@android:drawable/ic_menu_share"
+        android:drawableRight="@drawable/menu_down"
 
         android:title="@string/action_offset"
         app:showAsAction="never"/>

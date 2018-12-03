@@ -6,6 +6,7 @@ import android.annotation.TargetApi;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
 import android.view.View;
@@ -92,5 +93,6 @@ public class Utilities {
             //mSignInView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
+
 
 }

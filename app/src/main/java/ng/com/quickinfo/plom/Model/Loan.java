@@ -126,7 +126,14 @@ public class Loan {
     public Date getDateCleared() {
         return dateCleared;
     }
+    //setters
     public void setDateCleared(Date date){
         this.dateCleared = date;
     }
+    public void setClearedStatus(Date date){
+        this.dateCleared = date;
+        this.clearStatus = 1;
+    }
+
+
 }

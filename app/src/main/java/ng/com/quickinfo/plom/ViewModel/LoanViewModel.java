@@ -60,6 +60,11 @@ public class LoanViewModel extends AndroidViewModel {
         mLoanRepo.insert(loan);
     }
 
+    //delete
+    public void delete(Loan loan){
+        mLoanRepo.delete(loan);
+    }
+
     // ********************* users **********************
     public void insert(User user) {
         mUserRepo.insert(user);
@@ -79,7 +84,7 @@ public class LoanViewModel extends AndroidViewModel {
     }
 
 
-    //*********************** loans ******************************
+    //*********************** offset ******************************
 
     public LiveData<List<Offset>> getOffsetByLoanId(long loan_id) {
         return mOffsetRepo.getOffsetsByLoanId(loan_id);

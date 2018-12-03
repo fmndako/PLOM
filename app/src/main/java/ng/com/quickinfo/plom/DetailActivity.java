@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -40,7 +41,7 @@ import static ng.com.quickinfo.plom.Utils.Utilities.makeToast;
 
 public class DetailActivity extends LifecycleLoggingActivity implements
         LoanListAdapter.OnHandlerInteractionListener, OffsetDialog.OffsetDialogListener,
-            DeleteDialog.DeleteDialogListener{
+            DeleteDialog.DeleteDialogListener, ClearAllDialog.ClearAllDialogListener{
     @BindView(R.id.tvDetailNameValue)
     MyTextView tvDetailNameValue;
     @BindView(R.id.tvDetailAmountValue)
@@ -225,6 +226,8 @@ public class DetailActivity extends LifecycleLoggingActivity implements
                 return;
 
             case R.string.action_clear:
+                DialogFragment clearAllDialog = new ClearAllDialog();
+                clearAllDialog.show(getSupportFragmentManager(), "ClearAllDialog");
                 return;
         }
     }
@@ -233,6 +236,16 @@ public class DetailActivity extends LifecycleLoggingActivity implements
     // Fragment.onAttach() callback, which it uses to call the following methods
     // defined by the NoticeDialogFragment.NoticeDialogListener interface
 
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog, Date date) {
+        // User touched the offset dialog's positive button
+        makeToast(mContext, "clear positive offset");
+        mLoan.setClearedStatus(date);
+        mLoanViewModel.insert(mLoan);
+
+
+
+    }
     @Override
     public void onDialogPositiveClick(DialogFragment dialog, Offset offset) {
         // User touched the offset dialog's positive button
@@ -246,15 +259,9 @@ public class DetailActivity extends LifecycleLoggingActivity implements
     @Override
     public void onDialogPositiveClick(DialogFragment dialog, int action ) {
         // User touched the dialog's positive button
-        switch (action){
-            case R.string.action_offset:
-                makeToast(mContext, "positive offset");
-                return;
-            case R.string.action_delete:
-                return;
-            case R.string.action_clear:
-                return;
-        }
+      //delete
+        DeleteAsyncTask task = new DeleteAsyncTask();
+        task.execute(mLoan);
     }
 
     @Override
@@ -330,32 +337,26 @@ public class DetailActivity extends LifecycleLoggingActivity implements
                 return true;
 
             case R.id.action_share:
-                // User chose the "Favorite" action, mark the current item
-                // as a favorite...
+                startShareIntent();
+
                 return true;
             case R.id.action_offset:
                 showDialogs(R.string.action_offset);
-                // as a favorite...
                 return true;
             case R.id.action_update:
                 Intent updateIntent = new Intent(mContext, AddLoanActivity.class);
                 updateIntent.putExtra("loan_id", mLoan.getId());
                 startActivity(updateIntent);
-
-                // User chose the "Favorite" action, mark the current item
-                // as a favorite...
                 return true;
             case R.id.action_delete:
                 // delete lend
                 showDialogs(R.string.action_delete);
                 return true;
             case R.id.action_clear:
-                // User chose the "Favorite" action, mark the current item
-                // as a favorite...
+                showDialogs(R.string.action_clear);
                 return true;
             case R.id.action_home:
-                // User chose the "Favorite" action, mark the current item
-                // as a favorite...
+                startActivity(new Intent(this, HomeActivity.class));
                 return true;
             default:
                 // If we got here, the user's action was not recognized.
@@ -363,6 +364,23 @@ public class DetailActivity extends LifecycleLoggingActivity implements
                 return super.onOptionsItemSelected(item);
 
         }
+    }
+// *************** share **********************8
+    public void startShareIntent(){
+        String subj = "Personal Loan Manager";
+        String body = "N" + mLoan.getAmount() + " Date taken: " +
+                dateToString1(mLoan.getDateTaken()) + ", To return on or before " +
+                dateToString1(mLoan.getDateToRepay()) ;
+        shareText(subj, body);
+
+
+    }
+    public void shareText(String subject,String body) {
+        Intent txtIntent = new Intent(android.content.Intent.ACTION_SEND);
+        txtIntent .setType("text/plain");
+        txtIntent .putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
+        txtIntent .putExtra(android.content.Intent.EXTRA_TEXT, body);
+        startActivity(Intent.createChooser(txtIntent ,"Share"));
     }
 
 //        ******************** get laon async task ******************
@@ -394,6 +412,25 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
             //load loans
             updateUI();
+        }
+    }
+
+
+    private class DeleteAsyncTask extends AsyncTask<Loan, Void, Void> {
+
+
+
+        @Override
+        protected Void doInBackground(Loan... params) {
+            mLoanViewModel.delete(params[0]);
+            return null;
+
+        }
+
+        protected void onPostExecute(Loan result) {
+            onBackPressed();
+            //load loans
+
         }
     }
 }

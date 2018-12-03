@@ -33,6 +33,11 @@ public class LoanRepo {
         new insertAsyncTask(mLoanDao).execute(Loan);
     }
 
+    //delete
+    public void delete(Loan loan){
+        mLoanDao.deleteLoan(loan);
+    }
+
     private static class insertAsyncTask extends AsyncTask<Loan, Void, Void> {
 
         private LoanDao mAsyncTaskDao;

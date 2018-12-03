@@ -60,8 +60,8 @@
             <ImageView
                 android:id="@+id/slider"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:src="@drawable/retangle"
+                android:layout_height="70dp"
+                app:srcCompat="@drawable/cash_money"
                 android:background="#fff"
                 />
 
@@ -705,7 +705,7 @@
                             android:layout_weight="1"
                             android:layout_width="50dp"
                             android:layout_height="50dp"
-                            android:src="@android:drawable/ic_dialog_dialer"
+                            android:src="@drawable/phone"
                             android:layout_gravity="center"
                             android:gravity="bottom"/>
 
@@ -748,7 +748,7 @@
                             android:layout_weight="1"
                             android:layout_width="50dp"
                             android:layout_height="50dp"
-                            app:srcCompat="@drawable/cash"
+                            app:srcCompat="@drawable/email"
                             android:layout_gravity="center"
                             android:gravity="bottom"
 
@@ -792,7 +792,7 @@
                             android:layout_weight="1"
                             android:layout_width="50dp"
                             android:layout_height="50dp"
-                            android:src="@drawable/ic_launcher"
+                            android:src="@drawable/message_text"
                             android:layout_gravity="center"
                             android:gravity="bottom"
 

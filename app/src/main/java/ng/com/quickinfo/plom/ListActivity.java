@@ -321,7 +321,7 @@ public class ListActivity extends LifecycleLoggingActivity implements
             Integer clearStatus =  0;
             Integer offset = 0;
             Integer notify = 0;
-            Integer repaymentOption = 1;
+            Integer repaymentOption = 0;
             String email = "email";
             Date dateTaken = stringToDate("11/11/1111");
             Date dateToRepay = stringToDate(data.getStringExtra("dateToRepay"));

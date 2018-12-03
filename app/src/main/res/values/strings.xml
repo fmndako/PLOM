@@ -105,11 +105,13 @@
     <string name="action_delete">Delete</string>
     <string name="action_search">Search</string>
     <string name="action_offset">Offset</string>
+    <string name="action_home">Home</string>
 
     <!--dialog-->
     <string name="dialog_cancel">Cancel</string>
     <string name="dialog_delete_message">Are you sure you want to delete?</string>
     <string name="offset_date">Enter date</string>
+    <string name="dialog_clear">Are you sure you want to clear all?</string>
 
 
 
