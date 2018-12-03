@@ -368,8 +368,8 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 // *************** share **********************8
     public void startShareIntent(){
         String subj = "Personal Loan Manager";
-        String body = "N" + mLoan.getAmount() + " Date taken: " +
-                dateToString1(mLoan.getDateTaken()) + ", To return on or before " +
+        String body = "Amount N: " + mLoan.getAmount() + ", Date taken: " +
+                dateToString1(mLoan.getDateTaken()) + ", Promised Return Date: " +
                 dateToString1(mLoan.getDateToRepay()) ;
         shareText(subj, body);
 
