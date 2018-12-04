@@ -342,7 +342,7 @@ public class ListActivity extends LifecycleLoggingActivity implements
         if (requestCode == NEW_USER_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
             User user = new User(data.getStringExtra("user"),
                     "34354354", data.getStringExtra("email"), ";lsfl;f");
-            mLoanViewModel.insert(user);
+            mLoanViewModel.insert(user, mContext);
             makeToast(this, "User successfully added");
             //getuser id of registered U
             //getUserID()

@@ -28,8 +28,13 @@
             android:label="@string/title_activity_main3" />
         <activity
             android:name=".DetailActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:label="@string/title_activity_detail"></activity>
+            android:label="@string/title_activity_detail"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <receiver
+            android:name=".BroadcastReceivers.PostAsyncTaskReceiver"
+            android:enabled="true"
+            android:exported="false"></receiver>
     </application>
 
 </manifest>

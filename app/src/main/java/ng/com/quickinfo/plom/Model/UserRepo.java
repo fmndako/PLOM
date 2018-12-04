@@ -12,6 +12,7 @@ import android.util.Log;
 import java.util.List;
 
 import ng.com.quickinfo.plom.ListActivity;
+import ng.com.quickinfo.plom.SignInActivity;
 
 public class UserRepo {
 
@@ -31,17 +32,19 @@ public class UserRepo {
     }
 
     //insert user
-    public void insert (User User) {
-        new insertAsyncTask(mUserDao).execute(User);
+    public void insert (User User, Context context) {
+        new insertAsyncTask(mUserDao, context).execute(User);
     }
 
     //insert asynctask class
     private static class insertAsyncTask extends AsyncTask<User, Void, Void> {
 
         private UserDao mAsyncTaskDao;
+        private Context mContext;
 
-        insertAsyncTask(UserDao dao) {
+        insertAsyncTask(UserDao dao, Context context) {
             mAsyncTaskDao = dao;
+            mContext = context;
         }
 
         @Override
@@ -50,6 +53,14 @@ public class UserRepo {
             // mAsyncTaskDao.insert(params[0]);
             return null;
         }
+        @Override
+        protected void onPostExecute(Void Void){
+            Intent intent = new Intent(SignInActivity.asyncTaskUser);
+            LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
+
+
+
+        }
     }
 
     //get a  particular user without asynctask
@@ -57,16 +68,16 @@ public class UserRepo {
         return mUserDao.getUserbyEmail(email);
     }
 
-    //TODO remove is getUserByEmailWorks
-    public User getUser(String email){
-
-        try{
-       return new getUserAsyncTask( mUserDao).execute(email).get();}
-       catch (Exception e){
-            return null;
-
-       }
-    }
+//    //TODO remove is getUserByEmailWorks
+//    public User getUser(String email){
+//
+//        try{
+//       return new getUserAsyncTask( mUserDao).execute(email).get();}
+//       catch (Exception e){
+//            return null;
+//
+//       }
+//    }
 
     //getuser asynctask class
     private static class getUserAsyncTask extends AsyncTask<String, Void, User>{

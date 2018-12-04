@@ -134,6 +134,7 @@ public class HomeActivity extends LifecycleLoggingActivity {
         mContext = getApplicationContext();
         //get email from intent
         mEmail = getIntent().getStringExtra("email");
+        //
 
         getUser();
 
@@ -142,10 +143,11 @@ public class HomeActivity extends LifecycleLoggingActivity {
 
     private void viewLoans(int selection) {
         //go to listActivity
+        //TODO uncomment all below
         Intent listIntent = new Intent(this, ListActivity.class);
-        listIntent.putExtra("user_id", mUser.getUserId());
-        listIntent.putExtra("email", mUser.getEmail());
-        listIntent.putExtra("loanType", selection);
+        //listIntent.putExtra("user_id", mUser.getUserId());
+        //listIntent.putExtra("email", mUser.getEmail());
+        //listIntent.putExtra("loanType", selection);
         startActivity(listIntent);
     }
 

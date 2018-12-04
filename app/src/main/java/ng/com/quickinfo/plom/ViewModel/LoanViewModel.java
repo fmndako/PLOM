@@ -66,8 +66,8 @@ public class LoanViewModel extends AndroidViewModel {
     }
 
     // ********************* users **********************
-    public void insert(User user) {
-        mUserRepo.insert(user);
+    public void insert(User user, Context context) {
+        mUserRepo.insert(user, context);
     }
 
     public User getUser(String email) {

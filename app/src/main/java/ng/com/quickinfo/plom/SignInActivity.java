@@ -5,11 +5,15 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
 
@@ -24,14 +28,22 @@ import com.google.android.gms.tasks.Task;
 
 import java.util.List;
 
+
 import ng.com.quickinfo.plom.Model.User;
 import ng.com.quickinfo.plom.Utils.Utilities;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
 
 import static com.google.android.gms.auth.api.signin.GoogleSignInStatusCodes.getStatusCodeString;
+import static ng.com.quickinfo.plom.Utils.Utilities.makeToast;
 
 public class SignInActivity extends LifecycleLoggingActivity {
 
+    //register Broadcast receivers
+    public static String asyncTaskUser = "ng.com.quickinfo.plom.Sign_in";
+    SignInReceiver myReceiver;
+    IntentFilter myFilter;
+
+    private Context mContext;
     //ViewModel
     LoanViewModel mLoanViewModel;
     public GoogleSignInClient mGoogleSignInClient;
@@ -46,6 +58,7 @@ public class SignInActivity extends LifecycleLoggingActivity {
 
     //List of all users
     LiveData<List<User>> mAllUsers;
+    private String mEmail;
 
 
     @Override
@@ -68,12 +81,9 @@ public class SignInActivity extends LifecycleLoggingActivity {
             //register receivers
 
         }
-        else {
             //continue
             //updateUI();
             Log.d(TAG, "account is  null, load signin fragment");
-            mAllUsers = getAllUsers(mLoanViewModel, TAG);
-        }
     }
 
     @Override
@@ -81,10 +91,14 @@ public class SignInActivity extends LifecycleLoggingActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signin_layout);
 
+        //create broadcast receivers
+        myReceiver = new SignInReceiver();
+        myFilter = new IntentFilter(asyncTaskUser);
 
         //shared pref
-        sharedPref = Utilities.MyPref.getSharedPref(getApplicationContext());
+        sharedPref = Utilities.MyPref.getSharedPref(mContext);
         editor = sharedPref.edit();
+
 
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
@@ -107,23 +121,16 @@ public class SignInActivity extends LifecycleLoggingActivity {
                     switch (view.getId()) {
                         case R.id.sign_in_button:
                             //TODO uncomment signin and comment updateui
-                            updateUI("timatme@h4545hhhl.com");// signIn();
+                            //showProgress(true);
+                            updateUI("timatme@gnnmail.com");
+                            // signIn();
                             break;
-                        // ...
                     }
                     }
         });
         mSignInView = findViewById(R.id.signin_form);
         mProgressView = findViewById(R.id.signin_progress);
-
-
-
-
     }
-
-
-
-
 
     private void signIn() {
         showProgress(true);
@@ -148,7 +155,9 @@ public class SignInActivity extends LifecycleLoggingActivity {
         Log.d(TAG, "handle sign in");
             try {
                 GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-                Log.d(TAG, account.getEmail());
+                mEmail = account.getEmail();
+                Log.d(TAG, mEmail);
+
                 // Signed in successfully, show authenticated UI.
                 showProgress(false);
                 //updateUI(account.getEmail());
@@ -160,7 +169,7 @@ public class SignInActivity extends LifecycleLoggingActivity {
                 //showProgress(false);
                 //TODO remove after successful login
 
-                updateUI("timatme@h4545hhhl.com");
+                //updateUI("timatme@h4545hhhl.com");
 
             }
 
@@ -172,6 +181,7 @@ public class SignInActivity extends LifecycleLoggingActivity {
         boolean userFirstLogin = sharedPref.getBoolean(email, true);
         if (userFirstLogin) {
             //register
+            //start sign up dialog and sign up
             registerUser(email);
             //change first timer = false
             Utilities.log(TAG, "user first login");
@@ -191,24 +201,25 @@ public class SignInActivity extends LifecycleLoggingActivity {
 
     private void registerUser(String email) {
         User user = new User("username", "333", email, "jjjj");
-        mLoanViewModel.insert(user);
-        Utilities.makeToast(this, email + " added");
+        mLoanViewModel.insert(user, mContext);
+
+    }
+
+    private void registerUserSuccesful(){
+        makeToast(this, "Registration successful");
         //change shared pref to false if successfull
-        editor.putBoolean(email, false);
-        editor.putString("email", email);
+        editor.putBoolean(mEmail, false);
+        editor.putString("email", mEmail);
         editor.apply();
-        //enter system
-        loadAccount(email);
+        loadAccount(mEmail);
     }
 
     private void loadAccount(String email){
-        //TODO change mainactivity3 to homeactivity
         Intent intent = new Intent(this, HomeActivity.class);
         intent.putExtra("email", email);
         startActivity(intent);
         finish();
     }
-
 
     private void signOut() {
        mGoogleSignInClient.signOut()
@@ -216,7 +227,6 @@ public class SignInActivity extends LifecycleLoggingActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         // ...
-
                     }
                 });
     }
@@ -226,7 +236,6 @@ public class SignInActivity extends LifecycleLoggingActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         // ...
-
                     }
                 });
     }
@@ -234,10 +243,7 @@ public class SignInActivity extends LifecycleLoggingActivity {
     @Override
     public void onDestroy(){
         super.onDestroy();
-
     }
-
-
 
     public static LiveData getAllUsers(LoanViewModel mLoanViewModel, String TAG) {
         LiveData<List<User>> mAllUsers = mLoanViewModel.getAllUsers();
@@ -246,6 +252,7 @@ public class SignInActivity extends LifecycleLoggingActivity {
         else {Log.d(TAG, "allusers is not null obj");}
         return  mAllUsers;
     }
+
     /**
      * Shows the progress UI and hides the login form.
      */
@@ -281,11 +288,35 @@ public class SignInActivity extends LifecycleLoggingActivity {
             mSignInView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
+
+    //register receiver when app resumes and unregister when app pauses
+    //register on create then unregister on Destroy
     @Override
-    public void onBackPressed(){
-        super.onBackPressed();
-        showProgress(false);
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver, myFilter);
+
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //unregistering using local broadcast manager
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(myReceiver);
+       //null the receivers to prevent ish
+        myReceiver = null;
+    }
+
+    //******************** SignInReceiver ********************
+    public class SignInReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // TODO: This method is called when the BroadcastReceiver is receiving
+            // an Intent broadcast.
+            showProgress(false);
+            makeToast(context, "user added");
+            //
+        }
+    }
 }
 
