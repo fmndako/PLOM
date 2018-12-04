@@ -185,7 +185,7 @@ public class SignInActivity extends LifecycleLoggingActivity {
             registerUser(email);
             //change first timer = false
             Utilities.log(TAG, "user first login");
-            //save user to shared pred
+            //save user to shared pref
         }
         //else
         else {
