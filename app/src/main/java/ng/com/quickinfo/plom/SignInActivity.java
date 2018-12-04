@@ -91,6 +91,7 @@ public class SignInActivity extends LifecycleLoggingActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signin_layout);
 
+        mContext = getApplicationContext();
         //create broadcast receivers
         myReceiver = new SignInReceiver();
         myFilter = new IntentFilter(asyncTaskUser);
