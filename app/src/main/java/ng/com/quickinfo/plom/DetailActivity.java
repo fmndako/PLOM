@@ -151,6 +151,14 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
                 adapter.setLoans(loans);
                 tvDetailOffsetTotalValue.setText(adapter.getItemCount() + "");
+                //too much work
+                // getLoan(mLoan.getId());
+                //tyy only udating things that differ
+                if (mLoan != null) {
+                    if (mLoan.getClearStatus() == 1) {
+                        updateClearedStatus();
+                    }
+                }
 
 
             }
@@ -189,6 +197,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
             tvDetailAmountValue.setText(mLoan.getAmount() + "");
 
             //loan type
+
             if(mLoan.getLoanType() != 0) {
 
 
@@ -226,7 +235,23 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         }
     }
 
-// ************ offset dlg ************************88
+    public void updateClearedStatus(){
+
+        tvDetailClearedStatusValue.setText(R.string.cleared_status_cleared);
+        //TODO change to date
+
+        tvDetailDateClearedValue.setText("today");
+        log(TAG, "looking for menu");
+        if (mMenu != null) {
+            //remove clear action button and update
+            mMenu.findItem(R.id.action_clear).setVisible(false);
+            mMenu.findItem(R.id.action_update).setVisible(false);
+            mMenu.findItem(R.id.action_offset).setVisible(false);
+        }
+    }
+
+
+    // ************ offset dlg ************************88
     public void showDialogs(int action) {
         // Create an instance of the dialog fragment and show it
         switch (action){
@@ -256,6 +281,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         makeToast(mContext, "clear positive offset");
         mLoan.setClearedStatus(date);
         mLoanViewModel.insert(mLoan);
+        getLoan(mLoan.getId());
 
 
 
@@ -345,19 +371,8 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         //cleared status (if cleared)
         if (mLoan!=null) {
             if (mLoan.getClearStatus() != 0) {
-                tvDetailClearedStatusValue.setText(R.string.cleared_status_cleared);
-                //TODO change to date
 
-                tvDetailDateClearedValue.setText("today");
-                log(TAG, "looking for menu");
-                if (mMenu != null) {
-                    //remove clear action button and update
-                    mMenu.findItem(R.id.action_clear).setVisible(false);
-                    mMenu.findItem(R.id.action_update).setVisible(false);
-                    mMenu.findItem(R.id.action_offset).setVisible(false);
-                }
-            }
-        }
+                updateClearedStatus();        }}
 
 
 
