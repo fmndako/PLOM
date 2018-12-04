@@ -35,8 +35,8 @@ import customfonts.MyTextView;
 import ng.com.quickinfo.plom.Model.Loan;
 import ng.com.quickinfo.plom.Model.Offset;
 import ng.com.quickinfo.plom.Utils.Utilities;
-import ng.com.quickinfo.plom.ViewModel.LoanListAdapter;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
+import ng.com.quickinfo.plom.ViewModel.OffsetListAdapter;
 
 import static ng.com.quickinfo.plom.Utils.Utilities.HomeIntent;
 import static ng.com.quickinfo.plom.Utils.Utilities.dateToString1;
@@ -44,7 +44,7 @@ import static ng.com.quickinfo.plom.Utils.Utilities.log;
 import static ng.com.quickinfo.plom.Utils.Utilities.makeToast;
 
 public class DetailActivity extends LifecycleLoggingActivity implements
-        LoanListAdapter.OnHandlerInteractionListener, OffsetDialog.OffsetDialogListener,
+        OffsetListAdapter.OnHandlerInteractionListener, OffsetDialog.OffsetDialogListener,
             DeleteDialog.DeleteDialogListener, ClearAllDialog.ClearAllDialogListener{
     @BindView(R.id.tvDetailNameValue)
     MyTextView tvDetailNameValue;
@@ -81,7 +81,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
     //adapter
     //loads the RV
     private RecyclerView recyclerView;
-    private LoanListAdapter adapter;
+    private OffsetListAdapter adapter;
 
     //toolbar and menu
     Menu mMenu;
@@ -138,18 +138,18 @@ public class DetailActivity extends LifecycleLoggingActivity implements
     private void loadRV() {
         //loads the RV
         recyclerView = findViewById(R.id.recyclerview);
-        adapter = new LoanListAdapter(this);
+        adapter = new OffsetListAdapter(this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         //observer
-        mLoanViewModel.getLoanByUserId(1).observe(this, new Observer<List<Loan>>() {
+        mLoanViewModel.getOffsetByLoanId(mLoan.getId()).observe(this, new Observer<List<Offset>>() {
             @Override
-            public void onChanged(@Nullable final List<Loan> loans) {
+            public void onChanged(@Nullable final List<Offset> offsets) {
                 // Update the cached copy of the loans in the adapter.
                 //recyclerView.setVisibility(View.VISIBLE);
 
-                adapter.setLoans(loans);
+                adapter.setOffsets(offsets);
                 tvDetailOffsetTotalValue.setText(adapter.getItemCount() + "");
                 //too much work
                 // getLoan(mLoan.getId());
@@ -487,11 +487,6 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         }
     }
 
-//    @Override
-//    public void onBackPressed()
-//    {
-//        //
-//        super.onBackPressed();  // optional depending on your needs
-//    }
+
 }
 

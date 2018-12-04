@@ -6,58 +6,56 @@
     android:layout_width="match_parent"
     android:background="@color/gray"
     android:layout_height="wrap_content">
-    <!--remove the below layout to remove the color-->
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="10dp"-->
+            <!--android:layout_marginRight="10dp"-->
+            <!--android:layout_marginTop="5dp"-->
+            <!--android:background="@drawable/retangle"-->
+            <!--android:orientation="vertical">-->
 
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/retangle"
-            android:orientation="vertical">
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="horizontal">-->
 
+                <!--<ImageView-->
+                    <!--android:id="@+id/image"-->
+                    <!--android:layout_width="40dp"-->
+                    <!--android:layout_height="40dp"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:layout_marginLeft="15dp"-->
+                    <!--app:srcCompat="@drawable/cash" />-->
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                <!--<TextView-->
+                    <!--android:id="@+id/departure1"-->
+                    <!--style="@style/text_view"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_gravity="fill_vertical|center"-->
+                    <!--android:layout_marginTop="5dp"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:padding="10dp"-->
+                    <!--android:text="kkdsfldkf"-->
+                    <!--android:textColor="#ffcc00" />-->
 
-                <ImageView
-                    android:id="@+id/image"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="15dp"
-                    app:srcCompat="@drawable/cash" />
+                <!--<TextView-->
+                    <!--android:id="@+id/departure"-->
+                    <!--style="@style/text_view"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginTop="5dp"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:padding="10dp"-->
+                    <!--android:text="name"-->
+                    <!--android:textColor="#ffcc00" />-->
 
-                <TextView
-                    android:id="@+id/departure1"
-                    style="@style/text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="fill_vertical|center"
-                    android:layout_marginTop="5dp"
-                    android:layout_weight="1"
-                    android:padding="10dp"
-                    android:text="kkdsfldkf"
-                    android:textColor="#ffcc00" />
+            <!--</LinearLayout>-->
 
-                <TextView
-                    android:id="@+id/departure"
-                    style="@style/text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_weight="1"
-                    android:padding="10dp"
-                    android:text="name"
-                    android:textColor="#ffcc00" />
-
-            </LinearLayout>
-
-            <!--*********Repayment option**********-->
+            <!--*********Amount**********-->
 
             <LinearLayout
 
@@ -70,26 +68,26 @@
                 >
 
                 <customfonts.MyTextView
-                    android:id="@+id/tvDetailRepaymentOption"
+                    android:id="@+id/tvORVAmountText"
                     android:layout_weight="1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Repayment Option"
+                    android:text="@string/rv_amount"
                     android:textColor="@color/colorSub"
 
                     />
 
                 <customfonts.MyTextView
-                    android:id="@+id/tvDetailRepaymentOptionValue"
+                    android:id="@+id/tvORVAmount"
                     android:layout_weight="0.5"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="One Time"
+                    android:text="@string/rv_amount"
                     android:textColor="@color/colorTex"
 
                     />
             </LinearLayout>
-            <!--*********Additional Info **********-->
+            <!--*********Date offset **********-->
 
             <LinearLayout
 
@@ -102,21 +100,21 @@
                 >
 
                 <customfonts.MyTextView
-                    android:id="@+id/tvDetailRemarksText"
+                    android:id="@+id/tvORVDateOffsetText"
                     android:layout_weight="1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Additional Info"
+                    android:text="@string/rv_cleared_date"
                     android:textColor="@color/colorSub"
 
                     />
 
                 <customfonts.MyTextView
-                    android:id="@+id/tvDetailRemarksValue"
+                    android:id="@+id/tvORVDateOffset"
                     android:layout_weight="0.5"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="138.3 * 67.1mm"
+                    android:text="@string/rv_cleared_date"
                     android:textColor="@color/colorTex"
 
                     />
@@ -129,8 +127,29 @@
                 android:background="@color/colordevider"
                 android:padding="16dp"
                 />
+            <!--*********remarks**********-->
 
+            <LinearLayout
 
-        </LinearLayout>
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+
+                <customfonts.MyTextView
+                    android:id="@+id/tvORVRemarks"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/rv_remarks"
+                    android:textColor="@color/colorAccent"
+
+                    />
+
+            </LinearLayout>
+
 
 </LinearLayout>

@@ -608,7 +608,7 @@
 
                 </LinearLayout>
 
-                <!--*********Date To Repay**********-->
+                <!--*********cleared status boolean**********-->
 
                 <LinearLayout
 
@@ -641,7 +641,7 @@
                         />
                 </LinearLayout>
 
-                <!--*********Repayment option**********-->
+                <!--*********Date Cleared**********-->
 
                 <LinearLayout
 

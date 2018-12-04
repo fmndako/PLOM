@@ -115,6 +115,17 @@
     <string name="offset_date">Enter date</string>
     <string name="dialog_clear">Are you sure you want to clear all?</string>
 
+    <!-- rv-->
+    <string name="rv_lender">Lender</string>
+    <string name="rv_borrower">Borrower</string>
+    <string name="rv_date_taken">Date Taken</string>
+    <string name="rv_promised_date">Date Promised</string>
+    <string name="rv_cleared_date">Date Returned</string>
+    <string name="rv_amount">Amount</string>
+    <string name="rv_remarks">Remarks</string>
+
+
+
 
 
 

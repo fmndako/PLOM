@@ -1,4 +1,4 @@
-package ng.com.quickinfo.plom.Model;
+package ng.com.quickinfo.plom.ViewModel;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import ng.com.quickinfo.plom.Model.Offset;
 import ng.com.quickinfo.plom.R;
 import ng.com.quickinfo.plom.Utils.Utilities;
 
@@ -30,7 +31,7 @@ public class OffsetListAdapter extends RecyclerView.Adapter<OffsetListAdapter.Of
 
     @Override
     public OffsetViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = mInflater.inflate(R.layout.loan_rv, parent, false);
+        View itemView = mInflater.inflate(R.layout.offset_rv, parent, false);
         return new OffsetViewHolder(itemView);
         //TODO oncreate viewholder
 
@@ -41,31 +42,29 @@ public class OffsetListAdapter extends RecyclerView.Adapter<OffsetListAdapter.Of
     public void onBindViewHolder(OffsetViewHolder holder, final int position) {
         if (mOffsets != null) {
             Offset current = mOffsets.get(position);
-            holder.nameView.setText(current.getAmount());
+            holder.remarksView.setText(current.getRemarks());
             holder.amountView.setText(current.getDateOffset().toString());
-//
-//            holder.dateTakenView.setText(current.getDateToRepay().toString());
-//            holder.dateRepayView.setText(Utilities.dateToString(current.getDateToRepay()));
+            holder.dateTakenView.setText(Utilities.dateToString1(current.getDateOffset()));
 //            holder.commentView.setText("comment");
 
 
         } else {
             // Covers the case of data not being ready yet.
-            holder.nameView.setText("No Offset");
+            holder.remarksView.setText("No Offset");
         }
         //testing where to insert the interface listener to enable
         //comm between RV and activity
         //Utilities.log(TAG, "onbindview" + "" + getItemCount() + getTotalLends(mOffsets));
 
         //set onclick listeners
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v){
-                Utilities.log(TAG, "onclick name");
-                startDetailActivity(mOffsets.get(position).getId());
-
-            }
-                                               });
+//        holder.itemView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v){
+//                Utilities.log(TAG, "onclick name");
+//                startDetailActivity(mOffsets.get(position).getId());
+//
+//            }
+//                                               });
 
         //instantiate OnHandlerInteraction(created by me): useless for now.
         //as an example of a listener
@@ -94,6 +93,8 @@ public class OffsetListAdapter extends RecyclerView.Adapter<OffsetListAdapter.Of
         return 0;
     }
 
+    public int getTotal(){return 0;}
+
     //startactivity
     private void startDetailActivity(long loan_id){
         if (mListener != null) {
@@ -104,14 +105,14 @@ public class OffsetListAdapter extends RecyclerView.Adapter<OffsetListAdapter.Of
     }
 
     class OffsetViewHolder extends RecyclerView.ViewHolder {
-        private TextView nameView, amountView,  dateTakenView;
+        private TextView remarksView, amountView, dateTakenView;
         private ImageView cashView;
 
         private OffsetViewHolder(View itemView) {
             super(itemView);
-            nameView = itemView.findViewById(R.id.tvLRVName);
-            amountView = itemView.findViewById(R.id.tvLRVAmount);
-            dateTakenView = itemView.findViewById(R.id.tvLRVDateTaken);
+            remarksView = itemView.findViewById(R.id.tvORVRemarks);
+            amountView = itemView.findViewById(R.id.tvORVAmount);
+            dateTakenView = itemView.findViewById(R.id.tvORVDateOffset);
 //            dateRepayView = itemView.findViewById(R.id.tvLRVDateRepay);
 //            commentView = itemView.findViewById(R.id.tvLRVtime);
 //
