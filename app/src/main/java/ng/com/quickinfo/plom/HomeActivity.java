@@ -135,7 +135,15 @@ public class HomeActivity extends LifecycleLoggingActivity {
         //get email from intent
         mEmail = getIntent().getStringExtra("email");
 
-        getUser();
+        if (mEmail!=null){
+
+            //from signin
+            getUser();
+        }else{
+            //from other activities
+
+        }
+
 
     }
 

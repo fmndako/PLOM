@@ -7,6 +7,7 @@ import android.content.Context;
 //import android.graphics.PorterDuffColorFilter;
 //import android.graphics.drawable.Drawable;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -286,15 +287,37 @@ public class DetailActivity extends LifecycleLoggingActivity implements
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ivDetailCall:
-                //startcallintent
+                startCallIntent();
                 break;
             case R.id.ivDetailEmail:
-                //startmailintent
+                startMailIntent();
                 break;
             case R.id.ivDetailMessage:
-                //startmessageintent
+                startSmsIntent();
                 break;
         }
+    }
+
+    private void startSmsIntent() {
+        Intent smsIntent = new Intent(android.content.Intent.ACTION_VIEW);
+        smsIntent.setType("vnd.android-dir/mms-sms");
+        smsIntent.putExtra("address",mLoan.getNumber());
+        smsIntent.putExtra("sms_body","body");
+        startActivity(smsIntent);
+    }
+
+    private void startMailIntent() {
+        Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                "mailto","abc@gmail.com", null));
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Subject");
+        emailIntent.putExtra(Intent.EXTRA_TEXT, "Body");
+        startActivity(Intent.createChooser(emailIntent, "Send email..."));
+    }
+
+    private void startCallIntent() {
+        String phone = mLoan.getNumber();
+        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
+        startActivity(intent);
     }
 
     //********************** action bar ***************88
@@ -427,11 +450,18 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
         }
 
-        protected void onPostExecute(Loan result) {
+        protected void onPostExecute(Void Void) {
             onBackPressed();
             //load loans
 
         }
     }
+
+//    @Override
+//    public void onBackPressed()
+//    {
+//        //
+//        super.onBackPressed();  // optional depending on your needs
+//    }
 }
 

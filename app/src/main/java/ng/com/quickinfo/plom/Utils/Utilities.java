@@ -6,6 +6,7 @@ import android.annotation.TargetApi;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
@@ -92,6 +93,16 @@ public class Utilities {
             mRegisterProgress.setVisibility(show ? View.VISIBLE : View.GONE);
             //mSignInView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
+    }
+
+    public static class MyPref{
+        private SharedPreferences sharedPref;
+        private SharedPreferences.Editor editor;
+        MyPref(){}
+
+
+
+
     }
 
 

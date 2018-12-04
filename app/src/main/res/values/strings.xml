@@ -96,7 +96,9 @@
     <string name="remarks_value">None</string>
     <string name="repayment_option_once">One Time</string>
     <string name="repayment_option_several">More than once</string>
-
+    <string name="detail_call">Call</string>
+    <string name="detail_Email">Email</string>
+    <string name="detail_SMS">SMS</string>
 
     <!--action bar-->
     <string name="action_share">Share</string>
@@ -112,6 +114,8 @@
     <string name="dialog_delete_message">Are you sure you want to delete?</string>
     <string name="offset_date">Enter date</string>
     <string name="dialog_clear">Are you sure you want to clear all?</string>
+
+
 
 
 
