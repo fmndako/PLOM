@@ -20,11 +20,16 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class Utilities {
     /*contains basic tools*/
 
-    public static Intent startIntent(Application mContext, Class mClass){
-        return new Intent(mContext, mClass);
+    public static Intent HomeIntent(Context mContext, Class mClass, String email){
+        Intent intent = new Intent(mContext, mClass);
+        intent.putExtra("email", email);
+        return intent;
+
     }
     public static Date stringToDate(String dateString) {
         Date date;
@@ -95,11 +100,23 @@ public class Utilities {
         }
     }
 
-    public static class MyPref{
-        private SharedPreferences sharedPref;
-        private SharedPreferences.Editor editor;
-        MyPref(){}
 
+
+    //shared preference
+    public static class MyPref{
+        private static SharedPreferences sharedPref;
+        private static  SharedPreferences.Editor editor;
+
+
+        public static SharedPreferences getSharedPref(Context context){
+            sharedPref = context.getSharedPreferences("myPref", MODE_PRIVATE);
+            editor = sharedPref.edit();
+            return sharedPref;
+        }
+
+        public static SharedPreferences.Editor getEditor(){
+            return editor;
+        }
 
 
 

@@ -56,6 +56,7 @@ public class ListActivity extends LifecycleLoggingActivity implements
     private RecyclerView recyclerView;
     private LoanListAdapter adapter;
 
+
     //loan
     private List<Loan> mLoans;
 
@@ -93,10 +94,14 @@ public class ListActivity extends LifecycleLoggingActivity implements
 
 
         //intent
-        mEmail = getIntent().getStringExtra("email");
+        //TODO can get the email address from shared pref
+        //mEmail = getIntent().getStringExtra("email");
         mUserId = getIntent().getLongExtra("user_id", 1);
         int loanType = getIntent().getIntExtra("loanType", 1);
 
+
+        mEmail = Utilities.MyPref.getSharedPref(mContext).getString("email", null);
+        makeToast(mContext, mEmail);
 
        //register receiver
         registerMyReceivers();
@@ -194,7 +199,6 @@ public class ListActivity extends LifecycleLoggingActivity implements
             public void onChanged(@Nullable final List<Loan> loans) {
                 // Update the cached copy of the loans in the adapter.
                 log(TAG, loans.size() +"size");
-                adapter.setLoans(loans);
                 mLoans = loans;
                 switch (loanType) {
                     case 1:
@@ -219,7 +223,8 @@ public class ListActivity extends LifecycleLoggingActivity implements
 
                         break;
                 }
-                //adapter.setLoans(loans);
+                //TODO after all, setLoans to mLoans
+                adapter.setLoans(loans);
                 //TODO update other UI
                 log(TAG, adapter.getItemCount()+"");
                 //Utilities.log(TAG, getTotalLends(loans)+"");

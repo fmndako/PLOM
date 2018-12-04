@@ -83,7 +83,7 @@ public class SignInActivity extends LifecycleLoggingActivity {
 
 
         //shared pref
-        sharedPref = getApplicationContext().getSharedPreferences("myPref", MODE_PRIVATE);
+        sharedPref = Utilities.MyPref.getSharedPref(getApplicationContext());
         editor = sharedPref.edit();
 
         // Configure sign-in to request the user's ID, email address, and basic
@@ -175,13 +175,18 @@ public class SignInActivity extends LifecycleLoggingActivity {
             registerUser(email);
             //change first timer = false
             Utilities.log(TAG, "user first login");
+            //save user to shared pred
         }
         //else
         else {
             Utilities.log(TAG, "not user first login");
             //enter system
             loadAccount(email);
+            //change sharedpreff user to email
+            editor.putString("email", email);
+            editor.apply();
         }
+
     }
 
     private void registerUser(String email) {
@@ -190,6 +195,7 @@ public class SignInActivity extends LifecycleLoggingActivity {
         Utilities.makeToast(this, email + " added");
         //change shared pref to false if successfull
         editor.putBoolean(email, false);
+        editor.putString("email", email);
         editor.apply();
         //enter system
         loadAccount(email);

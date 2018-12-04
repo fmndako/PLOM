@@ -7,6 +7,8 @@ import android.content.Context;
 //import android.graphics.PorterDuffColorFilter;
 //import android.graphics.drawable.Drawable;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -36,6 +38,7 @@ import ng.com.quickinfo.plom.Utils.Utilities;
 import ng.com.quickinfo.plom.ViewModel.LoanListAdapter;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
 
+import static ng.com.quickinfo.plom.Utils.Utilities.HomeIntent;
 import static ng.com.quickinfo.plom.Utils.Utilities.dateToString1;
 import static ng.com.quickinfo.plom.Utils.Utilities.log;
 import static ng.com.quickinfo.plom.Utils.Utilities.makeToast;
@@ -83,10 +86,15 @@ public class DetailActivity extends LifecycleLoggingActivity implements
     //toolbar and menu
     Menu mMenu;
 
+    private SharedPreferences myPref;
+    private SharedPreferences.Editor editor;
+
     //loan
     private List<Loan> mLoans;
     private Loan mLoan;
 
+
+    private String userEmail;
     //initiate viewmodel
     LoanViewModel mLoanViewModel;
 
@@ -110,6 +118,11 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         //toolbar
         Toolbar myToolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(myToolbar);
+
+        myPref = Utilities.MyPref.getSharedPref(mContext);
+        editor = Utilities.MyPref.getEditor();
+        userEmail = myPref.getString("email", "null");
+
 
 
 
@@ -379,7 +392,8 @@ public class DetailActivity extends LifecycleLoggingActivity implements
                 showDialogs(R.string.action_clear);
                 return true;
             case R.id.action_home:
-                startActivity(new Intent(this, HomeActivity.class));
+
+                startActivity(HomeIntent(this, HomeActivity.class, userEmail));
                 return true;
             default:
                 // If we got here, the user's action was not recognized.
@@ -452,6 +466,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
         protected void onPostExecute(Void Void) {
             onBackPressed();
+            //else start ListActivity and pass back to it Listactivity_loantype
             //load loans
 
         }
