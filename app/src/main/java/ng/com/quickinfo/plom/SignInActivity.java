@@ -123,7 +123,7 @@ public class SignInActivity extends LifecycleLoggingActivity {
                         case R.id.sign_in_button:
                             //TODO uncomment signin and comment updateui
                             //showProgress(true);
-                            updateUI("timatme@gnnmail.com");
+                            updateUI("timatme@llgnnmail.com");
                             // signIn();
                             break;
                     }
