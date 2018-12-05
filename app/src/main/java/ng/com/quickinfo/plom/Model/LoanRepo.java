@@ -3,12 +3,14 @@ package ng.com.quickinfo.plom.Model;
 
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
+import android.content.Context;
 import android.os.AsyncTask;
 
 import java.util.List;
 
 public class LoanRepo {
 
+    private Context mContext;
     private LoanDao mLoanDao;
     private LiveData<List<Loan>> mAllLoans;
 
@@ -16,6 +18,7 @@ public class LoanRepo {
         LoanRoomDatabase db = LoanRoomDatabase.getDatabase(application);
         mLoanDao = db.loanDao();
         mAllLoans = mLoanDao.getAllLoanItems();
+        mContext = application.getApplicationContext();
     }
 
     //return all loans

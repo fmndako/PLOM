@@ -2,6 +2,7 @@ package ng.com.quickinfo.plom;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 //import android.graphics.PorterDuff;
 //import android.graphics.PorterDuffColorFilter;
@@ -17,6 +18,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 //import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -78,6 +80,22 @@ public class DetailActivity extends LifecycleLoggingActivity implements
     MyTextView tvDetailOffsetTotalValue;
     private Context mContext;
 
+    //Receivers
+    DetailReceiver myReceiver;
+    IntentFilter loanDeleteFilter;
+
+    IntentFilter offsetAddFilter;
+
+    public static final String loanClearedAction = "package ng.com.quickinfo.plom.LOAN_CLEARED";
+    public static final String loanOffsetAction = "package ng.com.quickinfo.plom.LOAN_OFFSET";
+    public static final String loanUpdateAction = "package ng.com.quickinfo.plom.LOAN_EDIT";
+    public static final String loanDeleteAction = "package ng.com.quickinfo.plom.LOAN_CLEARED";
+    public static final String offsetAddAction = "package ng.com.quickinfo.plom.OFFSET_ADDED";
+    public static final String offsetDeleteAction = "package ng.com.quickinfo.plom.OFFSET_UPDATED";
+    public static final String offsetUpdateAction = "package ng.com.quickinfo.plom.LOAN_DELETED";
+
+
+
     //adapter
     //loads the RV
     private RecyclerView recyclerView;
@@ -112,6 +130,12 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         //context
         mContext = getApplicationContext();
 
+        //create broadcast receivers
+        myReceiver = new DetailReceiver();
+        loanDeleteFilter = new IntentFilter(loanDeleteAction);
+        offsetAddFilter = new IntentFilter(offsetAddAction);
+
+
         //set loan view model
         mLoanViewModel = ViewModelProviders.of(this).get(LoanViewModel.class);
 
@@ -130,12 +154,12 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         long mLoanId = getIntent().getLongExtra("loan_id", 16L);
         getLoan(mLoanId);
 
-        loadRV();
+        loadRV(mLoanId);
 
 
     }
 
-    private void loadRV() {
+    private void loadRV(long id) {
         //loads the RV
         recyclerView = findViewById(R.id.recyclerview);
         adapter = new OffsetListAdapter(this);
@@ -143,7 +167,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         //observer
-        mLoanViewModel.getOffsetByLoanId(mLoan.getId()).observe(this, new Observer<List<Offset>>() {
+        mLoanViewModel.getOffsetByLoanId(id).observe(this, new Observer<List<Offset>>() {
             @Override
             public void onChanged(@Nullable final List<Offset> offsets) {
                 // Update the cached copy of the loans in the adapter.
@@ -222,10 +246,11 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
 
             //offset
-            if (mLoan.getOffset()!=0){
+            //TODO corrext logic
+            if (mLoan.getOffset()==0){
                 //load offset rv and set total and Balance
 
-                loadRV();
+                loadRV(mLoan.getId());
 
             }
 
@@ -277,7 +302,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
     @Override
     public void onDialogPositiveClick(DialogFragment dialog, Date date) {
-        // User touched the offset dialog's positive button
+        // User touched cleared dialog's positive button
         makeToast(mContext, "clear positive offset");
         mLoan.setClearedStatus(date);
         mLoanViewModel.insert(mLoan);
@@ -480,13 +505,45 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         }
 
         protected void onPostExecute(Void Void) {
-            onBackPressed();
+            Intent onDeleteLoanIntent = new Intent(loanDeleteAction);
+            LocalBroadcastManager.getInstance(mContext).sendBroadcast(onDeleteLoanIntent);
+            //onBackPressed();
             //else start ListActivity and pass back to it Listactivity_loantype
             //load loans
 
         }
     }
+    // *********** Register and unregister receivers
+    //register receiver when app resumes and unregister when app pauses
+    //register on create then unregister on Destroy
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver, loanDeleteFilter);
+        LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver, offsetAddFilter);
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //unregistering using local broadcast manager
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(myReceiver);
+        //null the receivers to prevent ish
+        myReceiver = null;
+    }
+
+    //******************** SignInReceiver ********************
+    public class DetailReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // TODO: This method is called when the BroadcastReceiver is receiving
+            // an Intent broadcast.
+            //showProgress(false);
+            makeToast(context, "offset added");
+            //
+        }
+    }
 
 }
 

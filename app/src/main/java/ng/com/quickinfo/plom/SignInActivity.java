@@ -34,12 +34,13 @@ import ng.com.quickinfo.plom.Utils.Utilities;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
 
 import static com.google.android.gms.auth.api.signin.GoogleSignInStatusCodes.getStatusCodeString;
+import static ng.com.quickinfo.plom.Utils.Utilities.log;
 import static ng.com.quickinfo.plom.Utils.Utilities.makeToast;
 
 public class SignInActivity extends LifecycleLoggingActivity {
 
     //register Broadcast receivers
-    public static String asyncTaskUser = "ng.com.quickinfo.plom.Sign_in";
+    public static final String userRegisteredAction = "ng.com.quickinfo.plom.Sign_in";
     SignInReceiver myReceiver;
     IntentFilter myFilter;
 
@@ -67,8 +68,6 @@ public class SignInActivity extends LifecycleLoggingActivity {
         // Check for existing Google Sign In account, if the user is already signed in
         // the GoogleSignInAccount will be non-null.
         //view model
-        //load View Model
-        mLoanViewModel = ViewModelProviders.of(this).get(LoanViewModel.class);
 
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         if (account != null){
@@ -91,10 +90,14 @@ public class SignInActivity extends LifecycleLoggingActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signin_layout);
 
+
         mContext = getApplicationContext();
+        //load View Model
+        mLoanViewModel = ViewModelProviders.of(this).get(LoanViewModel.class);
+
         //create broadcast receivers
         myReceiver = new SignInReceiver();
-        myFilter = new IntentFilter(asyncTaskUser);
+        myFilter = new IntentFilter(userRegisteredAction);
 
         //shared pref
         sharedPref = Utilities.MyPref.getSharedPref(mContext);
@@ -122,8 +125,8 @@ public class SignInActivity extends LifecycleLoggingActivity {
                     switch (view.getId()) {
                         case R.id.sign_in_button:
                             //TODO uncomment signin and comment updateui
-                            //showProgress(true);
-                            updateUI("timatme@gnnmail.com");
+                            showProgress(true);
+                            updateUI("timatme@l.cojjjjjjnm");
                             // signIn();
                             break;
                     }
@@ -185,12 +188,12 @@ public class SignInActivity extends LifecycleLoggingActivity {
             //start sign up dialog and sign up
             registerUser(email);
             //change first timer = false
-            Utilities.log(TAG, "user first login");
+            log(TAG, "user first login");
             //save user to shared pref
         }
         //else
         else {
-            Utilities.log(TAG, "not user first login");
+            log(TAG, "not user first login");
             //enter system
             loadAccount(email);
             //change sharedpreff user to email
@@ -202,13 +205,13 @@ public class SignInActivity extends LifecycleLoggingActivity {
 
     private void registerUser(String email) {
         User user = new User("username", "333", email, "jjjj");
+        log(TAG, "registerUser");
         mLoanViewModel.insert(user, mContext);
 
     }
 
     private void registerUserSuccesful(){
-        makeToast(this, "Registration successful");
-        //change shared pref to false if successfull
+        log(TAG, "registerUserSuccessful");//change shared pref to false if successfull
         editor.putBoolean(mEmail, false);
         editor.putString("email", mEmail);
         editor.apply();
@@ -289,7 +292,7 @@ public class SignInActivity extends LifecycleLoggingActivity {
             mSignInView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
-
+    // *********** Register and unregister receivers
     //register receiver when app resumes and unregister when app pauses
     //register on create then unregister on Destroy
     @Override
@@ -316,7 +319,8 @@ public class SignInActivity extends LifecycleLoggingActivity {
             // an Intent broadcast.
             showProgress(false);
             makeToast(context, "user added");
-            //
+            //register successful
+            registerUserSuccesful();
         }
     }
 }

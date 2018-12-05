@@ -11,12 +11,16 @@ import android.util.Log;
 
 import java.util.List;
 
+import ng.com.quickinfo.plom.DetailActivity;
 import ng.com.quickinfo.plom.ListActivity;
+import ng.com.quickinfo.plom.Utils.Utilities;
 
+import static ng.com.quickinfo.plom.DetailActivity.offsetAddAction;
 import static ng.com.quickinfo.plom.Utils.Utilities.log;
 
 public class OffsetRepo {
 
+    private Context mContext;
     private OffsetDao mOffsetDao;
     private LiveData<List<Offset>> mAllOffsets;
     private Offset mOffset;
@@ -24,6 +28,9 @@ public class OffsetRepo {
     public OffsetRepo(Application application) {
         LoanRoomDatabase db = LoanRoomDatabase.getDatabase(application);
         mOffsetDao = db.offsetDao();
+
+        //TODO trial
+        mContext = application.getApplicationContext();
         //mAllOffsets = mOffsetDao.getAllOffsets();
     }
 
@@ -41,8 +48,8 @@ public class OffsetRepo {
         new insertAsyncTask(mOffsetDao).execute(offset);
     }
 
-    //insert asynctask class
-    private static class insertAsyncTask extends AsyncTask<Offset, Void, Void> {
+// **************** insert asynctask class
+    private class insertAsyncTask extends AsyncTask<Offset, Void, Void> {
 
         private OffsetDao mAsyncTaskDao;
 
@@ -56,6 +63,15 @@ public class OffsetRepo {
             // mAsyncTaskDao.insert(params[0]);
             log("Add Offset", "offset added");
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void Void){
+            Utilities.log("OFFSET REPO",offsetAddAction);
+            Intent intent = new Intent(offsetAddAction);
+            LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
+
+
         }
     }
 
