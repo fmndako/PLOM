@@ -125,8 +125,10 @@ public class SignInActivity extends LifecycleLoggingActivity {
                     switch (view.getId()) {
                         case R.id.sign_in_button:
                             //TODO uncomment signin and comment updateui
-                            showProgress(true);
-                            updateUI("timatme@l.cojjjjjjnm");
+
+                            //showProgress(true);
+                            updateUI("timatme@llgnnmail.com");
+
                             // signIn();
                             break;
                     }
