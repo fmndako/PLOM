@@ -4,9 +4,6 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-//import android.graphics.PorterDuff;
-//import android.graphics.PorterDuffColorFilter;
-//import android.graphics.drawable.Drawable;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -14,10 +11,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
-//import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -45,9 +40,14 @@ import static ng.com.quickinfo.plom.Utils.Utilities.dateToString1;
 import static ng.com.quickinfo.plom.Utils.Utilities.log;
 import static ng.com.quickinfo.plom.Utils.Utilities.makeToast;
 
+//import android.graphics.PorterDuff;
+//import android.graphics.PorterDuffColorFilter;
+//import android.graphics.drawable.Drawable;
+//import android.support.v4.graphics.drawable.DrawableCompat;
+
 public class DetailActivity extends LifecycleLoggingActivity implements
         OffsetListAdapter.OnHandlerInteractionListener, OffsetDialog.OffsetDialogListener,
-            DeleteDialog.DeleteDialogListener, ClearAllDialog.ClearAllDialogListener{
+        DeleteDialog.DeleteDialogListener, ClearAllDialog.ClearAllDialogListener {
     @BindView(R.id.tvDetailNameValue)
     MyTextView tvDetailNameValue;
     @BindView(R.id.tvDetailAmountValue)
@@ -78,6 +78,10 @@ public class DetailActivity extends LifecycleLoggingActivity implements
     ImageView ivDetailMessage;
     @BindView(R.id.tvDetailOffsetTotalValue)
     MyTextView tvDetailOffsetTotalValue;
+    @BindView(R.id.offsetrv)
+    RecyclerView offsetrv;
+    @BindView(R.id.OffsetRecyclerview)
+    RecyclerView OffsetRecyclerview;
     private Context mContext;
 
     //Receivers
@@ -93,7 +97,6 @@ public class DetailActivity extends LifecycleLoggingActivity implements
     public static final String offsetAddAction = "package ng.com.quickinfo.plom.OFFSET_ADDED";
     public static final String offsetDeleteAction = "package ng.com.quickinfo.plom.OFFSET_UPDATED";
     public static final String offsetUpdateAction = "package ng.com.quickinfo.plom.LOAN_DELETED";
-
 
 
     //adapter
@@ -148,6 +151,12 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         userEmail = myPref.getString("email", "null");
 
 
+        //recyclerView = findViewById(R.id.OffsetRecyclerview);
+        adapter = new OffsetListAdapter(this);
+        OffsetRecyclerview.setAdapter(adapter);
+        offsetrv.setAdapter(adapter);
+        OffsetRecyclerview.setLayoutManager(new LinearLayoutManager(this));
+        offsetrv.setLayoutManager(new LinearLayoutManager(this));
 
 
         //get loan id from intent
@@ -161,10 +170,6 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
     private void loadRV(long id) {
         //loads the RV
-        recyclerView = findViewById(R.id.recyclerview);
-        adapter = new OffsetListAdapter(this);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         //observer
         mLoanViewModel.getOffsetByLoanId(id).observe(this, new Observer<List<Offset>>() {
@@ -175,14 +180,6 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
                 adapter.setOffsets(offsets);
                 tvDetailOffsetTotalValue.setText(adapter.getItemCount() + "");
-                //too much work
-                // getLoan(mLoan.getId());
-                //tyy only udating things that differ
-                if (mLoan != null) {
-                    if (mLoan.getClearStatus() == 1) {
-                        updateClearedStatus();
-                    }
-                }
 
 
             }
@@ -196,7 +193,8 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
 
     }
-// ***************** offsetadapter listener *******************88
+
+    // ***************** offsetadapter listener *******************88
     public void onHandlerInteraction(long loan_id) {
         //my own listener created in the loanadapter class
         makeToast(this, "" + loan_id);
@@ -222,10 +220,10 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
             //loan type
 
-            if(mLoan.getLoanType() != 0) {
+            if (mLoan.getLoanType() != 0) {
 
 
-              tvDetailLoanTypeValue.setText(R.string.loan_type_borrow);
+                tvDetailLoanTypeValue.setText(R.string.loan_type_borrow);
                 tvDetailLoanTypeValue.setBackground(
                         ContextCompat.getDrawable(mContext, R.drawable.rectangle_red));
             }
@@ -238,29 +236,26 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
             //repayment details
             tvDetailDateToRepayValue.setText(mLoan.getDateToRepay().toString());
-            if (mLoan.getRepaymentOption() != 0){
-                tvDetailRepaymentOptionValue.setText(R.string.repayment_option_several);}
+            if (mLoan.getRepaymentOption() != 0) {
+                tvDetailRepaymentOptionValue.setText(R.string.repayment_option_several);
+            }
             tvDetailRemarksValue.setText(mLoan.getRemarks() + "");
-
-
 
 
             //offset
             //TODO corrext logic
-            if (mLoan.getOffset()==0){
+            if (mLoan.getOffset() != 0) {
                 //load offset rv and set total and Balance
-
+                makeToast(mContext, "offset not equal to 0");
                 loadRV(mLoan.getId());
 
             }
 
 
-
-
         }
     }
 
-    public void updateClearedStatus(){
+    public void updateClearedStatus() {
 
         tvDetailClearedStatusValue.setText(R.string.cleared_status_cleared);
         //TODO change to date
@@ -279,7 +274,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
     // ************ offset dlg ************************88
     public void showDialogs(int action) {
         // Create an instance of the dialog fragment and show it
-        switch (action){
+        switch (action) {
             case R.string.action_delete:
                 DialogFragment deleteDialog = new DeleteDialog();
                 deleteDialog.show(getSupportFragmentManager(), "DeleteDialog");
@@ -309,8 +304,8 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         getLoan(mLoan.getId());
 
 
-
     }
+
     @Override
     public void onDialogPositiveClick(DialogFragment dialog, Offset offset) {
         // User touched the offset dialog's positive button
@@ -321,10 +316,11 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
 
     }
+
     @Override
-    public void onDialogPositiveClick(DialogFragment dialog, int action ) {
+    public void onDialogPositiveClick(DialogFragment dialog, int action) {
         // User touched the dialog's positive button
-      //delete
+        //delete
         DeleteAsyncTask task = new DeleteAsyncTask();
         task.execute(mLoan);
     }
@@ -333,7 +329,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
     public void onDialogNegativeClick(DialogFragment dialog, int action) {
         // User touched the dialog's negative button
 
-        switch (action){
+        switch (action) {
             case R.string.action_offset:
                 makeToast(mContext, "negative offset");
                 return;
@@ -363,16 +359,16 @@ public class DetailActivity extends LifecycleLoggingActivity implements
     }
 
     private void startSmsIntent() {
-        Intent smsIntent = new Intent(android.content.Intent.ACTION_VIEW);
+        Intent smsIntent = new Intent(Intent.ACTION_VIEW);
         smsIntent.setType("vnd.android-dir/mms-sms");
-        smsIntent.putExtra("address",mLoan.getNumber());
-        smsIntent.putExtra("sms_body","body");
+        smsIntent.putExtra("address", mLoan.getNumber());
+        smsIntent.putExtra("sms_body", "body");
         startActivity(smsIntent);
     }
 
     private void startMailIntent() {
         Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                "mailto","abc@gmail.com", null));
+                "mailto", "abc@gmail.com", null));
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Subject");
         emailIntent.putExtra(Intent.EXTRA_TEXT, "Body");
         startActivity(Intent.createChooser(emailIntent, "Send email..."));
@@ -394,11 +390,12 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         log(TAG, "menu created");
 
         //cleared status (if cleared)
-        if (mLoan!=null) {
+        if (mLoan != null) {
             if (mLoan.getClearStatus() != 0) {
 
-                updateClearedStatus();        }}
-
+                updateClearedStatus();
+            }
+        }
 
 
         return super.onCreateOptionsMenu(menu);
@@ -442,25 +439,27 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
         }
     }
-// *************** share **********************8
-    public void startShareIntent(){
+
+    // *************** share **********************8
+    public void startShareIntent() {
         String subj = "Personal Loan Manager";
         String body = "Amount N: " + mLoan.getAmount() + ", Date taken: " +
                 dateToString1(mLoan.getDateTaken()) + ", Promised Return Date: " +
-                dateToString1(mLoan.getDateToRepay()) ;
+                dateToString1(mLoan.getDateToRepay());
         shareText(subj, body);
 
 
     }
-    public void shareText(String subject,String body) {
-        Intent txtIntent = new Intent(android.content.Intent.ACTION_SEND);
-        txtIntent .setType("text/plain");
-        txtIntent .putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
-        txtIntent .putExtra(android.content.Intent.EXTRA_TEXT, body);
-        startActivity(Intent.createChooser(txtIntent ,"Share"));
+
+    public void shareText(String subject, String body) {
+        Intent txtIntent = new Intent(Intent.ACTION_SEND);
+        txtIntent.setType("text/plain");
+        txtIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        txtIntent.putExtra(Intent.EXTRA_TEXT, body);
+        startActivity(Intent.createChooser(txtIntent, "Share"));
     }
 
-//        ******************** get laon async task ******************
+    //        ******************** get laon async task ******************
     private class GetLoanAsyncTask extends AsyncTask<Long, Void, Loan> {
 
         @Override
@@ -496,7 +495,6 @@ public class DetailActivity extends LifecycleLoggingActivity implements
     private class DeleteAsyncTask extends AsyncTask<Loan, Void, Void> {
 
 
-
         @Override
         protected Void doInBackground(Loan... params) {
             mLoanViewModel.delete(params[0]);
@@ -513,6 +511,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
         }
     }
+
     // *********** Register and unregister receivers
     //register receiver when app resumes and unregister when app pauses
     //register on create then unregister on Destroy
@@ -540,7 +539,8 @@ public class DetailActivity extends LifecycleLoggingActivity implements
             // TODO: This method is called when the BroadcastReceiver is receiving
             // an Intent broadcast.
             //showProgress(false);
-            makeToast(context, "offset added");
+            makeToast(context, "offset added hhh");
+            loadRV(mLoan.getId());
             //
         }
     }

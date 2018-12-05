@@ -14,6 +14,8 @@ import ng.com.quickinfo.plom.Model.Offset;
 import ng.com.quickinfo.plom.R;
 import ng.com.quickinfo.plom.Utils.Utilities;
 
+import static ng.com.quickinfo.plom.Utils.Utilities.log;
+
 public class OffsetListAdapter extends RecyclerView.Adapter<OffsetListAdapter.OffsetViewHolder> {
 
     private final LayoutInflater mInflater;
@@ -31,7 +33,7 @@ public class OffsetListAdapter extends RecyclerView.Adapter<OffsetListAdapter.Of
 
     @Override
     public OffsetViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = mInflater.inflate(R.layout.offset_rv, parent, false);
+        View itemView = mInflater.inflate(R.layout.offset_rv1, parent, false);
         return new OffsetViewHolder(itemView);
         //TODO oncreate viewholder
 
@@ -40,7 +42,9 @@ public class OffsetListAdapter extends RecyclerView.Adapter<OffsetListAdapter.Of
 
     @Override
     public void onBindViewHolder(OffsetViewHolder holder, final int position) {
+        log(TAG,"binddview");
         if (mOffsets != null) {
+            log(TAG,"not null");
             Offset current = mOffsets.get(position);
             holder.remarksView.setText(current.getRemarks());
             holder.amountView.setText(current.getDateOffset().toString());
@@ -113,13 +117,6 @@ public class OffsetListAdapter extends RecyclerView.Adapter<OffsetListAdapter.Of
             remarksView = itemView.findViewById(R.id.tvORVRemarks);
             amountView = itemView.findViewById(R.id.tvORVAmount);
             dateTakenView = itemView.findViewById(R.id.tvORVDateOffset);
-//            dateRepayView = itemView.findViewById(R.id.tvLRVDateRepay);
-//            commentView = itemView.findViewById(R.id.tvLRVtime);
-//
-//            clearView = itemView.findViewById(R.id.ivLRVClear);
-//            cashView = itemView.findViewById(R.id.ivLRVCash);
-//            notifyView= itemView.findViewById(R.id.ivLRVNotify);
-//               alertView = itemView.findViewById(R.id.ivTLRAlert);
         }
     }
 

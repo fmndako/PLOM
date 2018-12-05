@@ -128,7 +128,8 @@ public class SignInActivity extends LifecycleLoggingActivity {
                             //TODO uncomment signin and comment updateui
 
                             //showProgress(true);
-                            updateUI("dfsdfdfdsfdf");
+                            loadAccount("kdklskdl");
+                            //updateUI("dfsdfdfdsfdf");
 
                             // signIn();
                             break;

@@ -324,7 +324,7 @@ public class ListActivity extends LifecycleLoggingActivity implements
             String remarks = "loan";
             String number = "090";
             Integer clearStatus =  0;
-            Integer offset = 0;
+            Integer offset = 1;
             Integer notify = 0;
             Integer repaymentOption = 0;
             String email = "email";
