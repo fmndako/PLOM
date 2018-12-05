@@ -103,8 +103,7 @@ public class SignInActivity extends LifecycleLoggingActivity {
         sharedPref = Utilities.MyPref.getSharedPref(mContext);
         editor = sharedPref.edit();
 
-        //TODO remove
-        mEmail = "tima@kkd";
+
 
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
@@ -198,11 +197,12 @@ public class SignInActivity extends LifecycleLoggingActivity {
         //else
         else {
             log(TAG, "not user first login");
-            //enter system
-            loadAccount(email);
             //change sharedpreff user to email
             editor.putString("email", email);
             editor.apply();
+            //enter system
+            loadAccount(email);
+
         }
 
     }
@@ -216,7 +216,7 @@ public class SignInActivity extends LifecycleLoggingActivity {
     }
 
     private void registerUserSuccesful(){
-        log(TAG, "registerUserSuccessful");//change shared pref to false if successfull
+        log(TAG, mEmail + "registerUserSuccessful");//change shared pref to false if successfull
         editor.putBoolean(mEmail, false);
         editor.putString("email", mEmail);
         editor.apply();

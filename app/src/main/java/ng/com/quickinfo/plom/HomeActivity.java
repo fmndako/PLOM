@@ -34,6 +34,7 @@ import static ng.com.quickinfo.plom.Utils.FilterUtils.activeLoans;
 import static ng.com.quickinfo.plom.Utils.FilterUtils.dateFilterList;
 import static ng.com.quickinfo.plom.Utils.FilterUtils.getItemCount;
 import static ng.com.quickinfo.plom.Utils.FilterUtils.getTotalLends;
+import static ng.com.quickinfo.plom.Utils.Utilities.log;
 import static ng.com.quickinfo.plom.Utils.Utilities.makeToast;
 import static ng.com.quickinfo.plom.Utils.Utilities.showProgress;
 
@@ -135,6 +136,7 @@ public class HomeActivity extends LifecycleLoggingActivity {
         mContext = getApplicationContext();
         //get email from intent
         mEmail = getIntent().getStringExtra("email");
+        log(TAG, mEmail + "the email");
         //
 
         getUser();
@@ -159,7 +161,7 @@ public class HomeActivity extends LifecycleLoggingActivity {
         //get user from database using getUserAsyncTask
         GetUserAsyncTask task = new GetUserAsyncTask();
         task.execute(mEmail);
-        Utilities.log(TAG, "user id = ");
+        log(TAG, "user id = ");
     }
 
     private void getLoans(long user_id) {
@@ -176,7 +178,7 @@ public class HomeActivity extends LifecycleLoggingActivity {
                 int lendTotal = getTotalLends(loanType.get(0));
                 tvLendsTotal.setText(String.valueOf(lendTotal));
                 tvSizeLends.setText(String.valueOf(lendCount));
-                Utilities.log(TAG, "lends:" + lendCount + ":" +
+                log(TAG, "lends:" + lendCount + ":" +
                         lendTotal);
 
                 //borrow
@@ -184,14 +186,14 @@ public class HomeActivity extends LifecycleLoggingActivity {
                 int borrowTotal = getTotalLends(loanType.get(1));
                 tvTotalBorrows.setText(String.valueOf(borrowTotal));
                 tvSizeBorrows.setText(String.valueOf(borrowCount));
-                Utilities.log(TAG, "Borrows:" + borrowCount + ":" + borrowTotal);
+                log(TAG, "Borrows:" + borrowCount + ":" + borrowTotal);
 
                 //all
                 int allCount = borrowCount + lendCount;
                 int allTotal = lendTotal - borrowTotal;
                 tvTotalAll.setText(String.valueOf(allTotal));
                 tvSizeAll.setText(String.valueOf(allCount));
-                Utilities.log(TAG, "all:" + allCount + ":" + allTotal);
+                log(TAG, "all:" + allCount + ":" + allTotal);
 
                 //datelist
                 List<List<Loan>> byDateLoans = dateFilterList(mLoans);
@@ -201,34 +203,34 @@ public class HomeActivity extends LifecycleLoggingActivity {
                 int dueSoonTotal = getTotalLends(byDateLoans.get(0));
                 tvTotalDueSoon.setText(String.valueOf(dueSoonTotal));
                 tvSizeDueSoon.setText(String.valueOf(dueSoonCount));
-                Utilities.log(TAG, "DueSoon:" + dueSoonCount + ":" + dueSoonTotal);
+                log(TAG, "DueSoon:" + dueSoonCount + ":" + dueSoonTotal);
 
                 //due
                 int dueCount = getItemCount(byDateLoans.get(1));
                 int dueTotal = getTotalLends(byDateLoans.get(1));
                 tvTotalDue.setText(String.valueOf(dueTotal));
                 tvSizeDue.setText(String.valueOf(dueCount));
-                Utilities.log(TAG, "Due:" + dueCount + ":" + dueTotal);
+                log(TAG, "Due:" + dueCount + ":" + dueTotal);
 
                 //overdue
                 int overDueCount = getItemCount(byDateLoans.get(2));
                 int overDueTotal = getTotalLends(byDateLoans.get(2));
                 tvTotalOverdue.setText(String.valueOf(overDueTotal));
                 tvSizeOverdue.setText(String.valueOf(overDueCount));
-                Utilities.log(TAG, "overDue:" + overDueCount + ":" + overDueTotal);
+                log(TAG, "overDue:" + overDueCount + ":" + overDueTotal);
 
 
                 //TODO update other UI
-                Utilities.log(TAG, getItemCount(mLoans) + "");
-                Utilities.log(TAG, getTotalLends(mLoans) + "");
+                log(TAG, getItemCount(mLoans) + "");
+                log(TAG, getTotalLends(mLoans) + "");
                 Date date = Calendar.getInstance().getTime();
-                Utilities.log(TAG, Utilities.dateToString(date));
+                log(TAG, Utilities.dateToString(date));
 
             }
         });
         //stop progress bar
         showProgress(false, progressBar, mContext);
-        Utilities.log(TAG, "stopprogress");
+        log(TAG, "stopprogress");
     }
 
     @OnClick({R.id.ivAll, R.id.fabOverSoon, R.id.fabDue, R.id.fabDueSoon, R.id.ivBorrow, R.id.ivLends})
@@ -260,7 +262,7 @@ public class HomeActivity extends LifecycleLoggingActivity {
 
         @Override
         protected void onPreExecute() {
-            Utilities.log(TAG, "preexecute");
+            log(TAG, "preexecute");
             //TODO implement a progress bar
             //showProgress(true);
         }
@@ -270,11 +272,11 @@ public class HomeActivity extends LifecycleLoggingActivity {
         }
 
         protected void onPostExecute(User result) {
-            Utilities.log(TAG, "postexecute");
+            log(TAG, "postexecute");
             //save result as mUser
             if (result != null){
                 makeToast(mContext, "user Not null" + result.getUserId());
-//                getLoans(mUser.getUserId());
+                getLoans(mUser.getUserId());
             }
             //stop progress bar
             //showProgress(false);
