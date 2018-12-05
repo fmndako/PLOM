@@ -46,7 +46,7 @@ public class SignInActivity extends LifecycleLoggingActivity {
 
     private Context mContext;
     //ViewModel
-    LoanViewModel mLoanViewModel;
+    private LoanViewModel mLoanViewModel;
     public GoogleSignInClient mGoogleSignInClient;
     private static final int RC_SIGN_IN = 9;
 
@@ -103,6 +103,8 @@ public class SignInActivity extends LifecycleLoggingActivity {
         sharedPref = Utilities.MyPref.getSharedPref(mContext);
         editor = sharedPref.edit();
 
+        //TODO remove
+        mEmail = "tima@kkd";
 
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
@@ -127,7 +129,7 @@ public class SignInActivity extends LifecycleLoggingActivity {
                             //TODO uncomment signin and comment updateui
 
                             //showProgress(true);
-                            updateUI("timatme@llgnnmail.com");
+                            updateUI("dfsdfdfdsfdf");
 
                             // signIn();
                             break;
@@ -207,6 +209,7 @@ public class SignInActivity extends LifecycleLoggingActivity {
 
     private void registerUser(String email) {
         User user = new User("username", "333", email, "jjjj");
+        mEmail = email;
         log(TAG, "registerUser");
         mLoanViewModel.insert(user, mContext);
 

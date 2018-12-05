@@ -34,6 +34,7 @@ import static ng.com.quickinfo.plom.Utils.FilterUtils.activeLoans;
 import static ng.com.quickinfo.plom.Utils.FilterUtils.dateFilterList;
 import static ng.com.quickinfo.plom.Utils.FilterUtils.getItemCount;
 import static ng.com.quickinfo.plom.Utils.FilterUtils.getTotalLends;
+import static ng.com.quickinfo.plom.Utils.Utilities.makeToast;
 import static ng.com.quickinfo.plom.Utils.Utilities.showProgress;
 
 public class HomeActivity extends LifecycleLoggingActivity {
@@ -271,11 +272,14 @@ public class HomeActivity extends LifecycleLoggingActivity {
         protected void onPostExecute(User result) {
             Utilities.log(TAG, "postexecute");
             //save result as mUser
-            mUser = result;
+            if (result != null){
+                makeToast(mContext, "user Not null" + result.getUserId());
+//                getLoans(mUser.getUserId());
+            }
             //stop progress bar
             //showProgress(false);
             //load loans
-            getLoans(mUser.getUserId());
+            //c
         }
     }
 }
