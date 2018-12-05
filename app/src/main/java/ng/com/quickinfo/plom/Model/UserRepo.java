@@ -21,13 +21,13 @@ public class UserRepo {
     private UserDao mUserDao;
     private LiveData<List<User>> mAllUsers;
     private User mUser;
-    private Context mContext;
+    //private Context mContext;
 
     public UserRepo(Application application) {
         LoanRoomDatabase db = LoanRoomDatabase.getDatabase(application);
         mUserDao = db.userDao();
         mAllUsers = mUserDao.getAllUsers();
-        mContext = application.getBaseContext();
+      //  mContext = application.getBaseContext();
     }
 
     //get all users
@@ -44,6 +44,7 @@ public class UserRepo {
     private class insertAsyncTask extends AsyncTask<User, Void, Void> {
 
         private UserDao mAsyncTaskDao;
+        private Context mContext;
 
         insertAsyncTask(UserDao dao, Context context) {
             mAsyncTaskDao = dao;
