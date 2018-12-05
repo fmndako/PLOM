@@ -177,7 +177,9 @@ public class DetailActivity extends LifecycleLoggingActivity implements
             public void onChanged(@Nullable final List<Offset> offsets) {
                 // Update the cached copy of the loans in the adapter.
                 //recyclerView.setVisibility(View.VISIBLE);
-
+                for (Offset item: offsets){
+                    makeToast(mContext, item.getAmount() + "");
+                }
                 adapter.setOffsets(offsets);
                 tvDetailOffsetTotalValue.setText(adapter.getItemCount() + "");
 
