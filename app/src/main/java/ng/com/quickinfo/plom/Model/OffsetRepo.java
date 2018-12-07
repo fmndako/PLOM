@@ -42,33 +42,46 @@ public class OffsetRepo {
     public Offset getOffset(long id){
             return mOffsetDao.getItembyId(id);
             }
+    //delete
+    public void delete(Offset offset){
+        new insertAsyncTask(mOffsetDao, DetailActivity.offsetDeleteAction).execute(offset);
+    }
 
     //insert Offset
-    public void insert(Offset offset) {
-        new insertAsyncTask(mOffsetDao).execute(offset);
+    public void insert(Offset offset, String action) {
+        new insertAsyncTask(mOffsetDao,
+               action).execute(offset);
     }
 
 // **************** insert asynctask class
     private class insertAsyncTask extends AsyncTask<Offset, Void, Void> {
+        String mAction;
 
         private OffsetDao mAsyncTaskDao;
 
-        insertAsyncTask(OffsetDao dao) {
+        insertAsyncTask(OffsetDao dao, String action) {
             mAsyncTaskDao = dao;
+            mAction = action;
         }
 
         @Override
         protected Void doInBackground(final Offset... params) {
-            mAsyncTaskDao.addOffset(params[0]);
-            // mAsyncTaskDao.insert(params[0]);
-            log("Add Offset", "offset added");
+            if (mAction.equals(DetailActivity.offsetDeleteAction)){
+                mAsyncTaskDao.deleteOffset(params[0]);
+            }
+            else {
+                mAsyncTaskDao.addOffset(params[0]);;
+
+            }
+
             return null;
         }
 
         @Override
         protected void onPostExecute(Void Void){
-            Utilities.log("OFFSET REPO",offsetAddAction);
-            Intent intent = new Intent(offsetAddAction);
+            log("DetailActivity repo", "post execute");
+            Intent intent = new Intent();
+            intent.setAction(mAction);
             LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
 
 

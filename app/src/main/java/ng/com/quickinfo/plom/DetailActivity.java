@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,6 +39,7 @@ import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
 import ng.com.quickinfo.plom.ViewModel.OffsetAdapter;
 
 import static ng.com.quickinfo.plom.Utils.Utilities.HomeIntent;
+import static ng.com.quickinfo.plom.Utils.Utilities.dateToString;
 import static ng.com.quickinfo.plom.Utils.Utilities.dateToString1;
 import static ng.com.quickinfo.plom.Utils.Utilities.log;
 import static ng.com.quickinfo.plom.Utils.Utilities.makeToast;
@@ -80,6 +82,10 @@ public class DetailActivity extends LifecycleLoggingActivity implements
     ImageView ivDetailMessage;
     @BindView(R.id.tvDetailOffsetTotalValue)
     MyTextView tvDetailOffsetTotalValue;
+    @BindView(R.id.llDetailOffsetBalance)
+    LinearLayout llDetailOffsetBalance;
+    @BindView(R.id.tvDetailAmountBalanceValue)
+    MyTextView tvDetailAmountBalanceValue;
     
 
 
@@ -97,8 +103,8 @@ public class DetailActivity extends LifecycleLoggingActivity implements
     public static final String loanUpdateAction = "package ng.com.quickinfo.plom.LOAN_EDIT";
     public static final String loanDeleteAction = "package ng.com.quickinfo.plom.LOAN_CLEARED";
     public static final String offsetAddAction = "package ng.com.quickinfo.plom.OFFSET_ADDED";
-    public static final String offsetDeleteAction = "package ng.com.quickinfo.plom.OFFSET_UPDATED";
-    public static final String offsetUpdateAction = "package ng.com.quickinfo.plom.LOAN_DELETED";
+    public static final String offsetDeleteAction = "package ng.com.quickinfo.plom.OFFSET_DELETED";
+    public static final String offsetUpdateAction = "package ng.com.quickinfo.plom.OFFSET_UPDATED";
 
 
     //adapter
@@ -115,7 +121,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
     //loan and current offset
     private Loan mLoan;
-    private Offset offset;
+    private Offset mOffset;
 
 
     private String userEmail;
@@ -141,8 +147,10 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         //create broadcast receivers
         myReceiver = new DetailReceiver();
         loanDeleteFilter = new IntentFilter(loanDeleteAction);
+        //add filters
         offsetAddFilter = new IntentFilter(offsetAddAction);
-
+        offsetAddFilter.addAction(offsetDeleteAction);
+        offsetAddFilter.addAction(offsetUpdateAction);
 
         //set loan view model
         mLoanViewModel = ViewModelProviders.of(this).get(LoanViewModel.class);
@@ -174,10 +182,6 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         //observer
         listview.setClickable(true);
 
-
-
-
-
         mLoanViewModel.getOffsetByLoanId(id).observe(this, new Observer<List<Offset>>() {
             @Override
             public void onChanged(@Nullable final List<Offset> offsets) {
@@ -186,10 +190,18 @@ public class DetailActivity extends LifecycleLoggingActivity implements
                 };
                 listview.setAdapter(baseAdapter);
 
+                tvDetailOffsetTotalValue.setText(baseAdapter.getTotal()+"");
+                if(listview.getCount() != 0){
+
+                llDetailOffsetBalance.setVisibility(View.VISIBLE);
+                tvDetailAmountBalanceValue.setText((mLoan.getAmount()- baseAdapter.getTotal())+ "");}
+
+
+
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                offset = offsets.get(position);
+                mOffset = offsets.get(position);
                 loadOffsetListDialog();
 
             }
@@ -261,6 +273,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
             //offset
             //TODO corrext logic
             if (mLoan.getOffset() != 0) {
+
                 //load offset rv and set total and Balance
                 //makeToast(mContext, "offset not equal to 0");
                 loadRV(mLoan.getId());
@@ -296,7 +309,12 @@ public class DetailActivity extends LifecycleLoggingActivity implements
                 deleteDialog.show(getSupportFragmentManager(), "DeleteDialog");
                 return;
             case R.string.action_offset:
-                DialogFragment offsetDialog = new OffsetDialog();
+                //pass action to offset dialog to know what is to be done, either
+                //insert or update
+                Bundle args = new Bundle();
+                args.putString("action", offsetAddAction);
+                OffsetDialog offsetDialog = new OffsetDialog();
+                offsetDialog.setArguments(args);
                 offsetDialog.show(getSupportFragmentManager(), "OffsetDialog");
                 return;
 
@@ -325,11 +343,23 @@ public class DetailActivity extends LifecycleLoggingActivity implements
     }
 
     @Override
-    public void onDialogPositiveClick(DialogFragment dialog, Offset offset) {
+    public void onDialogPositiveClick(DialogFragment dialog, Offset offset, String action) {
         // User touched the offset dialog's positive button
-        makeToast(mContext, "positive offset");
+
+        //makeToast(mContext, action);
+        if(action.equals(offsetUpdateAction)){
+            //makeToast(mContext, "updateing");
+            mOffset.setAmount(offset.getAmount());
+            mOffset.setDateOffset(offset.getDateOffset());
+            mOffset.setRemarks(offset.getRemarks());
+            mLoanViewModel.insert(mOffset, action);
+
+        }else{
+            //makeToast(mContext, "inserting");
+
         offset.setLoan_id(mLoan.getId());
-        mLoanViewModel.insert(offset);
+        mLoanViewModel.insert(offset, action);
+        }
         dialog.dismiss();
 }
 
@@ -356,16 +386,34 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         }
 
     }
+// ********************* offset item selected **********************8
 
     @Override
     public void onItemSelected(DialogFragment dialog, int title, int item){
         dialog.dismiss();
         makeToast(mContext, item + "");
         if (item == 0){
-           // deleteOffset();
+           deleteOffset();
         }else{
-            //updateOffset();
+            updateOffset();
         }
+    }
+
+    public void deleteOffset(){
+        log(TAG, "deleteOffset");
+        mLoanViewModel.deleteOffset(mOffset);
+
+    }
+    public void updateOffset(){
+        Bundle args = new Bundle();
+        args.putString("action", offsetUpdateAction);
+        args.putString("amount", mOffset.getAmount().toString());
+        args.putString("remarks", mOffset.getRemarks().toString());
+        args.putString("date", dateToString(mOffset.getDateOffset()));
+        OffsetDialog offsetDialog = new OffsetDialog();
+        offsetDialog.setArguments(args);
+        offsetDialog.show(getSupportFragmentManager(), "OffsetDialog");
+
     }
 
 // **************** contact lender ********************
@@ -565,11 +613,30 @@ public class DetailActivity extends LifecycleLoggingActivity implements
             // TODO: This method is called when the BroadcastReceiver is receiving
             // an Intent broadcast.
             //showProgress(false);
-            if (intent.getAction().equals(offsetAddAction)){
-                makeToast(context, "offset added");
-               // loadRV(mLoan.getId());
+//            ArrayList<String> action = new ArrayList<String>();
+//            action.add(offsetAddAction);
+//            action.add(offsetUpdateAction);
+//            action.add(offsetDeleteAction);
+            log(TAG, "onREceive");
+//
+            String action = "";
+
+            switch (intent.getAction()){
+                case offsetAddAction:
+                    action = "inserted";
+
+                    break;
+                case offsetUpdateAction:
+                    action = "updated";
+                    break;
+                case offsetDeleteAction:
+                    action = "deleted";
+                    break;
 
             }
+
+            makeToast(mContext, "Offset " + action);
+            log(TAG, action + "offset");
 
             //
         }

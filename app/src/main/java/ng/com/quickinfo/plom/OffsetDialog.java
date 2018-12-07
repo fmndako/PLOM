@@ -42,10 +42,15 @@ public class OffsetDialog extends DialogFragment {
     EditText etOffsetRemarks;
     Unbinder unbinder;
 
+    String mAction;
+
     //Override on create
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Build the dialog and set up the button click handlers
+
+
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         // Get the layout inflater
         LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -54,6 +59,17 @@ public class OffsetDialog extends DialogFragment {
         //butterknife
         unbinder = ButterKnife.bind(this, view);
 
+
+        //get from args
+        Bundle bundle = getArguments();
+        mAction = bundle.getString("action");
+
+        if(mAction.equals(DetailActivity.offsetUpdateAction)){
+            //setUI
+            etOffsetAmount.setText(bundle.getString("amount", ""));
+            etOffsetRemarks.setText(bundle.getString("remarks", ""));
+            etOffsetDate.setText(bundle.getString("date", ""));
+        }
        // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
         builder.setView(view)
@@ -62,7 +78,7 @@ public class OffsetDialog extends DialogFragment {
                         // Send the positive button event back to the host activity
                         //add offset
                         Offset offset = getValues();
-                        mListener.onDialogPositiveClick(OffsetDialog.this, offset);
+                        mListener.onDialogPositiveClick(OffsetDialog.this, offset, mAction);
 
                     }
                 })
@@ -111,7 +127,7 @@ public class OffsetDialog extends DialogFragment {
 
     //*********** interface *************
     public interface OffsetDialogListener {
-        public void onDialogPositiveClick(DialogFragment dialog, Offset offset);
+        public void onDialogPositiveClick(DialogFragment dialog, Offset offset, String action);
 
         public void onDialogNegativeClick(DialogFragment dialog, int action);
     }

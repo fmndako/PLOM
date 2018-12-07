@@ -57,9 +57,24 @@ public class OffsetAdapter extends BaseAdapter {
         return offset.get(position);
     }
 
+
     @Override
     public long getItemId(int position) {
         return position;
+    }
+
+    public int getTotal(){
+            int sum = 0;
+            if (offset != null){
+                for (int x = 0; x<offset.size(); x++ ){
+                    sum += offset.get(x).getAmount();
+                }
+                return sum;
+            }
+            else
+            {return sum;}
+
+
     }
 
     @Override

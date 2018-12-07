@@ -70,4 +70,16 @@ public class Offset {
     public void setLoan_id(long id){
         this.loan_id = id;
     }
+
+    public void setAmount(Integer amount) {
+        this.amount = amount;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
+    public void setDateOffset(Date dateOffset) {
+        this.dateOffset = dateOffset;
+    }
 }

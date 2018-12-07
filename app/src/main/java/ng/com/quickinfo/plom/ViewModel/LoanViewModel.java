@@ -106,7 +106,11 @@ public class LoanViewModel extends AndroidViewModel {
 
     }
 
-    public void insert(Offset offset) {
-        mOffsetRepo.insert(offset);
+    public void deleteOffset(Offset offset){
+        mOffsetRepo.delete(offset);
+    }
+
+    public void insert(Offset offset, String action) {
+        mOffsetRepo.insert(offset, action);
     }
 }

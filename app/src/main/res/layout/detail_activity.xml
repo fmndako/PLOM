@@ -109,6 +109,60 @@
                         />
                 </LinearLayout>
 
+                <!--*********if Offset**********-->
+
+                <LinearLayout
+                    android:id="@+id/llDetailOffsetBalance"
+                    android:padding="16dp"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    >
+
+                    <customfonts.MyTextView
+
+                        android:id="@+id/free"
+                        android:layout_width="110dp"
+                        android:layout_height="28dp"
+                        android:text=""
+                        android:textColor="#fff"
+                        android:gravity="center"
+
+                        />
+
+                    <LinearLayout
+
+                        android:layout_marginLeft="16dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        >
+
+                        <customfonts.MyTextView
+                            android:layout_weight="1"
+                            android:id="@+id/est"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Balance:"
+                            android:textSize="13dp"
+                            android:textColor="@color/colorSub"
+                            />
+
+                        <customfonts.MyTextView
+                            android:layout_weight="0.8"
+                            android:id="@+id/tvDetailAmountBalanceValue"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="31"
+                            android:textSize="18dp"
+                            android:textColor="@color/colorTex"
+                            />
+                    </LinearLayout>
+                </LinearLayout>
+
+
 
                 <!--*********Shipping**********-->
 
@@ -451,7 +505,13 @@
 
 
 
-
+                <View
+                    android:layout_marginTop="16dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colordevider"
+                    android:padding="16dp"
+                    />
 
                 <!--*********Repayment discription**********-->
 
@@ -463,6 +523,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:background="@color/detail_gray"
                     >
 
                     <customfonts.MyTextView
@@ -594,6 +655,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:background="@color/detail_gray"
                     >
 
                     <customfonts.MyTextView
@@ -821,35 +883,34 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="#f2f2f2">
+                    android:background="@color/detail_gray"
+                    android:orientation="vertical">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="OFFSET DETAILS"
                         android:padding="16dp"
-                        android:textSize="13dp"
-                        android:textColor="@color/colorSub"
-                        />
+                        android:text="OFFSET DETAILS"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="13dp" />
 
                     <!--*********Offser total**********-->
 
                     <LinearLayout
 
-                        android:layout_marginTop="16dp"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginRight="16dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        >
+                        android:layout_marginBottom="16dp"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginTop="16dp"
+                        android:orientation="horizontal">
 
                         <customfonts.MyTextView
                             android:id="@+id/tvDetailOffsetTotal"
-                            android:layout_weight="1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:text="Total"
                             android:textColor="@color/colorSub"
 
@@ -857,9 +918,9 @@
 
                         <customfonts.MyTextView
                             android:id="@+id/tvDetailOffsetTotalValue"
-                            android:layout_weight="0.5"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_weight="0.5"
                             android:text="0 $"
                             android:textColor="@color/colorTex"
 
@@ -868,15 +929,12 @@
                     <!--end offset total-->
 
 
-
                     <!--Offset other-->
                     <ng.com.quickinfo.plom.ExpandableHeightListView
                         android:id="@+id/listview"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="#fff"/>
-
-
+                        android:background="#fff" />
 
 
                 </LinearLayout>
