@@ -114,6 +114,7 @@
     <string name="dialog_delete_message">Are you sure you want to delete?</string>
     <string name="offset_date">Enter date</string>
     <string name="dialog_clear">Are you sure you want to clear all?</string>
+    <string name="offset_list_dialog_title">Select offset action</string>
 
     <!-- rv-->
     <string name="rv_lender">Lender</string>
@@ -123,14 +124,6 @@
     <string name="rv_cleared_date">Date Returned</string>
     <string name="rv_amount">Amount</string>
     <string name="rv_remarks">Remarks</string>
-
-
-
-
-
-
-
-
 
 
 </resources>

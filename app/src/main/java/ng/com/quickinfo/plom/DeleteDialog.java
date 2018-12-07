@@ -10,8 +10,6 @@ import android.support.v7.app.AlertDialog;
 
 
 public class DeleteDialog extends DialogFragment{
-    //context
-    Context mContext;
     // Use this instance of the interface to deliver action events
     DeleteDialogListener mListener;
 
@@ -48,8 +46,8 @@ public class DeleteDialog extends DialogFragment{
             mListener = (DeleteDialogListener) context;
         } catch (ClassCastException e) {
             // The activity doesn't implement the interface, throw exception
-            throw new ClassCastException(mContext.toString()
-                    + " must implement NoticeDialogListener");
+            throw new ClassCastException(context.toString()
+                    + " must implement DeleteDialogListener");
         }
     }
 

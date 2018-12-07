@@ -20,8 +20,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -33,7 +35,7 @@ import ng.com.quickinfo.plom.Model.Loan;
 import ng.com.quickinfo.plom.Model.Offset;
 import ng.com.quickinfo.plom.Utils.Utilities;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
-import ng.com.quickinfo.plom.ViewModel.OffsetListAdapter;
+import ng.com.quickinfo.plom.ViewModel.OffsetAdapter;
 
 import static ng.com.quickinfo.plom.Utils.Utilities.HomeIntent;
 import static ng.com.quickinfo.plom.Utils.Utilities.dateToString1;
@@ -46,7 +48,7 @@ import static ng.com.quickinfo.plom.Utils.Utilities.makeToast;
 //import android.support.v4.graphics.drawable.DrawableCompat;
 
 public class DetailActivity extends LifecycleLoggingActivity implements
-        OffsetListAdapter.OnHandlerInteractionListener, OffsetDialog.OffsetDialogListener,
+        OffsetDialog.OffsetDialogListener, ListDialog.ListDialogListener,
         DeleteDialog.DeleteDialogListener, ClearAllDialog.ClearAllDialogListener {
     @BindView(R.id.tvDetailNameValue)
     MyTextView tvDetailNameValue;
@@ -78,10 +80,10 @@ public class DetailActivity extends LifecycleLoggingActivity implements
     ImageView ivDetailMessage;
     @BindView(R.id.tvDetailOffsetTotalValue)
     MyTextView tvDetailOffsetTotalValue;
-    @BindView(R.id.offsetrv)
-    RecyclerView offsetrv;
-    @BindView(R.id.OffsetRecyclerview)
-    RecyclerView OffsetRecyclerview;
+    
+
+
+
     private Context mContext;
 
     //Receivers
@@ -100,9 +102,10 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
 
     //adapter
-    //loads the RV
-    private RecyclerView recyclerView;
-    private OffsetListAdapter adapter;
+
+    private ExpandableHeightListView listview;
+    private ArrayList<Offset>Offset;
+    private OffsetAdapter baseAdapter;
 
     //toolbar and menu
     Menu mMenu;
@@ -110,13 +113,12 @@ public class DetailActivity extends LifecycleLoggingActivity implements
     private SharedPreferences myPref;
     private SharedPreferences.Editor editor;
 
-    //loan
-    private List<Loan> mLoans;
+    //loan and current offset
     private Loan mLoan;
+    private Offset offset;
 
 
     private String userEmail;
-    //initiate viewmodel
     LoanViewModel mLoanViewModel;
 
     //TAG
@@ -132,6 +134,9 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
         //context
         mContext = getApplicationContext();
+
+
+
 
         //create broadcast receivers
         myReceiver = new DetailReceiver();
@@ -150,13 +155,11 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         editor = Utilities.MyPref.getEditor();
         userEmail = myPref.getString("email", "null");
 
+        //        ********LISTVIEW***********
+        listview = (ExpandableHeightListView)findViewById(R.id.listview);
+        //setlistener
 
-        //recyclerView = findViewById(R.id.OffsetRecyclerview);
-        adapter = new OffsetListAdapter(this);
-        OffsetRecyclerview.setAdapter(adapter);
-        offsetrv.setAdapter(adapter);
-        OffsetRecyclerview.setLayoutManager(new LinearLayoutManager(this));
-        offsetrv.setLayoutManager(new LinearLayoutManager(this));
+
 
 
         //get loan id from intent
@@ -164,44 +167,55 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         getLoan(mLoanId);
 
         loadRV(mLoanId);
-
-
     }
 
     private void loadRV(long id) {
         //loads the RV
-
         //observer
+        listview.setClickable(true);
+
+
+
+
+
         mLoanViewModel.getOffsetByLoanId(id).observe(this, new Observer<List<Offset>>() {
             @Override
             public void onChanged(@Nullable final List<Offset> offsets) {
                 // Update the cached copy of the loans in the adapter.
-                //recyclerView.setVisibility(View.VISIBLE);
-                for (Offset item: offsets){
-                    makeToast(mContext, item.getAmount() + "");
-                }
-                adapter.setOffsets(offsets);
-                tvDetailOffsetTotalValue.setText(adapter.getItemCount() + "");
+                baseAdapter = new OffsetAdapter(mContext, offsets) {
+                };
+                listview.setAdapter(baseAdapter);
 
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                offset = offsets.get(position);
+                loadOffsetListDialog();
 
             }
         });
+            }
+        });
+
+    }
+
+    private void loadOffsetListDialog() {
+        //handles click of offset list
+        Bundle args = new Bundle();
+        args.putInt("title", R.string.offset_list_dialog_title);
+        args.putInt("items", R.array.offset_dialog_list);
+        ListDialog listDialog = new ListDialog();
+        listDialog.setArguments(args);
+        listDialog.show(getSupportFragmentManager(), "ListDialog");
+
     }
 
     private void getLoan(long loan_id) {
         //get loan details
         GetLoanAsyncTask task = new GetLoanAsyncTask();
         task.execute(loan_id);
+ }
 
-
-    }
-
-    // ***************** offsetadapter listener *******************88
-    public void onHandlerInteraction(long loan_id) {
-        //my own listener created in the loanadapter class
-        makeToast(this, "" + loan_id);
-
-    }
 
 //    // drawable changer
 //    public static Drawable changeDrawableColor(Context context,int icon, int newColor) {
@@ -248,7 +262,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
             //TODO corrext logic
             if (mLoan.getOffset() != 0) {
                 //load offset rv and set total and Balance
-                makeToast(mContext, "offset not equal to 0");
+                //makeToast(mContext, "offset not equal to 0");
                 loadRV(mLoan.getId());
 
             }
@@ -293,9 +307,11 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         }
     }
 
+// ********************* Listeners **********************************************************
+
     // The dialog fragment receives a reference to this Activity through the
     // Fragment.onAttach() callback, which it uses to call the following methods
-    // defined by the NoticeDialogFragment.NoticeDialogListener interface
+    // defined by the DialogListener interface
 
     @Override
     public void onDialogPositiveClick(DialogFragment dialog, Date date) {
@@ -315,9 +331,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         offset.setLoan_id(mLoan.getId());
         mLoanViewModel.insert(offset);
         dialog.dismiss();
-
-
-    }
+}
 
     @Override
     public void onDialogPositiveClick(DialogFragment dialog, int action) {
@@ -343,8 +357,18 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
     }
 
+    @Override
+    public void onItemSelected(DialogFragment dialog, int title, int item){
+        dialog.dismiss();
+        makeToast(mContext, item + "");
+        if (item == 0){
+           // deleteOffset();
+        }else{
+            //updateOffset();
+        }
+    }
 
-    // **************** contact lender ********************
+// **************** contact lender ********************
     @OnClick({R.id.ivDetailCall, R.id.ivDetailEmail, R.id.ivDetailMessage})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -541,8 +565,12 @@ public class DetailActivity extends LifecycleLoggingActivity implements
             // TODO: This method is called when the BroadcastReceiver is receiving
             // an Intent broadcast.
             //showProgress(false);
-            makeToast(context, "offset added hhh");
-            loadRV(mLoan.getId());
+            if (intent.getAction().equals(offsetAddAction)){
+                makeToast(context, "offset added");
+               // loadRV(mLoan.getId());
+
+            }
+
             //
         }
     }
