@@ -17,6 +17,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import ng.com.quickinfo.plom.Model.Offset;
+import ng.com.quickinfo.plom.Utils.DateInputMask;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
 
 import static ng.com.quickinfo.plom.Utils.Utilities.stringToDate;
@@ -44,7 +45,7 @@ public class ClearAllDialog extends DialogFragment {
 
         //butterknife
         unbinder = ButterKnife.bind(this, view);
-
+        new DateInputMask(etClearDate);
        // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
         builder.setView(view)

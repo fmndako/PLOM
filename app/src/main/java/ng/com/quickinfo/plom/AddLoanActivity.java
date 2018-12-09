@@ -11,8 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Spinner;
 
@@ -21,41 +19,49 @@ import java.util.Calendar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import customfonts.MyEditText;
+import customfonts.MyTextView;
 import ng.com.quickinfo.plom.Utils.Utilities;
-import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
 
 public class AddLoanActivity extends AppCompatActivity {
 
     //for activity
     public static final String EXTRA_REPLY =
             "ng.com.quickinfo.plom.REPLY";
-    private String TAG = getClass().getSimpleName();
-
+    @BindView(R.id.tvDetailNameValue)
+    MyEditText tvDetailNameValue;
     @BindView(R.id.actvName)
-    AutoCompleteTextView actvName;
+    MyEditText actvName;
     @BindView(R.id.actvNumber)
-    AutoCompleteTextView actvNumber;
-    @BindView(R.id.actvAmount)
-    AutoCompleteTextView actvAmount;
-    @BindView(R.id.actvDateTaken)
-    AutoCompleteTextView actvDateTaken;
-    @BindView(R.id.actvDatePromised)
-    AutoCompleteTextView actvDatePromised;
+    MyEditText actvNumber;
+    @BindView(R.id.actvEmail)
+    MyEditText actvEmail;
     @BindView(R.id.spLoanType)
     Spinner spLoanType;
-    @BindView(R.id.actvRemarks)
-    AutoCompleteTextView actvRemarks;
+    @BindView(R.id.actvAmount)
+    MyEditText actvAmount;
+    @BindView(R.id.actvDateTaken)
+    MyEditText actvDateTaken;
+    @BindView(R.id.actvDatePromised)
+    MyEditText actvDatePromised;
+    @BindView(R.id.spRepaymentOption)
+    Spinner spRepaymentOption;
     @BindView(R.id.cbSetReminder)
     CheckBox cbSetReminder;
     @BindView(R.id.signUpBtn)
-    Button signUpBtn;
+    MyTextView signUpBtn;
+    @BindView(R.id.actvRemarks)
+    MyEditText actvRemarks;
+    private String TAG = getClass().getSimpleName();
+
 
     //contect
     Context mContext;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_loan_fragment_layout);
+        setContentView(R.layout.add_loan_activity);
         ButterKnife.bind(this);
 
         //contxt
@@ -63,18 +69,17 @@ public class AddLoanActivity extends AppCompatActivity {
 
         //action type check either add or update
         long loan_id = getIntent().getLongExtra("loan_id", 0);
-
-        if (loan_id != 0){
+        setSpinner();
+        if (loan_id != 0) {
             updateAction(loan_id);
 
         }
 
 
-
     }
 
     // ****************update Action **************
-    private void updateAction(long id){
+    private void updateAction(long id) {
         //TODO get loan details
         Utilities.makeToast(mContext, "updateAction");
         //set UI according
@@ -88,27 +93,38 @@ public class AddLoanActivity extends AppCompatActivity {
         int yy = calendar.get(Calendar.YEAR);
         int mm = calendar.get(Calendar.MONTH);
         int dd = calendar.get(Calendar.DAY_OF_MONTH);
-        actvDateTaken.setText(dd +"/"+(mm+1)+"/"+yy);
-        actvDatePromised.setText(dd +"/"+(mm+1)+"/"+yy);
+        actvDateTaken.setText(dd + "/" + (mm + 1) + "/" + yy);
+        actvDatePromised.setText(dd + "/" + (mm + 1) + "/" + yy);
     }
 
     //date
-    public void pickDate(Bundle args){
+    public void pickDate(Bundle args) {
         DialogFragment dateFragment = new DateDialog();
         dateFragment.setArguments(args);
         dateFragment.show(getSupportFragmentManager(), "Date Picker");
 
     }
-    public void setSpinner(Context context) {
+
+    public void setSpinner() {
+        Spinner spLoan = (Spinner) findViewById(R.id.spLoanType);
+
         // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context,
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(mContext,
                 R.array.planets_array, android.R.layout.simple_spinner_item);
+
+        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(mContext,
+                R.array.repayment_option, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(
+               // android.R.layout.simple_spinner_item
+                //
+                //
+                 android.R.layout.simple_spinner_dropdown_item
+
+        );
         // Apply the adapter to the spinner
-        spLoanType.setAdapter(adapter);
-
-
+        spLoan.setAdapter(adapter);
+        spRepaymentOption.setAdapter(adapter2);
     }
 
 
@@ -133,6 +149,7 @@ public class AddLoanActivity extends AppCompatActivity {
 
     //contacts name and number
     static final int PICK_CONTACT_REQUEST = 1;  // The request code
+
     public void pickContact(View view) {
         Intent pickContactIntent = new Intent(Intent.ACTION_PICK, Uri.parse("content://contacts"));
         pickContactIntent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE); // Show user only contacts w/ phone numbers
@@ -172,16 +189,16 @@ public class AddLoanActivity extends AppCompatActivity {
 
     public void getViewData() {
         //get values from view
-        String name =  actvName.getText().toString();
-        String number =  actvNumber.getText().toString();
-        String email =  actvName.getText().toString();
-        String dateTaken =  actvDateTaken.getText().toString();
-        String dateToRepay =  actvDatePromised.getText().toString();
-        String remarks =  actvRemarks.getText().toString();
+        String name = actvName.getText().toString();
+        String number = actvNumber.getText().toString();
+        String email = actvName.getText().toString();
+        String dateTaken = actvDateTaken.getText().toString();
+        String dateToRepay = actvDatePromised.getText().toString();
+        String remarks = actvRemarks.getText().toString();
         String amount = actvAmount.getText().toString();
         String loanType = spLoanType.toString();
         //get userId long userID =  mUserID;
-        if (cbSetReminder.isChecked()){
+        if (cbSetReminder.isChecked()) {
             //get reminder parameters
             //add to data setreminder database
             //get userid or loanId
@@ -192,7 +209,7 @@ public class AddLoanActivity extends AppCompatActivity {
             actvName.setError("Most not be empty");
             actvName.hasFocus();
             //setResult(RESULT_CANCELED, replyIntent);
-            Utilities.log(TAG,loanType + ":" + dateToRepay );
+            Utilities.log(TAG, loanType + ":" + dateToRepay);
         } else {
             replyIntent.putExtra(EXTRA_REPLY, name);
             replyIntent.putExtra("loanType", remarks.length());

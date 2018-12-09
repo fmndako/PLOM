@@ -9,4 +9,9 @@
         <item>#FF00FF00</item>
         <item>#FF0000FF</item>
     </array>
+
+    <array name="repayment_option">
+        <item>One time</item>
+        <item>Several</item>
+    </array>
 </resources>

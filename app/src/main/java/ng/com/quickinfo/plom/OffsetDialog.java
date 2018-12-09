@@ -21,6 +21,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import ng.com.quickinfo.plom.Model.Offset;
+import ng.com.quickinfo.plom.Utils.DateInputMask;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
 
 import static ng.com.quickinfo.plom.Utils.Utilities.dateToString;
@@ -59,7 +60,7 @@ public class OffsetDialog extends DialogFragment {
         //butterknife
         unbinder = ButterKnife.bind(this, view);
 
-
+        new DateInputMask(etOffsetDate);
         //get from args
         Bundle bundle = getArguments();
         mAction = bundle.getString("action");

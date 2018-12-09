@@ -30,7 +30,6 @@
         android:layout_marginRight="4dp"
         android:layout_marginBottom="16dp"
         android:fontFamily="sans-serif"
-        android:drawableEnd="@android:drawable/arrow_down_float"
         android:hint="@string/offset_date"/>
     <EditText
         android:id="@+id/etOffsetRemarks"

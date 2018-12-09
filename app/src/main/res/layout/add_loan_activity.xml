@@ -13,8 +13,8 @@
     android:background="#f2f2f2">
 
     <!--<include-->
-        <!--android:id="@+id/toolbar"-->
-        <!--layout="@layout/toolbar">-->
+    <!--android:id="@+id/toolbar"-->
+    <!--layout="@layout/toolbar">-->
 
     <!--</include>-->
     <android.support.v7.widget.Toolbar
@@ -26,12 +26,23 @@
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
+
+
+
+
+
     <android.support.v4.widget.NestedScrollView
         android:layout_marginTop="55dp"
         android:layout_marginBottom="49dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
+
+
+
+
+
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -44,11 +55,7 @@
                 android:orientation="vertical"
                 android:background="#fff"
                 >
-
-
-
-
-                <!--*********Iphone price**********-->
+                <!--********* enter phone **********-->
 
                 <LinearLayout
                     android:layout_marginTop="16dp"
@@ -59,27 +66,35 @@
                     android:orientation="horizontal"
                     >
 
-                    <customfonts.MyTextView
+                    <customfonts.MyEditText
                         android:visibility="visible"
                         android:id="@+id/tvDetailNameValue"
                         android:layout_weight="1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Name"
+                        android:hint="@string/loan_name"
                         android:textSize="21dp"
                         android:textColor="@color/colorTex"
                         />
 
-                    <customfonts.MyEditText
-                        android:id="@+id/etAddName"
-                        android:layout_weight="5"
+                    <ImageView
+                        android:id="@+id/ivDetailCall"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="75990 $"
-                        android:textSize="21dp"
-                        android:textHint="@string/loan_name"
-                        android:textColor="@color/colorTex"
-                        />
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="right"
+                        app:srcCompat="@drawable/account_box" />
+
+                    <!--<customfonts.MyTextView-->
+                        <!--android:id="@+id/tvDetailAmountValue"-->
+                        <!--android:layout_weight="5"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:text="75990 $"-->
+                        <!--android:textSize="21dp"-->
+                        <!--android:textColor="@color/colorTex"-->
+                        <!--/>-->
                 </LinearLayout>
 
                 <!--*********if Offset**********-->
@@ -137,7 +152,7 @@
 
 
 
-                <!--*********Shipping**********-->
+                <!--*********contact**********-->
 
                 <LinearLayout
 
@@ -169,14 +184,14 @@
                         >
 
                         <!--<customfonts.MyTextView-->
-                            <!--android:layout_weight="1"-->
-                            <!--android:id="@+id/est"-->
-                            <!--android:layout_width="match_parent"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:text="Borrow"-->
-                            <!--android:textSize="13dp"-->
-                            <!--android:textColor="@color/colorSub"-->
-                            <!--/>-->
+                        <!--android:layout_weight="1"-->
+                        <!--android:id="@+id/est"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:text="Borrow"-->
+                        <!--android:textSize="13dp"-->
+                        <!--android:textColor="@color/colorSub"-->
+                        <!--/>-->
 
                         <customfonts.MyTextView
                             android:layout_weight="0.8"
@@ -193,13 +208,79 @@
 
 
                 <!--<View-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="1dp"-->
-                    <!--android:background="@color/colordevider"-->
-                    <!--android:padding="16dp"-->
-                    <!--/>-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="1dp"-->
+                <!--android:background="@color/colordevider"-->
+                <!--android:padding="16dp"-->
+                <!--/>-->
 
-                <!--*********personal details**********-->
+<!--*********contact details**********-->
+                <View
+                    android:layout_marginTop="16dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colordevider"
+                    android:padding="16dp"
+                    />
+
+                <!--*********contact discription**********-->
+
+                <LinearLayout
+
+                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@color/detail_gray"
+                    >
+
+                    <customfonts.MyTextView
+                        android:id="@+id/tvContactDetails"
+
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Contact Details"
+                        android:textColor="@color/colorAccent"
+                        />
+
+                </LinearLayout>
+
+
+                <!--name-->
+
+                <LinearLayout
+
+                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
+
+                    <customfonts.MyTextView
+                        android:id="@+id/actvNameT"
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Phone Number"
+                        android:textColor="@color/colorSub"
+
+                        />
+
+                    <customfonts.MyEditText
+                        android:id="@+id/actvName"
+                        android:layout_weight="0.5"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/loan_name"
+                        android:textColor="@color/colorTex"
+
+                        />
+                </LinearLayout>
+                <!--number-->
 
                 <LinearLayout
 
@@ -221,12 +302,13 @@
 
                         />
 
-                    <customfonts.MyTextView
-                        android:id="@+id/tvDetailNumberValue"
+                    <customfonts.MyEditText
+                        android:id="@+id/actvNumber"
                         android:layout_weight="0.5"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="09028932784"
+                        android:hint="@string/loan_number"
+                        android:inputType="number"
                         android:textColor="@color/colorTex"
 
                         />
@@ -254,12 +336,13 @@
 
                         />
 
-                    <customfonts.MyTextView
-                        android:id="@+id/tvDetailEmailValue"
+                    <customfonts.MyEditText
+                        android:id="@+id/actvEmail"
                         android:layout_weight="0.5"
+                        android:inputType="textEmailAddress"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="ldkfls@jksjkdsjfkfj"
+                        android:hint="Enter Email"
                         android:textColor="@color/colorTex"
 
                         />
@@ -269,29 +352,29 @@
                 <!--&lt;!&ndash;*********show more**********&ndash;&gt;-->
 
                 <!--<LinearLayout-->
-                    <!--android:id="@+id/linear1"-->
-                    <!--android:gravity="center"-->
+                <!--android:id="@+id/linear1"-->
+                <!--android:gravity="center"-->
 
-                    <!--android:layout_marginTop="16dp"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:orientation="horizontal"-->
-                    <!--&gt;-->
+                <!--android:layout_marginTop="16dp"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="horizontal"-->
+                <!--&gt;-->
 
-                    <!--<customfonts.MyTextView-->
+                <!--<customfonts.MyTextView-->
 
-                        <!--android:id="@+id/show1"-->
+                <!--android:id="@+id/show1"-->
 
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:text="SHOW MORE"-->
-                        <!--android:textColor="#4c71f5"-->
-                        <!--android:textSize="11dp"-->
-                        <!--android:gravity="center"-->
-                        <!--android:drawableRight="@android:drawable/arrow_down_float"-->
-                        <!--android:drawablePadding="8dp"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="SHOW MORE"-->
+                <!--android:textColor="#4c71f5"-->
+                <!--android:textSize="11dp"-->
+                <!--android:gravity="center"-->
+                <!--android:drawableRight="@android:drawable/arrow_down_float"-->
+                <!--android:drawablePadding="8dp"-->
 
-                        <!--/>-->
+                <!--/>-->
 
 
                 <!--</LinearLayout>-->
@@ -299,177 +382,177 @@
 
 
                 <!--<LinearLayout-->
-                    <!--android:id="@+id/linear2"-->
-                    <!--android:visibility="gone"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:orientation="vertical">-->
+                <!--android:id="@+id/linear2"-->
+                <!--android:visibility="gone"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="vertical">-->
 
-                    <!--&lt;!&ndash;*********weight**********&ndash;&gt;-->
+                <!--&lt;!&ndash;*********weight**********&ndash;&gt;-->
 
-                    <!--<LinearLayout-->
+                <!--<LinearLayout-->
 
-                        <!--android:layout_marginTop="16dp"-->
-                        <!--android:layout_marginLeft="16dp"-->
-                        <!--android:layout_marginRight="16dp"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:orientation="horizontal"-->
-                        <!--&gt;-->
+                <!--android:layout_marginTop="16dp"-->
+                <!--android:layout_marginLeft="16dp"-->
+                <!--android:layout_marginRight="16dp"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="horizontal"-->
+                <!--&gt;-->
 
-                        <!--<customfonts.MyTextView-->
-                            <!--android:id="@+id/display1"-->
-                            <!--android:layout_weight="1"-->
-                            <!--android:layout_width="match_parent"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:text="Display"-->
-                            <!--android:textColor="@color/colorSub"-->
+                <!--<customfonts.MyTextView-->
+                <!--android:id="@+id/display1"-->
+                <!--android:layout_weight="1"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="Display"-->
+                <!--android:textColor="@color/colorSub"-->
 
-                            <!--/>-->
+                <!--/>-->
 
-                        <!--<customfonts.MyTextView-->
-                            <!--android:id="@+id/display2"-->
-                            <!--android:layout_weight="0.5"-->
-                            <!--android:layout_width="match_parent"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:text="4.7 inch"-->
-                            <!--android:textColor="@color/colorTex"-->
+                <!--<customfonts.MyTextView-->
+                <!--android:id="@+id/display2"-->
+                <!--android:layout_weight="0.5"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="4.7 inch"-->
+                <!--android:textColor="@color/colorTex"-->
 
-                            <!--/>-->
-                    <!--</LinearLayout>-->
-
-
-                    <!--&lt;!&ndash;*********camera**********&ndash;&gt;-->
-
-                    <!--<LinearLayout-->
-
-                        <!--android:layout_marginTop="16dp"-->
-                        <!--android:layout_marginLeft="16dp"-->
-                        <!--android:layout_marginRight="16dp"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:orientation="horizontal"-->
-                        <!--&gt;-->
-
-                        <!--<customfonts.MyTextView-->
-                            <!--android:id="@+id/camera1"-->
-                            <!--android:layout_weight="1"-->
-                            <!--android:layout_width="match_parent"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:text="iSight Camera"-->
-                            <!--android:textColor="@color/colorSub"-->
-
-                            <!--/>-->
-
-                        <!--<customfonts.MyTextView-->
-                            <!--android:id="@+id/camera2"-->
-                            <!--android:layout_weight="0.5"-->
-                            <!--android:layout_width="match_parent"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:text="12-megapixel with 1.22µ pixels"-->
-                            <!--android:textColor="@color/colorTex"-->
-
-                            <!--/>-->
-                    <!--</LinearLayout>-->
+                <!--/>-->
+                <!--</LinearLayout>-->
 
 
-                    <!--&lt;!&ndash;*********video**********&ndash;&gt;-->
+                <!--&lt;!&ndash;*********camera**********&ndash;&gt;-->
 
-                    <!--<LinearLayout-->
+                <!--<LinearLayout-->
 
-                        <!--android:layout_marginTop="16dp"-->
-                        <!--android:layout_marginLeft="16dp"-->
-                        <!--android:layout_marginRight="16dp"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:orientation="horizontal"-->
-                        <!--&gt;-->
+                <!--android:layout_marginTop="16dp"-->
+                <!--android:layout_marginLeft="16dp"-->
+                <!--android:layout_marginRight="16dp"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="horizontal"-->
+                <!--&gt;-->
 
-                        <!--<customfonts.MyTextView-->
-                            <!--android:id="@+id/video1"-->
-                            <!--android:layout_weight="1"-->
-                            <!--android:layout_width="match_parent"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:text="Video Recording"-->
-                            <!--android:textColor="@color/colorSub"-->
+                <!--<customfonts.MyTextView-->
+                <!--android:id="@+id/camera1"-->
+                <!--android:layout_weight="1"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="iSight Camera"-->
+                <!--android:textColor="@color/colorSub"-->
 
-                            <!--/>-->
+                <!--/>-->
 
-                        <!--<customfonts.MyTextView-->
-                            <!--android:id="@+id/video2"-->
-                            <!--android:layout_weight="0.5"-->
-                            <!--android:layout_width="match_parent"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:text="4K video recording (3840x2160)"-->
-                            <!--android:textColor="@color/colorTex"-->
+                <!--<customfonts.MyTextView-->
+                <!--android:id="@+id/camera2"-->
+                <!--android:layout_weight="0.5"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="12-megapixel with 1.22µ pixels"-->
+                <!--android:textColor="@color/colorTex"-->
 
-                            <!--/>-->
-                    <!--</LinearLayout>-->
-
-                    <!--&lt;!&ndash;*********Sim**********&ndash;&gt;-->
-
-                    <!--<LinearLayout-->
-
-                        <!--android:layout_marginTop="16dp"-->
-                        <!--android:layout_marginLeft="16dp"-->
-                        <!--android:layout_marginRight="16dp"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:orientation="horizontal"-->
-                        <!--&gt;-->
-
-                        <!--<customfonts.MyTextView-->
-                            <!--android:id="@+id/sim1"-->
-                            <!--android:layout_weight="1"-->
-                            <!--android:layout_width="match_parent"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:text="SIM Card"-->
-                            <!--android:textColor="@color/colorSub"-->
-
-                            <!--/>-->
-
-                        <!--<customfonts.MyTextView-->
-                            <!--android:id="@+id/sim2"-->
-                            <!--android:layout_weight="0.5"-->
-                            <!--android:layout_width="match_parent"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:text="Nano-SIM"-->
-                            <!--android:textColor="@color/colorTex"-->
-
-                            <!--/>-->
-                    <!--</LinearLayout>-->
+                <!--/>-->
+                <!--</LinearLayout>-->
 
 
+                <!--&lt;!&ndash;*********video**********&ndash;&gt;-->
+
+                <!--<LinearLayout-->
+
+                <!--android:layout_marginTop="16dp"-->
+                <!--android:layout_marginLeft="16dp"-->
+                <!--android:layout_marginRight="16dp"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="horizontal"-->
+                <!--&gt;-->
+
+                <!--<customfonts.MyTextView-->
+                <!--android:id="@+id/video1"-->
+                <!--android:layout_weight="1"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="Video Recording"-->
+                <!--android:textColor="@color/colorSub"-->
+
+                <!--/>-->
+
+                <!--<customfonts.MyTextView-->
+                <!--android:id="@+id/video2"-->
+                <!--android:layout_weight="0.5"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="4K video recording (3840x2160)"-->
+                <!--android:textColor="@color/colorTex"-->
+
+                <!--/>-->
+                <!--</LinearLayout>-->
+
+                <!--&lt;!&ndash;*********Sim**********&ndash;&gt;-->
+
+                <!--<LinearLayout-->
+
+                <!--android:layout_marginTop="16dp"-->
+                <!--android:layout_marginLeft="16dp"-->
+                <!--android:layout_marginRight="16dp"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="horizontal"-->
+                <!--&gt;-->
+
+                <!--<customfonts.MyTextView-->
+                <!--android:id="@+id/sim1"-->
+                <!--android:layout_weight="1"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="SIM Card"-->
+                <!--android:textColor="@color/colorSub"-->
+
+                <!--/>-->
+
+                <!--<customfonts.MyTextView-->
+                <!--android:id="@+id/sim2"-->
+                <!--android:layout_weight="0.5"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="Nano-SIM"-->
+                <!--android:textColor="@color/colorTex"-->
+
+                <!--/>-->
+                <!--</LinearLayout>-->
 
 
-                    <!--&lt;!&ndash;*********show less**********&ndash;&gt;-->
 
-                    <!--<LinearLayout-->
-                        <!--android:id="@+id/showless"-->
-                        <!--android:gravity="center"-->
 
-                        <!--android:layout_marginTop="16dp"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:orientation="horizontal"-->
-                        <!--&gt;-->
+                <!--&lt;!&ndash;*********show less**********&ndash;&gt;-->
 
-                        <!--<customfonts.MyTextView-->
+                <!--<LinearLayout-->
+                <!--android:id="@+id/showless"-->
+                <!--android:gravity="center"-->
 
-                            <!--android:id="@+id/show2"-->
+                <!--android:layout_marginTop="16dp"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="horizontal"-->
+                <!--&gt;-->
 
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:text="SHOW LESS"-->
-                            <!--android:textColor="#4c71f5"-->
-                            <!--android:textSize="11dp"-->
-                            <!--android:gravity="center"-->
-                            <!--android:drawableRight="@android:drawable/arrow_up_float"-->
-                            <!--android:drawablePadding="8dp"-->
+                <!--<customfonts.MyTextView-->
 
-                            <!--/>-->
+                <!--android:id="@+id/show2"-->
 
-                    <!--</LinearLayout>-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="SHOW LESS"-->
+                <!--android:textColor="#4c71f5"-->
+                <!--android:textSize="11dp"-->
+                <!--android:gravity="center"-->
+                <!--android:drawableRight="@android:drawable/arrow_up_float"-->
+                <!--android:drawablePadding="8dp"-->
+
+                <!--/>-->
+
+                <!--</LinearLayout>-->
 
 
                 <!--</LinearLayout>-->
@@ -488,6 +571,7 @@
 
                 <!--*********Repayment discription**********-->
 
+
                 <LinearLayout
 
                     android:layout_marginTop="16dp"
@@ -500,15 +584,50 @@
                     >
 
                     <customfonts.MyTextView
-                        android:id="@+id/tvDetailRepayment"
+                        android:id="@+id/tvLoanDetails"
 
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Repayment Details"
+                        android:text="Loan Details"
                         android:textColor="@color/colorAccent"
-                                                />
+                        />
 
                 </LinearLayout>
+
+                <!--loan Type-->
+
+                <LinearLayout
+
+                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
+
+                    <customfonts.MyTextView
+                        android:id="@+id/tvLoanType"
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Phone Number"
+                        android:textColor="@color/colorSub"
+
+                        />
+
+                    <Spinner
+                        android:id="@+id/spLoanType"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+
+                         />
+
+
+
+                </LinearLayout>
+
 
                 <!--*********Date To Repay**********-->
 
@@ -523,21 +642,22 @@
                     >
 
                     <customfonts.MyTextView
-                        android:id="@+id/tvDetailDateToRepayText"
+                        android:id="@+id/actvAmountT"
                         android:layout_weight="1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Date To Repay"
+                        android:text="Amount"
                         android:textColor="@color/colorSub"
 
                         />
 
-                    <customfonts.MyTextView
-                        android:id="@+id/tvDetailDateToRepayValue"
+                    <customfonts.MyEditText
+                        android:id="@+id/actvAmount"
                         android:layout_weight="0.5"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="wed Thu jan 18"
+                        android:hint="@string/loan_amount"
+                        android:inputType="numberDecimal"
                         android:textColor="@color/colorTex"
 
                         />
@@ -556,57 +676,27 @@
                     >
 
                     <customfonts.MyTextView
-                        android:id="@+id/tvDetailRepaymentOption"
+                        android:id="@+id/tvDateTaken"
                         android:layout_weight="1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Repayment Option"
+                        android:text="Date Taken"
                         android:textColor="@color/colorSub"
 
                         />
 
-                    <customfonts.MyTextView
-                        android:id="@+id/tvDetailRepaymentOptionValue"
+                    <customfonts.MyEditText
+                        android:id="@+id/actvDateTaken"
                         android:layout_weight="0.5"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="One Time"
+                        android:hint="Choose Date"
+                        android:inputType="date"
                         android:textColor="@color/colorTex"
 
                         />
                 </LinearLayout>
                 <!--*********Additional Info **********-->
-
-                <LinearLayout
-
-                    android:layout_marginTop="16dp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    >
-
-                    <customfonts.MyTextView
-                        android:id="@+id/tvDetailRemarksText"
-                        android:layout_weight="1"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Additional Info"
-                        android:textColor="@color/colorSub"
-
-                        />
-
-                    <customfonts.MyTextView
-                        android:id="@+id/tvDetailRemarksValue"
-                        android:layout_weight="0.5"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="138.3 * 67.1mm"
-                        android:textColor="@color/colorTex"
-
-                        />
-                </LinearLayout>
 
                 <View
                     android:layout_marginTop="16dp"
@@ -617,8 +707,7 @@
                     />
 
 
-
-                <!--*********cleared status**********-->
+<!--*********repayment details**********-->
 
                 <LinearLayout
 
@@ -632,18 +721,18 @@
                     >
 
                     <customfonts.MyTextView
-                        android:id="@+id/tvDetailClearedText"
+                        android:id="@+id/tvRepaymentOption"
 
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Clear Status"
+                        android:text="Repayment Details"
                         android:textColor="@color/colorAccent"
 
                         />
 
                 </LinearLayout>
 
-                <!--*********cleared status boolean**********-->
+                <!--*********repayment date**********-->
 
                 <LinearLayout
 
@@ -656,22 +745,23 @@
                     >
 
                     <customfonts.MyTextView
-                        android:id="@+id/tvDetailClearedStatusText"
+                        android:id="@+id/tvReturnDate"
                         android:layout_weight="1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Cleared Status"
+                        android:text="Date to Repay"
                         android:textColor="@color/colorSub"
 
                         />
 
-                    <customfonts.MyTextView
-                        android:id="@+id/tvDetailClearedStatusValue"
+                    <customfonts.MyEditText
+                        android:id="@+id/actvDatePromised"
                         android:layout_weight="0.5"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Pending"
+                        android:hint="Choose date"
                         android:textColor="@color/colorTex"
+                        android:inputType="date"
 
                         />
                 </LinearLayout>
@@ -689,26 +779,57 @@
                     >
 
                     <customfonts.MyTextView
-                        android:id="@+id/tvDetailDateCleared"
+                        android:id="@+id/tvRepaymentOptionT"
                         android:layout_weight="1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Date Cleared"
+                        android:text="Repayment option"
                         android:textColor="@color/colorSub"
 
                         />
 
+                    <Spinner
+                        android:id="@+id/spRepaymentOption"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:spinnerMode="dropdown"
+                        android:layout_weight="1" />
+
+
+                </LinearLayout>
+
+                <!--*********remarks**********-->
+
+                <LinearLayout
+
+                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
+
                     <customfonts.MyTextView
-                        android:id="@+id/tvDetailDateClearedValue"
+                        android:id="@+id/tvRemarks"
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Date to Repay"
+                        android:textColor="@color/colorSub"
+
+                        />
+
+                    <customfonts.MyEditText
+                        android:id="@+id/actvRemarks"
                         android:layout_weight="0.5"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Pending"
+                        android:hint="Enter Additional info"
                         android:textColor="@color/colorTex"
 
                         />
                 </LinearLayout>
-
 
                 <View
                     android:layout_marginTop="16dp"
@@ -718,202 +839,26 @@
                     android:padding="16dp"
                     />
 
-                <!--********Contact lender ************88-->
-                <LinearLayout
+                <CheckBox
+                    android:id="@+id/cbSetReminder"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    >
-
-                    <!--call-->
-                    <LinearLayout
-                        android:id="@+id/llCall"
-                        android:layout_weight="1"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:layout_marginTop="20dp"
-                        >
-
-                        <ImageView
-                            android:id="@+id/ivDetailCall"
-                            android:layout_weight="1"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:src="@drawable/phone"
-                            android:layout_gravity="center"
-                            android:gravity="bottom"/>
-
-                        <customfonts.MyTextView
-                            android:layout_weight="1"
-                            android:id="@+id/tvCall"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:text="Call"
-                            android:gravity="center"
-                            android:textSize="12dp"
-                            android:textColor="#4c71f5"
-                            />
-                    </LinearLayout>
-                    <!--end call-->
-
-                    <View
-
-                        android:layout_width="1dp"
-                        android:layout_height="match_parent"
-                        android:background="@color/colordevider"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginBottom="16dp"
-
-                        />
-
-                    <!--*********Email**********-->
-                    <LinearLayout
-                        android:id="@+id/llEmail"
-                        android:layout_weight="1"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-
-                        android:layout_marginTop="20dp"
-                        >
-
-                        <ImageView
-                            android:id="@+id/ivDetailEmail"
-                            android:layout_weight="1"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            app:srcCompat="@drawable/email"
-                            android:layout_gravity="center"
-                            android:gravity="bottom"
-
-                            />
-
-                        <customfonts.MyTextView
-                            android:layout_weight="1"
-                            android:id="@+id/tvMail"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:text="Mail"
-
-                            android:gravity="center"
-                            android:textSize="12dp"
-                            android:textColor="#4c71f5"
-                            />
-
-                    </LinearLayout>
-                    <!--end email-->
-
-                    <View
-                        android:layout_width="1dp"
-                        android:layout_height="match_parent"
-                        android:background="@color/colordevider"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginBottom="16dp" />
-
-                    <!--message-->
-                    <LinearLayout
-                        android:id="@+id/llMessage"
-                        android:layout_weight="1"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-
-                        android:layout_marginTop="20dp"
-                        >
-
-                        <ImageView
-                            android:id="@+id/ivDetailMessage"
-                            android:layout_weight="1"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:src="@drawable/message_text"
-                            android:layout_gravity="center"
-                            android:gravity="bottom"
-
-                            />
+                    android:layout_marginTop="7dp"
+                    android:text="@string/loan_set_reminder"
+                    android:textSize="14sp" />
 
 
-
-                        <customfonts.MyTextView
-                            android:gravity="center"
-                            android:layout_weight="1"
-                            android:id="@+id/tvMessage"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:text="Message"
-                            android:layout_gravity="center"
-                            android:textSize="12dp"
-                            android:textColor="#4c71f5"
-                            />
-                    </LinearLayout>
-                    <!--end message-->
-
-                    </LinearLayout>
-                <!--*********end Contact Lender-->
-
-                <!--offset main-->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/detail_gray"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="16dp"
-                        android:text="OFFSET DETAILS"
-                        android:textColor="@color/colorAccent"
-                        android:textSize="13dp" />
-
-                    <!--*********Offser total**********-->
-
-                    <LinearLayout
-
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginRight="16dp"
-                        android:layout_marginTop="16dp"
-                        android:orientation="horizontal">
-
-                        <customfonts.MyTextView
-                            android:id="@+id/tvDetailOffsetTotal"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Total"
-                            android:textColor="@color/colorSub"
-
-                            />
-
-                        <customfonts.MyTextView
-                            android:id="@+id/tvDetailOffsetTotalValue"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0.5"
-                            android:text="0 $"
-                            android:textColor="@color/colorTex"
-
-                            />
-                    </LinearLayout>
-                    <!--end offset total-->
-
-
-                    <!--Offset other-->
-                    <ng.com.quickinfo.plom.ExpandableHeightListView
-                        android:id="@+id/listview"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="#fff" />
-
-
-                </LinearLayout>
-                <!--end offset main-->
-
-
+                <customfonts.MyTextView
+            android:id="@+id/signUpBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#4c71f5"
+            android:text="@string/submit"
+            android:textSize="16dp"
+            android:textColor="#fff"
+            android:gravity="center"
+            android:padding="16dp"
+            />
             </LinearLayout>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
@@ -933,7 +878,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#4c71f5"
-        android:text="CLEAR LOAN"
+        android:text="@string/submit"
         android:textSize="16dp"
         android:textColor="#fff"
         android:gravity="center"
