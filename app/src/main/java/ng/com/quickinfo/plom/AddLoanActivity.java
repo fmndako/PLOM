@@ -32,8 +32,7 @@ public class AddLoanActivity extends AppCompatActivity {
     //for activity
     public static final String EXTRA_REPLY =
             "ng.com.quickinfo.plom.REPLY";
-    @BindView(R.id.tvDetailNameValue)
-    MyEditText tvDetailNameValue;
+
     @BindView(R.id.actvName)
     MyEditText actvName;
     @BindView(R.id.actvNumber)
@@ -48,6 +47,8 @@ public class AddLoanActivity extends AppCompatActivity {
     MyEditText actvDatePromised;
     @BindView(R.id.spRepaymentOption)
     Spinner spRepaymentOption;
+    @BindView(R.id.spLoanType)
+    Spinner spLoanType;
     @BindView(R.id.cbSetReminder)
     CheckBox cbSetReminder;
     @BindView(R.id.signUpBtn)
@@ -56,7 +57,6 @@ public class AddLoanActivity extends AppCompatActivity {
     MyEditText actvRemarks;
     private String TAG = getClass().getSimpleName();
 
-    Spinner spLoan;
     //contect
     Context mContext;
 
@@ -108,19 +108,20 @@ public class AddLoanActivity extends AppCompatActivity {
     }
 
     public void setSpinner() {
-        spLoan = (Spinner) findViewById(R.id.spRepaymentOption) ;
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(mContext,
-                R.array.planets_array, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        spLoan.setAdapter(adapter);
-
-        spLoan.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//        spLoan = (Spinner) findViewById(R.id.spRepaymentOption) ;
+//        // Create an ArrayAdapter using the string array and a default spinner layout
+//        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(mContext,
+//                R.array.planets_array, android.R.layout.simple_spinner_item);
+//        // Specify the layout to use when the list of choices appears
+//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        // Apply the adapter to the spinner
+//        spLoan.setAdapter(adapter);
+//
+        spLoanType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 makeToast(mContext, "item selected spinner");
+
             }
 
             @Override
@@ -129,8 +130,8 @@ public class AddLoanActivity extends AppCompatActivity {
             }
         });
 
-
-
+//
+//
 
     }
 
