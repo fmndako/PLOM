@@ -621,6 +621,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:entries="@array/planets_array"
 
                          />
 
@@ -792,8 +793,8 @@
                         android:id="@+id/spRepaymentOption"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:spinnerMode="dropdown"
-                        android:layout_weight="1" />
+                        android:entries="@array/repayment_option"
+                        />
 
 
                 </LinearLayout>
