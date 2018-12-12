@@ -98,19 +98,23 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
     IntentFilter offsetAddFilter;
 
+    public static final String loanInsertAction = "package ng.com.quickinfo.plom.LOAN_INSERTED";
+
     public static final String loanClearedAction = "package ng.com.quickinfo.plom.LOAN_CLEARED";
     public static final String loanOffsetAction = "package ng.com.quickinfo.plom.LOAN_OFFSET";
-    public static final String loanUpdateAction = "package ng.com.quickinfo.plom.LOAN_EDIT";
+    public static final String loanUpdateAction = "package ng.com.quickinfo.plom.LOAN_EDITED";
     public static final String loanDeleteAction = "package ng.com.quickinfo.plom.LOAN_CLEARED";
     public static final String offsetAddAction = "package ng.com.quickinfo.plom.OFFSET_ADDED";
     public static final String offsetDeleteAction = "package ng.com.quickinfo.plom.OFFSET_DELETED";
     public static final String offsetUpdateAction = "package ng.com.quickinfo.plom.OFFSET_UPDATED";
 
+    private static final int UPDATE_ACTIVITY = 13;
+
 
     //adapter
 
     private ExpandableHeightListView listview;
-    private ArrayList<Offset>Offset;
+    private ArrayList<Offset> Offset;
     private OffsetAdapter baseAdapter;
 
     //toolbar and menu
@@ -166,9 +170,6 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         //        ********LISTVIEW***********
         listview = (ExpandableHeightListView)findViewById(R.id.listview);
         //setlistener
-
-
-
 
         //get loan id from intent
         long mLoanId = getIntent().getLongExtra("loan_id", 16L);
@@ -491,9 +492,12 @@ public class DetailActivity extends LifecycleLoggingActivity implements
                 showDialogs(R.string.action_offset);
                 return true;
             case R.id.action_update:
+
+
                 Intent updateIntent = new Intent(mContext, AddLoanActivity.class);
                 updateIntent.putExtra("loan_id", mLoan.getId());
-                startActivity(updateIntent);
+
+                startActivityForResult(updateIntent, UPDATE_ACTIVITY);
                 return true;
             case R.id.action_delete:
                 // delete lend

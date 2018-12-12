@@ -4,9 +4,15 @@ package ng.com.quickinfo.plom.Model;
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v4.content.LocalBroadcastManager;
 
 import java.util.List;
+
+import ng.com.quickinfo.plom.DetailActivity;
+
+import static ng.com.quickinfo.plom.Utils.Utilities.log;
 
 public class LoanRepo {
 
@@ -33,7 +39,7 @@ public class LoanRepo {
     }
 
     public void insert (Loan Loan) {
-        new insertAsyncTask(mLoanDao).execute(Loan);
+        mLoanDao.insert(Loan);
     }
 
     //delete
@@ -41,36 +47,5 @@ public class LoanRepo {
         mLoanDao.deleteLoan(loan);
     }
 
-    private static class insertAsyncTask extends AsyncTask<Loan, Void, Void> {
 
-        private LoanDao mAsyncTaskDao;
-
-        insertAsyncTask(LoanDao dao) {
-            mAsyncTaskDao = dao;
-        }
-
-        @Override
-        protected Void doInBackground(final Loan... params) {
-            //mAsyncTaskDao.addLoan(params[0]);
-            mAsyncTaskDao.insert(params[0]);
-            return null;
-        }
-    }
-
-    //class for accessing user obj
-    private static class LoanAsyncTask extends AsyncTask<Long, Void, Void> {
-
-        private LoanDao mAsyncTaskDao;
-
-        LoanAsyncTask(LoanDao dao) {
-            mAsyncTaskDao = dao;
-        }
-
-        @Override
-        protected Void doInBackground(final Long... params) {
-            mAsyncTaskDao.getItembyId(params[0]);
-            return null;
-        }
-
-    }
 }

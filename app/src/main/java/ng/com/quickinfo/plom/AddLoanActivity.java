@@ -1,12 +1,16 @@
 package ng.com.quickinfo.plom;
 
+import android.arch.lifecycle.ViewModelProviders;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -14,24 +18,39 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import customfonts.MyEditText;
 import customfonts.MyTextView;
+import ng.com.quickinfo.plom.Model.Loan;
+import ng.com.quickinfo.plom.Utils.DateInputMask;
 import ng.com.quickinfo.plom.Utils.Utilities;
+import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
 
+import static ng.com.quickinfo.plom.Utils.Utilities.log;
 import static ng.com.quickinfo.plom.Utils.Utilities.makeToast;
+import static ng.com.quickinfo.plom.Utils.Utilities.stringToDate;
 
 public class AddLoanActivity extends AppCompatActivity {
 
     //for activity
     public static final String EXTRA_REPLY =
             "ng.com.quickinfo.plom.REPLY";
+    public static final String UpdateLoanAction = "ng.com.quickinfo.plom.LOAN_UPDATE";
+
+    //receivers
+
+    AddReceiver myReceiver;
+    IntentFilter myFilter;
+    //database
+    LoanViewModel mLoanViewModel;
 
     @BindView(R.id.actvName)
     MyEditText actvName;
@@ -49,8 +68,8 @@ public class AddLoanActivity extends AppCompatActivity {
     Spinner spRepaymentOption;
     @BindView(R.id.spLoanType)
     Spinner spLoanType;
-    @BindView(R.id.cbSetReminder)
-    CheckBox cbSetReminder;
+    @BindView(R.id.cbNotify)
+    CheckBox cbNotify;
     @BindView(R.id.signUpBtn)
     MyTextView signUpBtn;
     @BindView(R.id.actvRemarks)
@@ -60,6 +79,9 @@ public class AddLoanActivity extends AppCompatActivity {
     //contect
     Context mContext;
 
+    //action type
+    long loan_id;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,24 +90,65 @@ public class AddLoanActivity extends AppCompatActivity {
 
         //contxt
         mContext = getApplicationContext();
+        mLoanViewModel = ViewModelProviders.of(this).get(LoanViewModel.class);
+
+        //instantiate receivers
+        //create broadcast receivers
+        myReceiver = new AddReceiver();
+        myFilter = new IntentFilter(UpdateLoanAction);
+
+        //set Date Input Mask
+        new DateInputMask(actvDatePromised);
+        new DateInputMask(actvDateTaken);
 
         //action type check either add or update
-        long loan_id = getIntent().getLongExtra("loan_id", 0);
-        setSpinner();
-        if (loan_id != 0) {
+        loan_id = getIntent().getLongExtra("loan_id", -1);
+
+        //setSpinner();//not needed
+        if (loan_id != -1) {
             updateAction(loan_id);
-
         }
-
-
     }
 
     // ****************update Action **************
     private void updateAction(long id) {
         //TODO get loan details
-        makeToast(mContext, "updateAction");
+        Utilities.GetLoanAsyncTask task = new Utilities.GetLoanAsyncTask(mLoanViewModel,
+                UpdateLoanAction);
+        task.execute(id);
         //set UI according
         //button
+
+    }
+
+    private void updateUI(Intent intent){
+        //update UI from addreceiver intent
+        String name, number, email, date_taken, date_promised, remarks;
+        int amount, loan_type, repayment_option, notify;
+        name = intent.getStringExtra("name");
+        number = intent.getStringExtra("number");
+        email= intent.getStringExtra("email");
+        amount= intent.getIntExtra("amount",0);
+        loan_type= intent.getIntExtra("loan_type", 0);
+        date_taken = intent.getStringExtra("date_taken");
+        date_promised = intent.getStringExtra("date_promised");
+        repayment_option = intent.getIntExtra("repayment_option", 0);
+        notify = intent.getIntExtra("notify", 0);
+        remarks = intent.getStringExtra("remarks");
+
+
+        actvName.setText(name);
+        actvNumber.setText(number);
+        actvEmail.setText(email);
+        actvAmount.setText(amount +"");
+        spLoanType.setSelection(loan_type);
+        actvDateTaken.setText(date_taken);
+        actvDatePromised.setText(date_promised);
+        spRepaymentOption.setSelection(repayment_option);
+        if (notify != 0){
+        cbNotify.setChecked(true);}
+        actvRemarks.setText(remarks);
+        signUpBtn.setText(R.string.action_update);
 
     }
 
@@ -108,19 +171,11 @@ public class AddLoanActivity extends AppCompatActivity {
     }
 
     public void setSpinner() {
-//        spLoan = (Spinner) findViewById(R.id.spRepaymentOption) ;
-//        // Create an ArrayAdapter using the string array and a default spinner layout
-//        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(mContext,
-//                R.array.planets_array, android.R.layout.simple_spinner_item);
-//        // Specify the layout to use when the list of choices appears
-//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        // Apply the adapter to the spinner
-//        spLoan.setAdapter(adapter);
-//
+
         spLoanType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                makeToast(mContext, "item selected spinner");
+                makeToast(mContext, "item selected spinner" + i + l);
 
             }
 
@@ -138,7 +193,7 @@ public class AddLoanActivity extends AppCompatActivity {
 
 
 
-    @OnClick({R.id.actvName, R.id.actvDateTaken, R.id.actvDatePromised, R.id.cbSetReminder, R.id.signUpBtn})
+    @OnClick({R.id.actvName, R.id.ivContact, R.id.actvDateTaken, R.id.actvDatePromised, R.id.cbNotify, R.id.signUpBtn})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.actvName:
@@ -149,10 +204,14 @@ public class AddLoanActivity extends AppCompatActivity {
                 break;
             case R.id.actvDatePromised:
                 break;
-            case R.id.cbSetReminder:
+            case R.id.cbNotify:
                 break;
             case R.id.signUpBtn:
                 getViewData();
+
+                break;
+            case R.id.ivContact:
+                pickContact(view);
                 break;
         }
     }
@@ -176,6 +235,7 @@ public class AddLoanActivity extends AppCompatActivity {
                 Uri contactUri = data.getData();
                 // We only need the NUMBER column, because there will be only one row in the result
                 String[] projection = {ContactsContract.CommonDataKinds.Phone.NUMBER};
+                String[] proj2 = {ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME};
 
                 // Perform the query on the contact to get the NUMBER column
                 // We don't need a selection or sort order (there's only one result for the given URI)
@@ -185,13 +245,20 @@ public class AddLoanActivity extends AppCompatActivity {
                 Cursor cursor = this.getContentResolver()
                         .query(contactUri, projection, null, null, null);
                 cursor.moveToFirst();
+                Cursor cursor1 = this.getContentResolver()
+                        .query(contactUri, proj2, null, null, null);
+                cursor.moveToFirst();
 
                 // Retrieve the phone number from the NUMBER column
                 int column = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+                int columnName = cursor1.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
                 String number = cursor.getString(column);
+                String name = cursor.getString(columnName);
+
 
                 // Do something with the phone number
                 actvNumber.setText(number);
+                actvName.setText(name);
 
             }
         }
@@ -201,35 +268,78 @@ public class AddLoanActivity extends AppCompatActivity {
         //get values from view
         String name = actvName.getText().toString();
         String number = actvNumber.getText().toString();
-        String email = actvName.getText().toString();
-        String dateTaken = actvDateTaken.getText().toString();
-        String dateToRepay = actvDatePromised.getText().toString();
+        String email = actvEmail.getText().toString();
+        Date dateTaken = stringToDate(actvDateTaken.getText().toString());
+        Date dateToRepay = stringToDate(actvDatePromised.getText().toString());
         String remarks = actvRemarks.getText().toString();
-        String amount = actvAmount.getText().toString();
-        //String loanType = spLoanType.toString();
-        //get userId long userID =  mUserID;
-        if (cbSetReminder.isChecked()) {
-            //get reminder parameters
-            //add to data setreminder database
-            //get userid or loanId
-        }
+        int amount = Integer.valueOf(actvAmount.getText().toString());
+        int notify = 0;
+        if (cbNotify.isChecked()) {
+            notify = 1;
+                   }
+        int loan_type = spLoanType.getSelectedItemPosition();
 
-        Intent replyIntent = new Intent();
+        int repayment_option = spRepaymentOption.getSelectedItemPosition();
+
+        Loan loan = new Loan(name, number,email, amount, dateTaken, dateToRepay, loan_type,
+                remarks, 0, 0, notify, repayment_option, -1);
+
+
+        Intent intent = new Intent();
         if (TextUtils.isEmpty(actvName.getText())) {
             actvName.setError("Most not be empty");
             actvName.hasFocus();
-            //setResult(RESULT_CANCELED, replyIntent);
-           // Utilities.log(TAG, loanType + ":" + dateToRepay);
-        } else {
-            replyIntent.putExtra(EXTRA_REPLY, name);
-            replyIntent.putExtra("loanType", remarks.length());
-            replyIntent.putExtra("dateToRepay", dateToRepay);
-            setResult(RESULT_OK, replyIntent);
+        }else if (TextUtils.isEmpty(number)){
+            actvNumber.setError("Most not be empty");
+            actvNumber.hasFocus(); }
+        else {
+            intent.putExtra("name", name);
+            intent.putExtra("number", number);
+            intent.putExtra("email", email);
+            intent.putExtra("amount", amount);
+            intent.putExtra("loan_type", loan_type);
+            intent.putExtra("date_taken", dateTaken);
+            intent.putExtra("date_promised", dateToRepay);
+            intent.putExtra("repayment_option", repayment_option);
+            intent.putExtra("notify", notify);
+            intent.putExtra("remarks", remarks);
+            intent.putExtra("id", loan_id);
+            setResult(RESULT_OK, intent);
+            if (loan_id == -1){
+
+            }
             finish();
         }
+    }
 
-        //Loan loan = new Loan(name, number, email, amount, dateTaken);
 
+    // *********** Register and unregister receivers
+    //register receiver when app resumes and unregister when app pauses
+    //register on create then unregister on Destroy
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver, myFilter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //unregistering using local broadcast manager
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(myReceiver);
+        //null the receivers to prevent ish
+        myReceiver = null;
+    }
+
+    //******************** AddReceiver ********************
+    public class AddReceiver extends BroadcastReceiver {
+        //receives loan details for update
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            updateUI(intent);
+            log(TAG, "intent received");
+            // updateUI();
+        }
     }
 
 }

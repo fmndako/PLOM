@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -21,7 +22,9 @@ import java.util.Calendar;
 import java.util.Date;
 
 import ng.com.quickinfo.plom.AddLoanActivity;
+import ng.com.quickinfo.plom.DetailActivity;
 import ng.com.quickinfo.plom.Model.Loan;
+import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -125,29 +128,61 @@ public class Utilities {
 
     }
 
+    // *************************   get user async task ***************
+
+    //        ******************** get laon async task ******************
+    public static class GetLoanAsyncTask extends AsyncTask<Long, Void, Loan> {
+        LoanViewModel loanViewModel;
+        String mAction;
+        Context mContext;
+
+        public GetLoanAsyncTask(LoanViewModel lv, String action){
+            loanViewModel = lv;
+
+            mAction = action;
+            mContext=lv.getApplication().getApplicationContext();
+        }
 
 
+        @Override
+        protected Loan doInBackground(Long... params) {
 
-//    public static Intent GetIntent (Intent intent){String name = data.getStringExtra(AddLoanActivity.EXTRA_REPLY);
-//
-//    Integer amount = 33;
-//        Integer loanType = data.getIntExtra("loanType", 0);
-//        String remarks = "loan";
-//        String number = "090";
-//        Integer clearStatus =  0;
-//        Integer offset = 1;
-//        Integer notify = 0;
-//        Integer repaymentOption = 0;
-//        String email = "email";
-//        Date dateTaken = stringToDate("11/11/1111");
-//        Date dateToRepay = stringToDate(data.getStringExtra("dateToRepay"));
-//        long user_id = mUserId;
-//
-//        Loan loan = new Loan(name, number, email, amount, dateTaken, dateToRepay, loanType,
-//                remarks, clearStatus, offset, notify,repaymentOption, user_id);
-//        mLoanViewModel.insert(loan);
-//        makeToast(this, "loan saved");
-//        return
-//    }
+            return loanViewModel.getLoan(params[0]);
+
+
+        }
+
+        protected void onPostExecute(Loan result) {
+           // /extract data into intent
+
+            //send braodcast
+            log("DetailActivity repo", "post execute");
+            Intent intent = new Intent();
+            intent.putExtra("name", result.getName());
+            intent.putExtra("number", result.getNumber());
+            intent.putExtra("email", result.getEmail());
+            intent.putExtra("amount", result.getAmount());
+            intent.putExtra("loan_type", result.getLoanType());
+            intent.putExtra("date_taken", dateToString(result.getDateTaken()));
+            intent.putExtra("date_promised", dateToString(result.getDateToRepay()));
+            intent.putExtra("repayment_option", result.getRepaymentOption());
+            intent.putExtra("notify", result.getNotify());
+            intent.putExtra("remarks", result.getRemarks());
+            intent.putExtra("id", result.getId());
+            if(mAction == DetailActivity.offsetAddAction) {
+                intent.putExtra("cleared_status", result.getClearStatus());
+                intent.putExtra("offset", result.getOffset());
+                if (result.getClearStatus() != 0) {
+
+                    intent.putExtra("date_cleared", dateToString(result.getDateCleared()));
+                }
+
+            }
+
+            intent.setAction(mAction);
+            LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
+        }
+    }
+
 
 }

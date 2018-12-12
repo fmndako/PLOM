@@ -135,5 +135,9 @@ public class Loan {
         this.clearStatus = 1;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
 
 }

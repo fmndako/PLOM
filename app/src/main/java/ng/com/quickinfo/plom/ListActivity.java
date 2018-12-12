@@ -34,6 +34,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ng.com.quickinfo.plom.Model.Loan;
 import ng.com.quickinfo.plom.Model.User;
+import ng.com.quickinfo.plom.Utils.DatabaseUtils;
 import ng.com.quickinfo.plom.Utils.FilterUtils;
 import ng.com.quickinfo.plom.Utils.Utilities;
 import ng.com.quickinfo.plom.ViewModel.LoanListAdapter;
@@ -48,7 +49,7 @@ public class ListActivity extends LifecycleLoggingActivity implements
     //implemented a listener from the adapter to handle layout clicks
     //delare variables
     //intent for signout and revoke access
-    SignOutReceiver signoutReceiver;
+    ListReceiver ListReceiver;
     IntentFilter intentfilter;
 
     //adapter
@@ -72,6 +73,8 @@ public class ListActivity extends LifecycleLoggingActivity implements
     LoanViewModel mLoanViewModel;
     private String mEmail;
     private long mUserId;
+
+    int loanType;
     //required for start new activity
     public static final int NEW_LOAN_ACTIVITY_REQUEST_CODE = 1;
     public static final int NEW_USER_ACTIVITY_REQUEST_CODE = 2;
@@ -97,7 +100,7 @@ public class ListActivity extends LifecycleLoggingActivity implements
         //TODO can get the email address from shared pref
         //mEmail = getIntent().getStringExtra("email");
         mUserId = getIntent().getLongExtra("user_id", 1);
-        int loanType = getIntent().getIntExtra("loanType", 1);
+        loanType = getIntent().getIntExtra("loanType", 1);
 
 
         mEmail = Utilities.MyPref.getSharedPref(mContext).getString("email", null);
@@ -183,6 +186,7 @@ public class ListActivity extends LifecycleLoggingActivity implements
 
     private void goToHome() {
         Intent intent = new Intent(this, AddLoanActivity.class);
+        intent.putExtra("loantype", loanType);
         startActivityForResult(intent, NEW_LOAN_ACTIVITY_REQUEST_CODE);
     }
 
@@ -314,58 +318,49 @@ public class ListActivity extends LifecycleLoggingActivity implements
 
 
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
 
         if (requestCode == NEW_LOAN_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-            String name = data.getStringExtra(AddLoanActivity.EXTRA_REPLY);
-            Integer amount = 33;
-            Integer loanType = data.getIntExtra("loanType", 0);
-            String remarks = "loan";
-            String number = "090";
-            Integer clearStatus =  0;
-            Integer offset = 1;
-            Integer notify = 0;
-            Integer repaymentOption = 0;
-            String email = "email";
-            Date dateTaken = stringToDate("11/11/1111");
-            Date dateToRepay = stringToDate(data.getStringExtra("dateToRepay"));
+            String name, number, email, date_taken, date_promised, remarks;
+            int amount, loan_type, repayment_option, notify;
+            name = intent.getStringExtra("name");
+            number = intent.getStringExtra("number");
+            email= intent.getStringExtra("email");
+            amount= intent.getIntExtra("amount",0);
+            loan_type= intent.getIntExtra("loan_type", 0);
+            date_taken = intent.getStringExtra("date_taken");
+            date_promised = intent.getStringExtra("date_promised");
+            repayment_option = intent.getIntExtra("repayment_option", 0);
+            notify = intent.getIntExtra("notify", 0);
+            remarks = intent.getStringExtra("remarks");
             long user_id = mUserId;
 
-            Loan loan = new Loan(name, number, email, amount, dateTaken, dateToRepay, loanType,
-                    remarks, clearStatus, offset, notify,repaymentOption, user_id);
-            mLoanViewModel.insert(loan);
-            makeToast(this, "loan saved");
+            Loan loan = new Loan(name, number, email, amount, stringToDate(date_taken), stringToDate(date_promised), loan_type,
+                    remarks, 0,0, notify,repayment_option, user_id);
+            //use database utils async task
+            new DatabaseUtils.InsertLoanAsyncTask(mLoanViewModel,
+                    DetailActivity.loanInsertAction).execute(loan);
+
+            ///makeToast(this, "loan saved");
 
         }
 
-        if (requestCode == NEW_USER_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-            User user = new User(data.getStringExtra("user"),
-                    "34354354", data.getStringExtra("email"), ";lsfl;f");
-            mLoanViewModel.insert(user, mContext);
-            makeToast(this, "User successfully added");
-            //getuser id of registered U
-            //getUserID()
-            //wait(11);ser
-            //getUser(data.getStringExtra("email"));
-
-
-        }
     }
 
     private void registerMyReceivers() {
-        signoutReceiver = new SignOutReceiver();
-        intentfilter = new IntentFilter(ListActivity.ACTION_USER_SIGN_IN);
+        ListReceiver = new ListReceiver();
+        intentfilter = new IntentFilter(DetailActivity.loanInsertAction);
         //intentfilter.addAction(ListActivity.ACTION_DELETE_ACCOUNT);
         //registers receivers
-        LocalBroadcastManager.getInstance(this).registerReceiver(signoutReceiver, intentfilter);
+        LocalBroadcastManager.getInstance(this).registerReceiver(ListReceiver, intentfilter);
     }
 
     private void unRegisterMyReceivers() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(signoutReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(ListReceiver);
     }
 
-    public class SignOutReceiver extends BroadcastReceiver {
+    public class ListReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {

@@ -124,7 +124,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="7dp"
-            android:text="@string/loan_set_reminder"
+            android:text="@string/loan_notify"
             android:textColor="@color/add_loan_text_color"
             android:textSize="14sp" />
 

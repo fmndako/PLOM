@@ -28,7 +28,7 @@
     <string name="loan_date_taken">Date Taken</string>
     <string name="loan_date_promised">Date to repay</string>
     <string name="loan_remarks">Add remarks (Optional)</string>
-    <string name="loan_set_reminder">Set Reminder</string>
+    <string name="loan_notify">Notify</string>
     <string name="loan_add">ADD</string>
     <string name="title_activity_settings">Settings</string>
 
