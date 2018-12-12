@@ -319,7 +319,7 @@ public class AddLoanActivity extends AppCompatActivity {
             intent.putExtra("notify", notify);
             intent.putExtra("remarks", remarks);
             setResult(RESULT_OK, intent);
-            startActivity(intent);
+            finish();
 
 
         }

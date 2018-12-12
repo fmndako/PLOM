@@ -541,12 +541,13 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         super.onActivityResult(requestCode, resultCode, intent);
 
         if (requestCode == UPDATE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+            log(TAG, "back to detail activity");
             Loan loan = intentToLoan(intent);
             loan.updateLoan(mLoan.getId(), mLoan.getOffset(), mLoan.getClearStatus(), mLoan.getDateCleared(), mLoan.getUser_id());
             //use database utils async task
             new DatabaseUtils.InsertLoanAsyncTask(mLoanViewModel,
                     DetailActivity.loanUpdateAction).execute(loan);
-
+            log(TAG, "tru with detailactivity onActivityResult");
             ///makeToast(this, "loan saved");
 
         }
