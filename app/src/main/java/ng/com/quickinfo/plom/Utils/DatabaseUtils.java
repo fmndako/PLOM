@@ -55,8 +55,10 @@ public class DatabaseUtils {
             intent.putExtra("repayment_option", result.getRepaymentOption());
             intent.putExtra("notify", result.getNotify());
             intent.putExtra("remarks", result.getRemarks());
-            intent.putExtra("id", result.getId());
-            if(mAction == DetailActivity.offsetAddAction) {
+            intent.putExtra("loan_id", result.getId());
+            intent.putExtra("user_id", result.getUser_id());
+            intent.putExtra("clear_status", result.getClearStatus());
+            if(mAction == DetailActivity.loanDetailGetAction) {
                 intent.putExtra("cleared_status", result.getClearStatus());
                 intent.putExtra("offset", result.getOffset());
                 if (result.getClearStatus() != 0) {

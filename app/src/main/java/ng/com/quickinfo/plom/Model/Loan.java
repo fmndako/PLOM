@@ -130,13 +130,25 @@ public class Loan {
     public void setDateCleared(Date date){
         this.dateCleared = date;
     }
+    public void setUser_id(long id){
+        this.user_id = id;
+    }
     public void setClearedStatus(Date date){
         this.dateCleared = date;
         this.clearStatus = 1;
     }
 
-    public void setId(long id) {
+    public void setId(long id){
         this.id = id;
+    }
+    public void updateLoan(long id, int offset, int status, Date datecleared, long user_id) {
+        //update from update activity with values
+
+        this.id = id;
+        this.offset = offset;
+        this.clearStatus = status;
+        this.dateCleared = datecleared;
+        this.user_id = user_id;
     }
 
 

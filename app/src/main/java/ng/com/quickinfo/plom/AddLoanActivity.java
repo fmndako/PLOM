@@ -30,6 +30,7 @@ import butterknife.OnClick;
 import customfonts.MyEditText;
 import customfonts.MyTextView;
 import ng.com.quickinfo.plom.Model.Loan;
+import ng.com.quickinfo.plom.Utils.DatabaseUtils;
 import ng.com.quickinfo.plom.Utils.DateInputMask;
 import ng.com.quickinfo.plom.Utils.Utilities;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
@@ -43,7 +44,7 @@ public class AddLoanActivity extends AppCompatActivity {
     //for activity
     public static final String EXTRA_REPLY =
             "ng.com.quickinfo.plom.REPLY";
-    public static final String UpdateLoanAction = "ng.com.quickinfo.plom.LOAN_UPDATE";
+    public static final String LoanUpdateGetAction = "ng.com.quickinfo.plom.add_loan_activity_get_loan";
 
     //receivers
 
@@ -95,7 +96,7 @@ public class AddLoanActivity extends AppCompatActivity {
         //instantiate receivers
         //create broadcast receivers
         myReceiver = new AddReceiver();
-        myFilter = new IntentFilter(UpdateLoanAction);
+        myFilter = new IntentFilter(LoanUpdateGetAction);
 
         //set Date Input Mask
         new DateInputMask(actvDatePromised);
@@ -112,9 +113,9 @@ public class AddLoanActivity extends AppCompatActivity {
 
     // ****************update Action **************
     private void updateAction(long id) {
-        //TODO get loan details
-        Utilities.GetLoanAsyncTask task = new Utilities.GetLoanAsyncTask(mLoanViewModel,
-                UpdateLoanAction);
+        //get loan details
+        DatabaseUtils.GetLoanAsyncTask task = new DatabaseUtils.GetLoanAsyncTask(mLoanViewModel,
+                LoanUpdateGetAction);
         task.execute(id);
         //set UI according
         //button
@@ -265,34 +266,48 @@ public class AddLoanActivity extends AppCompatActivity {
     }
 
     public void getViewData() {
-        //get values from view
-        String name = actvName.getText().toString();
-        String number = actvNumber.getText().toString();
-        String email = actvEmail.getText().toString();
-        Date dateTaken = stringToDate(actvDateTaken.getText().toString());
-        Date dateToRepay = stringToDate(actvDatePromised.getText().toString());
-        String remarks = actvRemarks.getText().toString();
-        int amount = Integer.valueOf(actvAmount.getText().toString());
-        int notify = 0;
-        if (cbNotify.isChecked()) {
-            notify = 1;
-                   }
-        int loan_type = spLoanType.getSelectedItemPosition();
-
-        int repayment_option = spRepaymentOption.getSelectedItemPosition();
-
-        Loan loan = new Loan(name, number,email, amount, dateTaken, dateToRepay, loan_type,
-                remarks, 0, 0, notify, repayment_option, -1);
-
 
         Intent intent = new Intent();
-        if (TextUtils.isEmpty(actvName.getText())) {
-            actvName.setError("Most not be empty");
-            actvName.hasFocus();
-        }else if (TextUtils.isEmpty(number)){
-            actvNumber.setError("Most not be empty");
-            actvNumber.hasFocus(); }
+        if (TextUtils.isEmpty(actvName.getText()) ||
+                (TextUtils.isEmpty(actvAmount.getText())) ||
+                TextUtils.isEmpty(actvDateTaken.getText())) {
+            if(TextUtils.isEmpty(actvName.getText())){
+                actvName.setError("Most not be empty");
+                actvName.hasFocus();
+            }else if (TextUtils.isEmpty(actvAmount.getText())){
+                actvAmount.setError("Most not be empty");
+                actvAmount.hasFocus();
+            }
+            else{
+                actvDateTaken.setError("Most not be empty");
+                actvDateTaken.hasFocus();
+            }
+
+
+        }
+
         else {
+            //get values from view
+            String name = actvName.getText().toString();
+            String number = actvNumber.getText().toString();
+            String email = actvEmail.getText().toString();
+            Date dateTaken = stringToDate(actvDateTaken.getText().toString());
+            Date dateToRepay = stringToDate(actvDatePromised.getText().toString());
+            String remarks = actvRemarks.getText().toString();
+            int amount = Integer.valueOf(actvAmount.getText().toString());
+            int notify = 0;
+            if (cbNotify.isChecked()) {
+                notify = 1;
+            }
+            int loan_type = spLoanType.getSelectedItemPosition();
+
+            int repayment_option = spRepaymentOption.getSelectedItemPosition();
+
+            Loan loan = new Loan(name, number,email, amount, dateTaken, dateToRepay, loan_type,
+                    remarks, 0, 0, notify, repayment_option, -1);
+
+
+            log(TAG, "else setRasesult");
             intent.putExtra("name", name);
             intent.putExtra("number", number);
             intent.putExtra("email", email);
@@ -303,12 +318,10 @@ public class AddLoanActivity extends AppCompatActivity {
             intent.putExtra("repayment_option", repayment_option);
             intent.putExtra("notify", notify);
             intent.putExtra("remarks", remarks);
-            intent.putExtra("id", loan_id);
             setResult(RESULT_OK, intent);
-            if (loan_id == -1){
+            startActivity(intent);
 
-            }
-            finish();
+
         }
     }
 

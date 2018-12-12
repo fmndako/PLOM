@@ -40,6 +40,7 @@ import ng.com.quickinfo.plom.Utils.Utilities;
 import ng.com.quickinfo.plom.ViewModel.LoanListAdapter;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
 
+import static ng.com.quickinfo.plom.Utils.Utilities.intentToLoan;
 import static ng.com.quickinfo.plom.Utils.Utilities.log;
 import static ng.com.quickinfo.plom.Utils.Utilities.makeToast;
 import static ng.com.quickinfo.plom.Utils.Utilities.stringToDate;
@@ -322,23 +323,8 @@ public class ListActivity extends LifecycleLoggingActivity implements
         super.onActivityResult(requestCode, resultCode, intent);
 
         if (requestCode == NEW_LOAN_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-            String name, number, email, date_taken, date_promised, remarks;
-            int amount, loan_type, repayment_option, notify;
-            name = intent.getStringExtra("name");
-            number = intent.getStringExtra("number");
-            email= intent.getStringExtra("email");
-            amount= intent.getIntExtra("amount",0);
-            loan_type= intent.getIntExtra("loan_type", 0);
-            date_taken = intent.getStringExtra("date_taken");
-            date_promised = intent.getStringExtra("date_promised");
-            repayment_option = intent.getIntExtra("repayment_option", 0);
-            notify = intent.getIntExtra("notify", 0);
-            remarks = intent.getStringExtra("remarks");
-            long user_id = mUserId;
-
-            Loan loan = new Loan(name, number, email, amount, stringToDate(date_taken), stringToDate(date_promised), loan_type,
-                    remarks, 0,0, notify,repayment_option, user_id);
-            //use database utils async task
+            Loan loan = intentToLoan(intent);//use database utils async task
+            loan.setUser_id(mUserId);
             new DatabaseUtils.InsertLoanAsyncTask(mLoanViewModel,
                     DetailActivity.loanInsertAction).execute(loan);
 
@@ -365,16 +351,12 @@ public class ListActivity extends LifecycleLoggingActivity implements
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d(TAG, intent.getAction());
-            if (intent.getAction().equals(ListActivity.ACTION_USER_SIGN_IN)) {
-                Log.d("Sup", "user in");
-                //loadRV();
-                //signOut();
-
-            } else if (intent.getAction().equals(ListActivity.ACTION_DELETE_ACCOUNT)) {
-                Log.d(TAG, "delete account");
-                //revokeAccess();
-
+            switch (intent.getAction()){
+                case DetailActivity.loanInsertAction:
+                    makeToast(mContext, "Loan added");
+                    break;
             }
+
 
 
         }

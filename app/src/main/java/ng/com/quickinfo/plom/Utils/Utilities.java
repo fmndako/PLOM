@@ -40,7 +40,7 @@ public class Utilities {
     public static Date stringToDate(String dateString) {
         Date date;
         try {
-            date = new SimpleDateFormat("E MMM dd yyyy").parse(dateString);
+            date = new SimpleDateFormat("dd/MM/yyyy").parse(dateString);
 
         } catch (ParseException e) {
             e.printStackTrace();
@@ -129,60 +129,35 @@ public class Utilities {
     }
 
     // *************************   get user async task ***************
+    public static Loan intentToLoan(Intent intent){
+        String name, number, email, date_taken, date_promised, date_cleared, remarks;
+        int amount, loan_type, repayment_option, notify, offset, clearStatus;
+        long user_id, loan_id;
+        name = intent.getStringExtra("name");
+        number = intent.getStringExtra("number");
+        email= intent.getStringExtra("email");
+        amount= intent.getIntExtra("amount",0);
+        loan_type= intent.getIntExtra("loan_type", 0);
+        date_taken = intent.getStringExtra("date_taken");
+        date_promised = intent.getStringExtra("date_promised");
+        repayment_option = intent.getIntExtra("repayment_option", 0);
+        notify = intent.getIntExtra("notify", 0);
+        remarks = intent.getStringExtra("remarks");
+        offset = intent.getIntExtra("offset", 0);
+        clearStatus = intent.getIntExtra("clearStatus", 0);
+        user_id = intent.getLongExtra("user_id", -1);
+        loan_id = intent.getLongExtra("loan_id", -1);
+        date_cleared = intent.getStringExtra("date_cleared");
 
-    //        ******************** get laon async task ******************
-    public static class GetLoanAsyncTask extends AsyncTask<Long, Void, Loan> {
-        LoanViewModel loanViewModel;
-        String mAction;
-        Context mContext;
 
-        public GetLoanAsyncTask(LoanViewModel lv, String action){
-            loanViewModel = lv;
-
-            mAction = action;
-            mContext=lv.getApplication().getApplicationContext();
+        Loan loan = new Loan(name, number, email, amount, stringToDate(date_taken), stringToDate(date_promised), loan_type,
+                remarks, clearStatus,offset, notify,repayment_option, user_id);
+        if (loan_id != -1){
+            loan.setId(loan_id);
         }
-
-
-        @Override
-        protected Loan doInBackground(Long... params) {
-
-            return loanViewModel.getLoan(params[0]);
-
-
+        if (clearStatus != 0){
+            loan.setClearedStatus(stringToDate(date_cleared));
         }
-
-        protected void onPostExecute(Loan result) {
-           // /extract data into intent
-
-            //send braodcast
-            log("DetailActivity repo", "post execute");
-            Intent intent = new Intent();
-            intent.putExtra("name", result.getName());
-            intent.putExtra("number", result.getNumber());
-            intent.putExtra("email", result.getEmail());
-            intent.putExtra("amount", result.getAmount());
-            intent.putExtra("loan_type", result.getLoanType());
-            intent.putExtra("date_taken", dateToString(result.getDateTaken()));
-            intent.putExtra("date_promised", dateToString(result.getDateToRepay()));
-            intent.putExtra("repayment_option", result.getRepaymentOption());
-            intent.putExtra("notify", result.getNotify());
-            intent.putExtra("remarks", result.getRemarks());
-            intent.putExtra("id", result.getId());
-            if(mAction == DetailActivity.offsetAddAction) {
-                intent.putExtra("cleared_status", result.getClearStatus());
-                intent.putExtra("offset", result.getOffset());
-                if (result.getClearStatus() != 0) {
-
-                    intent.putExtra("date_cleared", dateToString(result.getDateCleared()));
-                }
-
-            }
-
-            intent.setAction(mAction);
-            LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
-        }
+        return loan;
     }
-
-
 }

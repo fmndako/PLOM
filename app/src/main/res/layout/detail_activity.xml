@@ -32,6 +32,7 @@
 
 
     <android.support.v4.widget.NestedScrollView
+        android:id="@+id/nsvDetail"
         android:layout_marginTop="55dp"
         android:layout_marginBottom="49dp"
         android:layout_width="match_parent"
@@ -45,6 +46,7 @@
 
 
         <LinearLayout
+            android:id="@+id/llDetailMain"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -955,6 +957,12 @@
 
 
     <!--****buy****-->
+    <ProgressBar
+        android:id="@+id/pbDetail"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <customfonts.MyTextView
         android:id="@+id/buy"
         android:layout_width="match_parent"

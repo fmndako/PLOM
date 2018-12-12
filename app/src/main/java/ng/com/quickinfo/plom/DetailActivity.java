@@ -23,6 +23,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,6 +35,7 @@ import butterknife.OnClick;
 import customfonts.MyTextView;
 import ng.com.quickinfo.plom.Model.Loan;
 import ng.com.quickinfo.plom.Model.Offset;
+import ng.com.quickinfo.plom.Utils.DatabaseUtils;
 import ng.com.quickinfo.plom.Utils.Utilities;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
 import ng.com.quickinfo.plom.ViewModel.OffsetAdapter;
@@ -41,8 +43,11 @@ import ng.com.quickinfo.plom.ViewModel.OffsetAdapter;
 import static ng.com.quickinfo.plom.Utils.Utilities.HomeIntent;
 import static ng.com.quickinfo.plom.Utils.Utilities.dateToString;
 import static ng.com.quickinfo.plom.Utils.Utilities.dateToString1;
+import static ng.com.quickinfo.plom.Utils.Utilities.intentToLoan;
 import static ng.com.quickinfo.plom.Utils.Utilities.log;
 import static ng.com.quickinfo.plom.Utils.Utilities.makeToast;
+import static ng.com.quickinfo.plom.Utils.Utilities.showProgress;
+import static ng.com.quickinfo.plom.Utils.Utilities.stringToDate;
 
 //import android.graphics.PorterDuff;
 //import android.graphics.PorterDuffColorFilter;
@@ -86,7 +91,10 @@ public class DetailActivity extends LifecycleLoggingActivity implements
     LinearLayout llDetailOffsetBalance;
     @BindView(R.id.tvDetailAmountBalanceValue)
     MyTextView tvDetailAmountBalanceValue;
-    
+    @BindView(R.id.pbDetail)
+    ProgressBar pbDetail;
+    @BindView(R.id.llDetailMain)
+    LinearLayout llDetailMain;
 
 
 
@@ -99,6 +107,8 @@ public class DetailActivity extends LifecycleLoggingActivity implements
     IntentFilter offsetAddFilter;
 
     public static final String loanInsertAction = "package ng.com.quickinfo.plom.LOAN_INSERTED";
+    public static final String loanDetailGetAction = 
+            "package ng.com.quickinfo.plom.detail_activity_get_loan";
 
     public static final String loanClearedAction = "package ng.com.quickinfo.plom.LOAN_CLEARED";
     public static final String loanOffsetAction = "package ng.com.quickinfo.plom.LOAN_OFFSET";
@@ -108,7 +118,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
     public static final String offsetDeleteAction = "package ng.com.quickinfo.plom.OFFSET_DELETED";
     public static final String offsetUpdateAction = "package ng.com.quickinfo.plom.OFFSET_UPDATED";
 
-    private static final int UPDATE_ACTIVITY = 13;
+    private static final int UPDATE_ACTIVITY_REQUEST_CODE = 13;
 
 
     //adapter
@@ -144,8 +154,8 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
         //context
         mContext = getApplicationContext();
-
-
+        llDetailMain.setVisibility(View.INVISIBLE);
+        showProgress(true, pbDetail, mContext);
 
 
         //create broadcast receivers
@@ -155,6 +165,8 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         offsetAddFilter = new IntentFilter(offsetAddAction);
         offsetAddFilter.addAction(offsetDeleteAction);
         offsetAddFilter.addAction(offsetUpdateAction);
+        offsetAddFilter.addAction(loanDetailGetAction);
+        offsetAddFilter.addAction(loanUpdateAction);
 
         //set loan view model
         mLoanViewModel = ViewModelProviders.of(this).get(LoanViewModel.class);
@@ -173,9 +185,10 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
         //get loan id from intent
         long mLoanId = getIntent().getLongExtra("loan_id", 16L);
+        //mLoan.setId(mLoanId);
         getLoan(mLoanId);
 
-        loadRV(mLoanId);
+        //loadRV(mLoanId);
     }
 
     private void loadRV(long id) {
@@ -225,7 +238,9 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
     private void getLoan(long loan_id) {
         //get loan details
-        GetLoanAsyncTask task = new GetLoanAsyncTask();
+        DatabaseUtils.GetLoanAsyncTask task = new DatabaseUtils.GetLoanAsyncTask(
+                mLoanViewModel, loanDetailGetAction
+        );
         task.execute(loan_id);
  }
 
@@ -243,23 +258,18 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
 
         if (mLoan != null) {
-            makeToast(mContext, mLoan.getName());
-            tvDetailNameValue.setText(mLoan.getName());
+            makeToast(mContext, "Loan name"+mLoan.getName() + mLoan.getId());
             tvDetailAmountValue.setText(mLoan.getAmount() + "");
-
+            //dates
+            tvDetailDateTakenValue.setText(dateToString1(mLoan.getDateTaken()));
             //loan type
-
             if (mLoan.getLoanType() != 0) {
-
-
                 tvDetailLoanTypeValue.setText(R.string.loan_type_borrow);
                 tvDetailLoanTypeValue.setBackground(
                         ContextCompat.getDrawable(mContext, R.drawable.rectangle_red));
             }
-            //dates
-            tvDetailDateTakenValue.setText(dateToString1(mLoan.getDateTaken()));
-
             //personal details
+            tvDetailNameValue.setText(mLoan.getName());
             tvDetailNumberValue.setText(mLoan.getNumber());
             tvDetailEmailValue.setText(mLoan.getEmail());
 
@@ -270,28 +280,16 @@ public class DetailActivity extends LifecycleLoggingActivity implements
             }
             tvDetailRemarksValue.setText(mLoan.getRemarks() + "");
 
-
             //offset
-            //TODO corrext logic
-            if (mLoan.getOffset() != 0) {
-
-                //load offset rv and set total and Balance
-                //makeToast(mContext, "offset not equal to 0");
-                loadRV(mLoan.getId());
+            loadRV(mLoan.getId());
 
             }
-
-
-        }
     }
 
     public void updateClearedStatus() {
-
         tvDetailClearedStatusValue.setText(R.string.cleared_status_cleared);
-        //TODO change to date
-
-        tvDetailDateClearedValue.setText("today");
-        log(TAG, "looking for menu");
+        //change to date
+        tvDetailDateClearedValue.setText(dateToString1(mLoan.getDateCleared()));
         if (mMenu != null) {
             //remove clear action button and update
             mMenu.findItem(R.id.action_clear).setVisible(false);
@@ -367,8 +365,9 @@ public class DetailActivity extends LifecycleLoggingActivity implements
     @Override
     public void onDialogPositiveClick(DialogFragment dialog, int action) {
         // User touched the dialog's positive button
-        //delete
-        DeleteAsyncTask task = new DeleteAsyncTask();
+        DatabaseUtils.InsertLoanAsyncTask task = new DatabaseUtils.InsertLoanAsyncTask(
+                mLoanViewModel, loanDeleteAction
+        );
         task.execute(mLoan);
     }
 
@@ -497,7 +496,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
                 Intent updateIntent = new Intent(mContext, AddLoanActivity.class);
                 updateIntent.putExtra("loan_id", mLoan.getId());
 
-                startActivityForResult(updateIntent, UPDATE_ACTIVITY);
+                startActivityForResult(updateIntent, UPDATE_ACTIVITY_REQUEST_CODE);
                 return true;
             case R.id.action_delete:
                 // delete lend
@@ -537,58 +536,23 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         startActivity(Intent.createChooser(txtIntent, "Share"));
     }
 
-    //        ******************** get laon async task ******************
-    private class GetLoanAsyncTask extends AsyncTask<Long, Void, Loan> {
 
-        @Override
-        protected void onPreExecute() {
-            log(TAG, "preexecute");
-            //TODO implement a progress bar
-            // Utilities.showProgress(true, progressBar2, mContext);
-        }
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
 
-        @Override
-        protected Loan doInBackground(Long... params) {
-            log(TAG, "DOINBACK" + params.length + ":" + params[0]);
+        if (requestCode == UPDATE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+            Loan loan = intentToLoan(intent);
+            loan.updateLoan(mLoan.getId(), mLoan.getOffset(), mLoan.getClearStatus(), mLoan.getDateCleared(), mLoan.getUser_id());
+            //use database utils async task
+            new DatabaseUtils.InsertLoanAsyncTask(mLoanViewModel,
+                    DetailActivity.loanUpdateAction).execute(loan);
 
-            Loan mloan = mLoanViewModel.getLoan(params[0]);
-            log(TAG, "DOINBACK");
-            return mloan;
+            ///makeToast(this, "loan saved");
 
         }
 
-        protected void onPostExecute(Loan result) {
-            log(TAG, "postexecute");
-            //save result as mUser
-            mLoan = result;
-            //stop progress bar
-            //Utilities.showProgress(false, progressBar2, mContext);
-
-            //load loans
-            updateUI();
-        }
     }
 
-
-    private class DeleteAsyncTask extends AsyncTask<Loan, Void, Void> {
-
-
-        @Override
-        protected Void doInBackground(Loan... params) {
-            mLoanViewModel.delete(params[0]);
-            return null;
-
-        }
-
-        protected void onPostExecute(Void Void) {
-            Intent onDeleteLoanIntent = new Intent(loanDeleteAction);
-            LocalBroadcastManager.getInstance(mContext).sendBroadcast(onDeleteLoanIntent);
-            //onBackPressed();
-            //else start ListActivity and pass back to it Listactivity_loantype
-            //load loans
-
-        }
-    }
 
     // *********** Register and unregister receivers
     //register receiver when app resumes and unregister when app pauses
@@ -614,32 +578,34 @@ public class DetailActivity extends LifecycleLoggingActivity implements
     public class DetailReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            // TODO: This method is called when the BroadcastReceiver is receiving
-            // an Intent broadcast.
-            //showProgress(false);
-//            ArrayList<String> action = new ArrayList<String>();
-//            action.add(offsetAddAction);
-//            action.add(offsetUpdateAction);
-//            action.add(offsetDeleteAction);
-            log(TAG, "onREceive");
-//
+            makeToast(mContext, "intent received" + intent.getAction());
             String action = "";
-
             switch (intent.getAction()){
                 case offsetAddAction:
-                    action = "inserted";
+                    action = "Offset inserted";
 
                     break;
                 case offsetUpdateAction:
-                    action = "updated";
+                    action = "Offset updated";
                     break;
                 case offsetDeleteAction:
-                    action = "deleted";
+                    action = "Offset deleted";
                     break;
+                case loanUpdateAction:
+                    action = "Loan Updated";
+                    updateUI();
+                    break;
+                case loanDetailGetAction:
+                    mLoan = intentToLoan(intent);
+                    showProgress(false, pbDetail, mContext);
+                    llDetailMain.setVisibility(View.VISIBLE);
+                    action = " Get Loan gotten " +mLoan.getUser_id();
+                    updateUI();
+
 
             }
 
-            makeToast(mContext, "Offset " + action);
+            makeToast(mContext, action);
             log(TAG, action + "offset");
 
             //
