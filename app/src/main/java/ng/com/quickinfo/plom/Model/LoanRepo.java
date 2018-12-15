@@ -4,15 +4,8 @@ package ng.com.quickinfo.plom.Model;
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.content.Context;
-import android.content.Intent;
-import android.os.AsyncTask;
-import android.support.v4.content.LocalBroadcastManager;
 
 import java.util.List;
-
-import ng.com.quickinfo.plom.DetailActivity;
-
-import static ng.com.quickinfo.plom.Utils.Utilities.log;
 
 public class LoanRepo {
 
@@ -21,7 +14,7 @@ public class LoanRepo {
     private LiveData<List<Loan>> mAllLoans;
 
     public LoanRepo(Application application) {
-        LoanRoomDatabase db = LoanRoomDatabase.getDatabase(application);
+        AppRoomDatabase db = AppRoomDatabase.getDatabase(application);
         mLoanDao = db.loanDao();
         mAllLoans = mLoanDao.getAllLoanItems();
         mContext = application.getApplicationContext();

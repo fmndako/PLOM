@@ -7,15 +7,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 import java.util.List;
 
 import ng.com.quickinfo.plom.DetailActivity;
-import ng.com.quickinfo.plom.ListActivity;
-import ng.com.quickinfo.plom.Utils.Utilities;
 
-import static ng.com.quickinfo.plom.DetailActivity.offsetAddAction;
 import static ng.com.quickinfo.plom.Utils.Utilities.log;
 
 public class OffsetRepo {
@@ -26,7 +22,7 @@ public class OffsetRepo {
     private Offset mOffset;
 
     public OffsetRepo(Application application) {
-        LoanRoomDatabase db = LoanRoomDatabase.getDatabase(application);
+        AppRoomDatabase db = AppRoomDatabase.getDatabase(application);
         mOffsetDao = db.offsetDao();
 
         //TODO trial

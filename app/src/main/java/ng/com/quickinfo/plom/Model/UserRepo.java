@@ -23,7 +23,7 @@ public class UserRepo {
     private User mUser;
 
     public UserRepo(Application application) {
-        LoanRoomDatabase db = LoanRoomDatabase.getDatabase(application);
+        AppRoomDatabase db = AppRoomDatabase.getDatabase(application);
         mUserDao = db.userDao();
         mAllUsers = mUserDao.getAllUsers();
     }
