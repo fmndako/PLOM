@@ -86,28 +86,32 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:layout_gravity="center"
                     >
 
                     <customfonts.MyTextView
-                        android:visibility="visible"
                         android:id="@+id/tvDetailNameValue"
-                        android:layout_weight="1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="right"
+                        android:paddingRight="10dp"
                         android:text="Name"
-                        android:textSize="21dp"
                         android:textColor="@color/colorTex"
-                        />
+                        android:textSize="21dp"
+                        android:visibility="visible" />
 
                     <customfonts.MyTextView
                         android:id="@+id/tvDetailAmountValue"
-                        android:layout_weight="5"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="left"
+                        android:paddingLeft="10dp"
                         android:text="75990 $"
-                        android:textSize="21dp"
                         android:textColor="@color/colorTex"
-                        />
+                        android:textSize="21dp" />
                 </LinearLayout>
 
                 <!--*********if Offset**********-->
