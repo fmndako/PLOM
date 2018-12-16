@@ -34,7 +34,6 @@
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/nsvDetail"
         android:layout_marginTop="55dp"
-        android:layout_marginBottom="49dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
@@ -961,20 +960,21 @@
         android:id="@+id/pbDetail"
         style="?android:attr/progressBarStyle"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:visibility="invisible"/>
 
-    <customfonts.MyTextView
-        android:id="@+id/buy"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#4c71f5"
-        android:text="CLEAR LOAN"
-        android:textSize="16dp"
-        android:textColor="#fff"
-        android:gravity="center"
-        android:padding="16dp"
-        android:layout_alignParentBottom="true"
-        />
+    <!--<customfonts.MyTextView-->
+        <!--android:id="@+id/buy"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="#4c71f5"-->
+        <!--android:text="CLEAR LOAN"-->
+        <!--android:textSize="16dp"-->
+        <!--android:textColor="#fff"-->
+        <!--android:gravity="center"-->
+        <!--android:padding="16dp"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--/>-->
 </RelativeLayout>
 
 

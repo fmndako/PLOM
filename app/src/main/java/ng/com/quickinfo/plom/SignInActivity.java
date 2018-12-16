@@ -32,6 +32,7 @@ import java.util.List;
 import ng.com.quickinfo.plom.Model.User;
 import ng.com.quickinfo.plom.Utils.Utilities;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
+import ng.com.quickinfo.plom.ViewModel.UserViewModel;
 
 import static com.google.android.gms.auth.api.signin.GoogleSignInStatusCodes.getStatusCodeString;
 import static ng.com.quickinfo.plom.Utils.Utilities.log;
@@ -46,7 +47,7 @@ public class SignInActivity extends LifecycleLoggingActivity {
 
     private Context mContext;
     //ViewModel
-    private LoanViewModel mLoanViewModel;
+    private UserViewModel mUserViewModel;
     public GoogleSignInClient mGoogleSignInClient;
     private static final int RC_SIGN_IN = 9;
 
@@ -93,7 +94,7 @@ public class SignInActivity extends LifecycleLoggingActivity {
 
         mContext = getApplicationContext();
         //load View Model
-        mLoanViewModel = ViewModelProviders.of(this).get(LoanViewModel.class);
+        mUserViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
 
         //create broadcast receivers
         myReceiver = new SignInReceiver();
@@ -212,7 +213,7 @@ public class SignInActivity extends LifecycleLoggingActivity {
         User user = new User("username", "333", email, "jjjj");
         mEmail = email;
         log(TAG, "registerUser");
-        mLoanViewModel.insert(user, mContext);
+        mUserViewModel.insert(user, mContext);
 
     }
 
@@ -255,8 +256,8 @@ public class SignInActivity extends LifecycleLoggingActivity {
         super.onDestroy();
     }
 
-    public static LiveData getAllUsers(LoanViewModel mLoanViewModel, String TAG) {
-        LiveData<List<User>> mAllUsers = mLoanViewModel.getAllUsers();
+    public static LiveData getAllUsers(UserViewModel mUserViewModel, String TAG) {
+        LiveData<List<User>> mAllUsers = mUserViewModel.getAllUsers();
         List<User> allUsers = mAllUsers.getValue();
         if (mAllUsers == null){Log.d(TAG, "allusers is null obj");}
         else {Log.d(TAG, "allusers is not null obj");}

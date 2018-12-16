@@ -33,7 +33,6 @@ import customfonts.MyTextView;
 import ng.com.quickinfo.plom.Model.Loan;
 import ng.com.quickinfo.plom.Model.LoanRepo.LoanAsyncTask;
 import ng.com.quickinfo.plom.Model.Offset;
-import ng.com.quickinfo.plom.Utils.DatabaseUtils;
 import ng.com.quickinfo.plom.Utils.Utilities;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
 import ng.com.quickinfo.plom.View.OffsetAdapter;
@@ -44,7 +43,6 @@ import static ng.com.quickinfo.plom.Utils.Utilities.dateToString1;
 import static ng.com.quickinfo.plom.Utils.Utilities.intentToLoan;
 import static ng.com.quickinfo.plom.Utils.Utilities.log;
 import static ng.com.quickinfo.plom.Utils.Utilities.makeToast;
-import static ng.com.quickinfo.plom.Utils.Utilities.showProgress;
 
 //import android.graphics.PorterDuff;
 //import android.graphics.PorterDuffColorFilter;
@@ -99,7 +97,6 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
     //Receivers
     DetailReceiver myReceiver;
-    IntentFilter loanDeleteFilter;
 
     IntentFilter offsetAddFilter;
 
@@ -151,19 +148,22 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
         //context
         mContext = getApplicationContext();
-        llDetailMain.setVisibility(View.INVISIBLE);
-        showProgress(true, pbDetail, mContext);
+        //llDetailMain.setVisibility(View.INVISIBLE);
+        //showProgress(true, pbDetail, mContext);
 
 
         //create broadcast receivers
         myReceiver = new DetailReceiver();
-        loanDeleteFilter = new IntentFilter(loanDeleteAction);
         //add filters
         offsetAddFilter = new IntentFilter(offsetAddAction);
         offsetAddFilter.addAction(offsetDeleteAction);
         offsetAddFilter.addAction(offsetUpdateAction);
-        offsetAddFilter.addAction(loanDetailGetAction);
+        offsetAddFilter.addAction(loanDeleteAction);
         offsetAddFilter.addAction(loanUpdateAction);
+        offsetAddFilter.addAction(loanClearedAction);
+        //register
+        LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver, offsetAddFilter);
+
 
         //set loan view model
         mLoanViewModel = ViewModelProviders.of(this).get(LoanViewModel.class);
@@ -186,12 +186,16 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         mLoanViewModel.getLoan(mLoanId).observe(this,
                 new Observer<Loan>()
         {
+
             @Override
             public void onChanged(@Nullable final Loan loan) {
                 // Update the cached copy of the loans in the adapter.
                 mLoan = loan;
                 updateUI();
-               }
+                //showProgress(false, pbDetail, mContext);
+                //llDetailMain.setVisibility(View.VISIBLE);
+
+            }
         });
         //loadRV(mLoanId);
     }
@@ -278,20 +282,21 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
             //offset
             loadRV(mLoan.getId());
+                if (mLoan.getClearStatus() != 0) {
+
+                    updateClearedStatus();
+                        }
 
             }
     }
-
+    //TODO separate concern
     public void updateClearedStatus() {
+
         tvDetailClearedStatusValue.setText(R.string.cleared_status_cleared);
         //change to date
         tvDetailDateClearedValue.setText(dateToString1(mLoan.getDateCleared()));
-        if (mMenu != null) {
-            //remove clear action button and update
-            mMenu.findItem(R.id.action_clear).setVisible(false);
-            mMenu.findItem(R.id.action_update).setVisible(false);
-            mMenu.findItem(R.id.action_offset).setVisible(false);
-        }
+        removeClearedMenuItem();
+
     }
 
 
@@ -331,7 +336,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         // User touched cleared dialog's positive button
         makeToast(mContext, "clear positive offset");
         mLoan.setClearedStatus(date);
-        mLoanViewModel.insert(mLoan);
+        new LoanAsyncTask(mLoanViewModel, loanClearedAction).execute(mLoan);
 
 
     }
@@ -459,17 +464,23 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         log(TAG, "menu created");
 
         //cleared status (if cleared)
-        if (mLoan != null) {
-            if (mLoan.getClearStatus() != 0) {
 
-                updateClearedStatus();
-            }
-        }
+
 
 
         return super.onCreateOptionsMenu(menu);
     }
 
+    //TODO remove menu if cleared
+    public void removeClearedMenuItem(){
+        if (mMenu != null) {
+            //remove clear action button and update
+            mMenu.findItem(R.id.action_clear).setVisible(false);
+            mMenu.findItem(R.id.action_update).setVisible(false);
+            mMenu.findItem(R.id.action_offset).setVisible(false);
+        }
+
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -554,21 +565,21 @@ public class DetailActivity extends LifecycleLoggingActivity implements
     // *********** Register and unregister receivers
     //register receiver when app resumes and unregister when app pauses
     //register on create then unregister on Destroy
-    @Override
-    protected void onResume() {
-        super.onResume();
-        LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver, loanDeleteFilter);
-        LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver, offsetAddFilter);
 
-    }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onDestroy() {
+        super.onDestroy();
         //unregistering using local broadcast manager
         LocalBroadcastManager.getInstance(this).unregisterReceiver(myReceiver);
         //null the receivers to prevent ish
         myReceiver = null;
+    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        //unregistering using local broadcast manager
+
     }
 
     //******************** SignInReceiver ********************
@@ -592,7 +603,8 @@ public class DetailActivity extends LifecycleLoggingActivity implements
                     action = "Loan Updated";
                     break;
                 case loanDeleteAction:
-                    action = "Loan Deleted";
+                    makeToast(mContext, "Loan Deleted");
+                    //startActivity(new Intent(DetailActivity.this, ListActivity.class));
                     onBackPressed();
                     break;
                 case loanClearedAction:
@@ -606,6 +618,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
             //
         }
     }
+
 
 }
 

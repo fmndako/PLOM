@@ -2,27 +2,21 @@ package ng.com.quickinfo.plom;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -32,12 +26,10 @@ import butterknife.OnClick;
 import customfonts.MyEditText;
 import customfonts.MyTextView;
 import ng.com.quickinfo.plom.Model.Loan;
-import ng.com.quickinfo.plom.Model.LoanRepo;
-import ng.com.quickinfo.plom.Utils.DatabaseUtils;
 import ng.com.quickinfo.plom.Utils.DateInputMask;
-import ng.com.quickinfo.plom.Utils.Utilities;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
 
+import static ng.com.quickinfo.plom.Utils.Utilities.dateToString;
 import static ng.com.quickinfo.plom.Utils.Utilities.log;
 import static ng.com.quickinfo.plom.Utils.Utilities.makeToast;
 import static ng.com.quickinfo.plom.Utils.Utilities.stringToDate;
@@ -115,31 +107,17 @@ public class AddLoanActivity extends AppCompatActivity {
 
     private void updateUI(Loan loan){
         //update UI from addreceiver intent
-        String name, number, email, date_taken, date_promised, remarks;
-        int amount, loan_type, repayment_option, notify;
-        name = intent.getStringExtra("name");
-        number = intent.getStringExtra("number");
-        email= intent.getStringExtra("email");
-        amount= intent.getIntExtra("amount",0);
-        loan_type= intent.getIntExtra("loan_type", 0);
-        date_taken = intent.getStringExtra("date_taken");
-        date_promised = intent.getStringExtra("date_promised");
-        repayment_option = intent.getIntExtra("repayment_option", 0);
-        notify = intent.getIntExtra("notify", 0);
-        remarks = intent.getStringExtra("remarks");
-
-
-        actvName.setText(name);
-        actvNumber.setText(number);
-        actvEmail.setText(email);
-        actvAmount.setText(amount +"");
-        spLoanType.setSelection(loan_type);
-        actvDateTaken.setText(date_taken);
-        actvDatePromised.setText(date_promised);
-        spRepaymentOption.setSelection(repayment_option);
-        if (notify != 0){
+        actvName.setText(loan.getName());
+        actvNumber.setText(loan.getNumber());
+        actvEmail.setText(loan.getEmail());
+        actvAmount.setText(loan.getAmount()+ "");
+        spLoanType.setSelection(loan.getLoanType());
+        actvDateTaken.setText(dateToString(loan.getDateTaken()));
+        actvDatePromised.setText(dateToString(loan.getDateToRepay()));
+        spRepaymentOption.setSelection(loan.getRepaymentOption());
+        if (loan.getNotify()!= 0){
         cbNotify.setChecked(true);}
-        actvRemarks.setText(remarks);
+        actvRemarks.setText(loan.getRemarks());
         signUpBtn.setText(R.string.action_update);
 
     }
@@ -282,8 +260,8 @@ public class AddLoanActivity extends AppCompatActivity {
             String name = actvName.getText().toString();
             String number = actvNumber.getText().toString();
             String email = actvEmail.getText().toString();
-            Date dateTaken = stringToDate(actvDateTaken.getText().toString());
-            Date dateToRepay = stringToDate(actvDatePromised.getText().toString());
+            String dateTaken = actvDateTaken.getText().toString();
+            String dateToRepay = actvDatePromised.getText().toString();
             String remarks = actvRemarks.getText().toString();
             int amount = Integer.valueOf(actvAmount.getText().toString());
             int notify = 0;
@@ -294,11 +272,11 @@ public class AddLoanActivity extends AppCompatActivity {
 
             int repayment_option = spRepaymentOption.getSelectedItemPosition();
 
-            Loan loan = new Loan(name, number,email, amount, dateTaken, dateToRepay, loan_type,
-                    remarks, 0, 0, notify, repayment_option, -1);
+//            Loan loan = new Loan(name, number,email, amount, dateTaken, dateToRepay, loan_type,
+//                    remarks, 0, 0, notify, repayment_option, -1);
+//
 
-
-            log(TAG, "else setRasesult");
+            log(TAG, dateTaken + ": " + dateToRepay);
             intent.putExtra("name", name);
             intent.putExtra("number", number);
             intent.putExtra("email", email);

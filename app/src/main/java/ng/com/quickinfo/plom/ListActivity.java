@@ -32,7 +32,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ng.com.quickinfo.plom.Model.Loan;
 import ng.com.quickinfo.plom.Model.LoanRepo;
-import ng.com.quickinfo.plom.Utils.DatabaseUtils;
 import ng.com.quickinfo.plom.Utils.FilterUtils;
 import ng.com.quickinfo.plom.Utils.Utilities;
 import ng.com.quickinfo.plom.View.LoanListAdapter;
@@ -196,7 +195,7 @@ public class ListActivity extends LifecycleLoggingActivity implements
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         //observer
-        mLoanViewModel.getLoanByUserId(mUserId).observe(this, new Observer<List<Loan>>() {
+        mLoanViewModel.getLoansByUserId(mUserId).observe(this, new Observer<List<Loan>>() {
             @Override
             public void onChanged(@Nullable final List<Loan> loans) {
                 // Update the cached copy of the loans in the adapter.

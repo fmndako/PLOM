@@ -24,10 +24,9 @@ public class LoanViewModel extends AndroidViewModel {
 
     //instantiate repo classes
     private LoanRepo mLoanRepo;
-    private UserRepo mUserRepo;
     private OffsetRepo mOffsetRepo;
 
-    private LiveData<List<Loan>> mAllLoans;
+    private LiveData<List<Loan>> Loans;
     private LiveData<List<User>> mAllUsers;
 
     private Context context;
@@ -37,25 +36,16 @@ public class LoanViewModel extends AndroidViewModel {
         //instantiate
 
         context = application.getBaseContext();
-        mUserRepo = new UserRepo(application);
         mLoanRepo = new LoanRepo(application);
         mOffsetRepo = new OffsetRepo(application);
-
-        mAllLoans = mLoanRepo.getAllLoans();
-        mAllUsers = mUserRepo.getAllUsers();
 
 
 
     }
 
     //*********************** loans ******************************
-    //get allloans
-    public LiveData<List<Loan>> getAllLoans() {
-        return mAllLoans;
-    }
-    //getloanbyuser
 
-    public LiveData<List<Loan>> getLoanByUserId(long user_id) {
+    public LiveData<List<Loan>> getLoansByUserId(long user_id) {
         return mLoanRepo.getLoanByUserId(user_id);
     }
 
@@ -73,26 +63,6 @@ public class LoanViewModel extends AndroidViewModel {
     public void delete(Loan loan){
         mLoanRepo.delete(loan);
     }
-// ********************* users **********************
-    public void insert(User user, Context context) {
-
-
-        mUserRepo.insert(user, context);
-    }
-
-    public User getUser(String email) {
-        //repo first returns the user with the email address without asynctask
-        //return mUserRepo.getSimpleUser(email);
-        //with async task
-        return mUserRepo.getUserByEmail(email);
-
-
-    }
-
-    public LiveData<List<User>> getAllUsers() {
-        return mAllUsers;
-    }
-
 
 //*********************** offset ******************************
 

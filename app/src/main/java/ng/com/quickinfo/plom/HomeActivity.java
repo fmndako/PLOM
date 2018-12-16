@@ -29,6 +29,7 @@ import ng.com.quickinfo.plom.Model.User;
 import ng.com.quickinfo.plom.Utils.FilterUtils;
 import ng.com.quickinfo.plom.Utils.Utilities;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
+import ng.com.quickinfo.plom.ViewModel.UserViewModel;
 
 import static ng.com.quickinfo.plom.Utils.FilterUtils.activeLoans;
 import static ng.com.quickinfo.plom.Utils.FilterUtils.dateFilterList;
@@ -95,6 +96,7 @@ public class HomeActivity extends LifecycleLoggingActivity {
 
     //initiate viewmodel
     LoanViewModel mLoanViewModel;
+    UserViewModel mUserViewModel;
     String mEmail;
     Context mContext;
 
@@ -132,6 +134,8 @@ public class HomeActivity extends LifecycleLoggingActivity {
 
         //handles viewmodel
         mLoanViewModel = ViewModelProviders.of(this).get(LoanViewModel.class);
+        mUserViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+
         //context
         mContext = getApplicationContext();
         //get email from intent
@@ -166,7 +170,7 @@ public class HomeActivity extends LifecycleLoggingActivity {
 
     private void getLoans(long user_id) {
         //observer
-        mLoanViewModel.getLoanByUserId(user_id).observe(this, new Observer<List<Loan>>() {
+        mLoanViewModel.getLoansByUserId(user_id).observe(this, new Observer<List<Loan>>() {
             @Override
             public void onChanged(@Nullable final List<Loan> loans) {
                 // Update the cached copy of the loans in the adapter.
@@ -268,7 +272,7 @@ public class HomeActivity extends LifecycleLoggingActivity {
         }
 
         protected User doInBackground(final String... params) {
-            return mLoanViewModel.getUser(params[0]);
+            return mUserViewModel.getUser(params[0]);
         }
 
         protected void onPostExecute(User result) {
