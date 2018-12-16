@@ -9,13 +9,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -33,17 +31,16 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ng.com.quickinfo.plom.Model.Loan;
-import ng.com.quickinfo.plom.Model.User;
+import ng.com.quickinfo.plom.Model.LoanRepo;
 import ng.com.quickinfo.plom.Utils.DatabaseUtils;
 import ng.com.quickinfo.plom.Utils.FilterUtils;
 import ng.com.quickinfo.plom.Utils.Utilities;
-import ng.com.quickinfo.plom.ViewModel.LoanListAdapter;
+import ng.com.quickinfo.plom.View.LoanListAdapter;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
 
 import static ng.com.quickinfo.plom.Utils.Utilities.intentToLoan;
 import static ng.com.quickinfo.plom.Utils.Utilities.log;
 import static ng.com.quickinfo.plom.Utils.Utilities.makeToast;
-import static ng.com.quickinfo.plom.Utils.Utilities.stringToDate;
 
 public class ListActivity extends LifecycleLoggingActivity implements
         LoanListAdapter.OnHandlerInteractionListener {
@@ -292,31 +289,6 @@ public class ListActivity extends LifecycleLoggingActivity implements
     }
 
 
-        //search
-
-
-//        final SearchView searchView = (SearchView) item.getActionView();
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                // Toast like print
-//                Utilities.log(TAG, query);
-//                //Utilities.makeToast(mContext, "SearchOnQueryTextSubmit: " + query);
-//                if( ! searchView.isIconified()) {
-//                    searchView.setIconified(true);
-//                }
-//                item.collapseActionView();
-//                return false;
-//            }
-//            @Override
-//            public boolean onQueryTextChange(String s) {
-//                Utilities.log(TAG, s);
-//                // UserFeedback.show( "SearchOnQueryTextChanged: " + s);
-//                return false;
-//            }
-//        });
-                //return true;
-
 
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -325,7 +297,7 @@ public class ListActivity extends LifecycleLoggingActivity implements
         if (requestCode == NEW_LOAN_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
             Loan loan = intentToLoan(intent);//use database utils async task
             loan.setUser_id(mUserId);
-            new DatabaseUtils.InsertLoanAsyncTask(mLoanViewModel,
+            new LoanRepo.LoanAsyncTask(mLoanViewModel,
                     DetailActivity.loanInsertAction).execute(loan);
 
             ///makeToast(this, "loan saved");

@@ -1,4 +1,4 @@
-package ng.com.quickinfo.plom.ViewModel;
+package ng.com.quickinfo.plom.View;
 
 import android.app.Activity;
 import android.content.Context;

@@ -17,22 +17,15 @@ import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
 @TypeConverters(DateConverter.class)
 public interface LoanDao {
 
-    @Query("select * from loan_table")
-    LiveData<List<Loan>> getAllLoanItems();
-
     @Query("select * from loan_table where id = :id")
-    Loan getItembyId(long id);
+    LiveData<Loan> getItembyId(long id);
 
     @Query("select * from loan_table where user_id = :id")
     LiveData<List<Loan>>  getItembyUserId(long id);
 
     @Insert(onConflict = REPLACE)
-    //void addLoan(Loan loan);
     void insert(Loan loan);
 
     @Delete
     void deleteLoan(Loan loan);
-
-
-
 }

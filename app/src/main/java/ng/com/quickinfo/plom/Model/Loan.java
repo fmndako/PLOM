@@ -14,23 +14,17 @@ import ng.com.quickinfo.plom.Utils.DateConverter;
 import static android.arch.persistence.room.ForeignKey.CASCADE;
 
 @Entity(tableName = "loan_table",
-        indices = {@Index("user_id")},
-        foreignKeys = @ForeignKey(entity = User.class,
-        parentColumns = "id",
-        childColumns = "user_id",
-        onDelete = CASCADE))
+        indices = {@Index("user_id")}, foreignKeys = @ForeignKey(entity = User.class,
+        parentColumns = "id", childColumns = "user_id", onDelete = CASCADE))
 
 public class Loan {
-
     @PrimaryKey(autoGenerate = true)
-
     public long id;
-
 
     @ColumnInfo(name = "user_id")
     private long user_id;
 
-     private String name;
+    private String name;
     private Integer amount;
     private Integer loanType;
     private String remarks;

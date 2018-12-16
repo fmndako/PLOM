@@ -60,7 +60,7 @@ public class LoanViewModel extends AndroidViewModel {
     }
 
     //get loan by loan id
-    public Loan getLoan(long id) {
+    public LiveData<Loan> getLoan(long id) {
         return mLoanRepo.getLoan(id);
 
     }

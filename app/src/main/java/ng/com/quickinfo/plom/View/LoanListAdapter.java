@@ -1,32 +1,20 @@
-package ng.com.quickinfo.plom.ViewModel;
+package ng.com.quickinfo.plom.View;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.SumPathEffect;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
-import ng.com.quickinfo.plom.DetailActivity;
 import ng.com.quickinfo.plom.Model.Loan;
 import ng.com.quickinfo.plom.R;
 import ng.com.quickinfo.plom.Utils.FilterUtils;
 import ng.com.quickinfo.plom.Utils.Utilities;
 
-import static ng.com.quickinfo.plom.Utils.FilterUtils.activeLoans;
 import static ng.com.quickinfo.plom.Utils.FilterUtils.getTotalLends;
 
 public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanViewHolder> {

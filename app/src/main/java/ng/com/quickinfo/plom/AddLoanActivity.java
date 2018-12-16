@@ -1,5 +1,6 @@
 package ng.com.quickinfo.plom;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -9,6 +10,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +32,7 @@ import butterknife.OnClick;
 import customfonts.MyEditText;
 import customfonts.MyTextView;
 import ng.com.quickinfo.plom.Model.Loan;
+import ng.com.quickinfo.plom.Model.LoanRepo;
 import ng.com.quickinfo.plom.Utils.DatabaseUtils;
 import ng.com.quickinfo.plom.Utils.DateInputMask;
 import ng.com.quickinfo.plom.Utils.Utilities;
@@ -41,15 +44,7 @@ import static ng.com.quickinfo.plom.Utils.Utilities.stringToDate;
 
 public class AddLoanActivity extends AppCompatActivity {
 
-    //for activity
-    public static final String EXTRA_REPLY =
-            "ng.com.quickinfo.plom.REPLY";
-    public static final String LoanUpdateGetAction = "ng.com.quickinfo.plom.add_loan_activity_get_loan";
 
-    //receivers
-
-    AddReceiver myReceiver;
-    IntentFilter myFilter;
     //database
     LoanViewModel mLoanViewModel;
 
@@ -93,11 +88,6 @@ public class AddLoanActivity extends AppCompatActivity {
         mContext = getApplicationContext();
         mLoanViewModel = ViewModelProviders.of(this).get(LoanViewModel.class);
 
-        //instantiate receivers
-        //create broadcast receivers
-        myReceiver = new AddReceiver();
-        myFilter = new IntentFilter(LoanUpdateGetAction);
-
         //set Date Input Mask
         new DateInputMask(actvDatePromised);
         new DateInputMask(actvDateTaken);
@@ -107,22 +97,23 @@ public class AddLoanActivity extends AppCompatActivity {
 
         //setSpinner();//not needed
         if (loan_id != -1) {
-            updateAction(loan_id);
+            // loan data observer
+            mLoanViewModel.getLoan(loan_id).observe(this,
+                    new Observer<Loan>()
+                    {
+                        @Override
+                        public void onChanged(@Nullable final Loan loan) {
+                            // Update the cached copy of the loans in the adapter.
+
+                            updateUI(loan);
+                        }
+                    });
+
         }
     }
 
-    // ****************update Action **************
-    private void updateAction(long id) {
-        //get loan details
-        DatabaseUtils.GetLoanAsyncTask task = new DatabaseUtils.GetLoanAsyncTask(mLoanViewModel,
-                LoanUpdateGetAction);
-        task.execute(id);
-        //set UI according
-        //button
 
-    }
-
-    private void updateUI(Intent intent){
+    private void updateUI(Loan loan){
         //update UI from addreceiver intent
         String name, number, email, date_taken, date_promised, remarks;
         int amount, loan_type, repayment_option, notify;
@@ -326,34 +317,6 @@ public class AddLoanActivity extends AppCompatActivity {
     }
 
 
-    // *********** Register and unregister receivers
-    //register receiver when app resumes and unregister when app pauses
-    //register on create then unregister on Destroy
-    @Override
-    protected void onResume() {
-        super.onResume();
-        LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver, myFilter);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        //unregistering using local broadcast manager
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(myReceiver);
-        //null the receivers to prevent ish
-        myReceiver = null;
-    }
-
-    //******************** AddReceiver ********************
-    public class AddReceiver extends BroadcastReceiver {
-        //receives loan details for update
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            updateUI(intent);
-            log(TAG, "intent received");
-            // updateUI();
-        }
-    }
 
 }
 

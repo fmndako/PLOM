@@ -8,14 +8,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,11 +31,12 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import customfonts.MyTextView;
 import ng.com.quickinfo.plom.Model.Loan;
+import ng.com.quickinfo.plom.Model.LoanRepo.LoanAsyncTask;
 import ng.com.quickinfo.plom.Model.Offset;
 import ng.com.quickinfo.plom.Utils.DatabaseUtils;
 import ng.com.quickinfo.plom.Utils.Utilities;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
-import ng.com.quickinfo.plom.ViewModel.OffsetAdapter;
+import ng.com.quickinfo.plom.View.OffsetAdapter;
 
 import static ng.com.quickinfo.plom.Utils.Utilities.HomeIntent;
 import static ng.com.quickinfo.plom.Utils.Utilities.dateToString;
@@ -47,7 +45,6 @@ import static ng.com.quickinfo.plom.Utils.Utilities.intentToLoan;
 import static ng.com.quickinfo.plom.Utils.Utilities.log;
 import static ng.com.quickinfo.plom.Utils.Utilities.makeToast;
 import static ng.com.quickinfo.plom.Utils.Utilities.showProgress;
-import static ng.com.quickinfo.plom.Utils.Utilities.stringToDate;
 
 //import android.graphics.PorterDuff;
 //import android.graphics.PorterDuffColorFilter;
@@ -113,7 +110,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
     public static final String loanClearedAction = "package ng.com.quickinfo.plom.LOAN_CLEARED";
     public static final String loanOffsetAction = "package ng.com.quickinfo.plom.LOAN_OFFSET";
     public static final String loanUpdateAction = "package ng.com.quickinfo.plom.LOAN_EDITED";
-    public static final String loanDeleteAction = "package ng.com.quickinfo.plom.LOAN_CLEARED";
+    public static final String loanDeleteAction = "package ng.com.quickinfo.plom.LOAN_DELETED";
     public static final String offsetAddAction = "package ng.com.quickinfo.plom.OFFSET_ADDED";
     public static final String offsetDeleteAction = "package ng.com.quickinfo.plom.OFFSET_DELETED";
     public static final String offsetUpdateAction = "package ng.com.quickinfo.plom.OFFSET_UPDATED";
@@ -185,9 +182,17 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
         //get loan id from intent
         long mLoanId = getIntent().getLongExtra("loan_id", 16L);
-        //mLoan.setId(mLoanId);
-        getLoan(mLoanId);
-
+        // loan data observer
+        mLoanViewModel.getLoan(mLoanId).observe(this,
+                new Observer<Loan>()
+        {
+            @Override
+            public void onChanged(@Nullable final Loan loan) {
+                // Update the cached copy of the loans in the adapter.
+                mLoan = loan;
+                updateUI();
+               }
+        });
         //loadRV(mLoanId);
     }
 
@@ -236,16 +241,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
     }
 
-    private void getLoan(long loan_id) {
-        //get loan details
-        DatabaseUtils.GetLoanAsyncTask task = new DatabaseUtils.GetLoanAsyncTask(
-                mLoanViewModel, loanDetailGetAction
-        );
-        task.execute(loan_id);
- }
-
-
-//    // drawable changer
+ //    // drawable changer
 //    public static Drawable changeDrawableColor(Context context,int icon, int newColor) {
 //        Drawable mDrawable = ContextCompat.getDrawable(context, icon).mutate();
 //        mDrawable.setColorFilter(new PorterDuffColorFilter(newColor, PorterDuff.Mode.SRC_IN));
@@ -336,7 +332,6 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         makeToast(mContext, "clear positive offset");
         mLoan.setClearedStatus(date);
         mLoanViewModel.insert(mLoan);
-        getLoan(mLoan.getId());
 
 
     }
@@ -364,8 +359,8 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
     @Override
     public void onDialogPositiveClick(DialogFragment dialog, int action) {
-        // User touched the dialog's positive button
-        DatabaseUtils.InsertLoanAsyncTask task = new DatabaseUtils.InsertLoanAsyncTask(
+        // User touched the delete dialog's positive button
+        LoanAsyncTask task = new LoanAsyncTask(
                 mLoanViewModel, loanDeleteAction
         );
         task.execute(mLoan);
@@ -475,6 +470,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         return super.onCreateOptionsMenu(menu);
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -545,7 +541,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
             Loan loan = intentToLoan(intent);
             loan.updateLoan(mLoan.getId(), mLoan.getOffset(), mLoan.getClearStatus(), mLoan.getDateCleared(), mLoan.getUser_id());
             //use database utils async task
-            new DatabaseUtils.InsertLoanAsyncTask(mLoanViewModel,
+            new LoanAsyncTask(mLoanViewModel,
                     DetailActivity.loanUpdateAction).execute(loan);
             log(TAG, "tru with detailactivity onActivityResult");
             ///makeToast(this, "loan saved");
@@ -594,16 +590,14 @@ public class DetailActivity extends LifecycleLoggingActivity implements
                     break;
                 case loanUpdateAction:
                     action = "Loan Updated";
-                    updateUI();
                     break;
-                case loanDetailGetAction:
-                    mLoan = intentToLoan(intent);
-                    showProgress(false, pbDetail, mContext);
-                    llDetailMain.setVisibility(View.VISIBLE);
-                    action = " Get Loan gotten " +mLoan.getUser_id();
-                    updateUI();
-
-
+                case loanDeleteAction:
+                    action = "Loan Deleted";
+                    onBackPressed();
+                    break;
+                case loanClearedAction:
+                    action = "Loan cleared";
+                    break;
             }
 
             makeToast(mContext, action);
