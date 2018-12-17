@@ -16,7 +16,9 @@
         <activity android:name=".AddLoanActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".LoginActivity" />
-        <activity android:name=".SignInActivity">
+        <activity android:name=".SignInActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

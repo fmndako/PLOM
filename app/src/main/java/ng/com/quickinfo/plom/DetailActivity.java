@@ -105,7 +105,6 @@ public class DetailActivity extends LifecycleLoggingActivity implements
             "package ng.com.quickinfo.plom.detail_activity_get_loan";
 
     public static final String loanClearedAction = "package ng.com.quickinfo.plom.LOAN_CLEARED";
-    public static final String loanOffsetAction = "package ng.com.quickinfo.plom.LOAN_OFFSET";
     public static final String loanUpdateAction = "package ng.com.quickinfo.plom.LOAN_EDITED";
     public static final String loanDeleteAction = "package ng.com.quickinfo.plom.LOAN_DELETED";
     public static final String offsetAddAction = "package ng.com.quickinfo.plom.OFFSET_ADDED";

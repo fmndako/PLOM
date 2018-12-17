@@ -100,6 +100,9 @@ public class HomeActivity extends LifecycleLoggingActivity {
     String mEmail;
     Context mContext;
 
+    public static final String userClearedAction = "package ng.com.quickinfo.plom.USER_ADDED";
+    public static final String userUpdateAction = "package ng.com.quickinfo.plom.USER_UPDATED";
+    public static final String userDeleteAction = "package ng.com.quickinfo.plom.USER_DELETED";
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {

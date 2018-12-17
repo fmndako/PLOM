@@ -20,27 +20,28 @@ public class UserViewModel extends AndroidViewModel {
     //instantiate repo classes
     private UserRepo mUserRepo;
 
-    private LiveData<List<User>> mAllUsers;
-
-    private Context context;
 
     public UserViewModel(Application application) {
         super(application);
         //instantiate
-        context = application.getBaseContext();
         mUserRepo = new UserRepo(application);
-        mAllUsers = mUserRepo.getAllUsers();
+
     }
 
-    public void insert(User user, Context context) {
-        mUserRepo.insert(user, context);
+    public void insert(User user) {
+        mUserRepo.insert(user);
     }
 
-    public User getUser(String email) {
+    public LiveData<User> getUserById(long id ) {
+        return mUserRepo.getUserById(id);
+    }
+
+    public LiveData<User> getUserByEmail(String email) {
         return mUserRepo.getUserByEmail(email);
     }
-
-    public LiveData<List<User>> getAllUsers() {
-        return mAllUsers;
+    public LiveData<User> getUserByName(String name) {
+        return mUserRepo.getUserByName(name);
     }
+
+    public  void delete(User user){mUserRepo.delete(user);}
 }

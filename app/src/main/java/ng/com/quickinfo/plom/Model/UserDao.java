@@ -21,7 +21,13 @@ public interface UserDao {
     LiveData<List<User>> getAllUsers();
 
     @Query("select * from user_table where email = :email")
-    User getUserbyEmail(String email);
+    LiveData<User> getUserByEmail(String email);
+
+    @Query("select * from user_table where userName = :user")
+    LiveData<User> getUserByName(String user);
+
+    @Query("select * from user_table where id = :id")
+    LiveData<User> getUserById(long id);
 
     @Insert(onConflict = REPLACE)
     long addUser(User user);

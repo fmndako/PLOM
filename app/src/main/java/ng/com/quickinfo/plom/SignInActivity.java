@@ -13,9 +13,14 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -28,22 +33,33 @@ import com.google.android.gms.tasks.Task;
 
 import java.util.List;
 
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import ng.com.quickinfo.plom.Model.User;
 import ng.com.quickinfo.plom.Utils.Utilities;
-import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
 import ng.com.quickinfo.plom.ViewModel.UserViewModel;
 
 import static com.google.android.gms.auth.api.signin.GoogleSignInStatusCodes.getStatusCodeString;
 import static ng.com.quickinfo.plom.Utils.Utilities.log;
 import static ng.com.quickinfo.plom.Utils.Utilities.makeToast;
 
-public class SignInActivity extends LifecycleLoggingActivity {
+public class SignInActivity extends LifecycleLoggingActivity implements SignupDialog.SignupDialogListener {
 
     //register Broadcast receivers
     public static final String userRegisteredAction = "ng.com.quickinfo.plom.Sign_in";
     SignInReceiver myReceiver;
     IntentFilter myFilter;
+    @BindView(R.id.user)
+    EditText etUser;
+    @BindView(R.id.pass)
+    EditText etPassword;
+    @BindView(R.id.cbNotify)
+    CheckBox cbNotify;
+    @BindView(R.id.login)
+    TextView login;
+    @BindView(R.id.signup)
+    TextView signup;
 
     private Context mContext;
     //ViewModel
@@ -64,32 +80,33 @@ public class SignInActivity extends LifecycleLoggingActivity {
 
 
     @Override
-    protected void onStart(){
+    protected void onStart() {
         super.onStart();
         // Check for existing Google Sign In account, if the user is already signed in
         // the GoogleSignInAccount will be non-null.
         //view model
 
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        if (account != null){
-            Log.d(TAG, "account is not  null"+account.getObfuscatedIdentifier());
+        if (account != null) {
+            Log.d(TAG, "account is not  null" + account.getObfuscatedIdentifier());
             //updateUI(account.getEmail());
-           // registerMyReceivers();
+            // registerMyReceivers();
             //start next activity with email
             loadAccount(account.getEmail());
-           //startActivity(new Intent(this, ListActivity.class));
+            //startActivity(new Intent(this, ListActivity.class));
             //register receivers
 
         }
-            //continue
-            //updateUI();
-            Log.d(TAG, "account is  null, load signin fragment");
+        //continue
+        //updateUI();
+        Log.d(TAG, "account is  null, load signin fragment");
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.signin_layout);
+        setContentView(R.layout.login_layout);
+        ButterKnife.bind(this);
 
 
         mContext = getApplicationContext();
@@ -99,11 +116,12 @@ public class SignInActivity extends LifecycleLoggingActivity {
         //create broadcast receivers
         myReceiver = new SignInReceiver();
         myFilter = new IntentFilter(userRegisteredAction);
+        LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver, myFilter);
+
 
         //shared pref
         sharedPref = Utilities.MyPref.getSharedPref(mContext);
         editor = sharedPref.edit();
-
 
 
         // Configure sign-in to request the user's ID, email address, and basic
@@ -118,7 +136,7 @@ public class SignInActivity extends LifecycleLoggingActivity {
 
         // Set the dimensions of the sign-in button.
         SignInButton signInButton = findViewById(R.id.sign_in_button);
-        signInButton.setSize(SignInButton.SIZE_STANDARD);
+        //signInButton.setSize(SignInButton.SIZE_STANDARD);
 
         //listener for signin button
         findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener() {
@@ -126,19 +144,13 @@ public class SignInActivity extends LifecycleLoggingActivity {
             public void onClick(View view) {
                     switch (view.getId()) {
                         case R.id.sign_in_button:
-                            //TODO uncomment signin and comment updateui
-
-                            //showProgress(true);
-                            loadAccount("kdklskdl");
-                            //updateUI("dfsdfdfdsfdf");
-
-                            // signIn();
+                            signIn();
                             break;
                     }
                     }
         });
-        mSignInView = findViewById(R.id.signin_form);
-        mProgressView = findViewById(R.id.signin_progress);
+        mSignInView = findViewById(R.id.llLoginView);
+        mProgressView = findViewById(R.id.login_signin_progress);
     }
 
     private void signIn() {
@@ -162,30 +174,24 @@ public class SignInActivity extends LifecycleLoggingActivity {
 
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         Log.d(TAG, "handle sign in");
-            try {
-                GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-                mEmail = account.getEmail();
-                Log.d(TAG, mEmail);
+        try {
+            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
 
-                // Signed in successfully, show authenticated UI.
-                showProgress(false);
-                //updateUI(account.getEmail());
-            } catch (ApiException e) {
-                // The ApiException status code indicates the detailed failure reason.
-                // Please refer to the GoogleSignInStatusCodes class reference for more information.
-                Log.w(TAG, "signInResult:failed code=" + getStatusCodeString(e.getStatusCode()));
-                //updateUI("timatme@hhhh.com");
-                //showProgress(false);
-                //TODO remove after successful login
+            // Signed in successfully, show authenticated UI.
+            checkCredentialsGoogle(account.getEmail());
+        } catch (ApiException e) {
+            // The ApiException status code indicates the detailed failure reason.
+            // Please refer to the GoogleSignInStatusCodes class reference for more information.
+            Log.w(TAG, "signInResult:failed code=" + getStatusCodeString(e.getStatusCode()));
+            showProgress(false);
+            makeToast(mContext, "Google signin unsuccessful");
 
-                //updateUI("timatme@h4545hhhl.com");
-
-            }
+        }
 
 
     }
 
-    private void updateUI(String email ){
+    private void updateUI(String email) {
         //if first timer
         boolean userFirstLogin = sharedPref.getBoolean(email, true);
         if (userFirstLogin) {
@@ -208,16 +214,16 @@ public class SignInActivity extends LifecycleLoggingActivity {
         }
 
     }
-
+    //TODO remove all 3
     private void registerUser(String email) {
         User user = new User("username", "333", email, "jjjj");
         mEmail = email;
         log(TAG, "registerUser");
-        mUserViewModel.insert(user, mContext);
+       // mUserViewModel.insert(user, mContext);
 
     }
 
-    private void registerUserSuccesful(){
+    private void registerUserSuccesful() {
         log(TAG, mEmail + "registerUserSuccessful");//change shared pref to false if successfull
         editor.putBoolean(mEmail, false);
         editor.putString("email", mEmail);
@@ -225,7 +231,7 @@ public class SignInActivity extends LifecycleLoggingActivity {
         loadAccount(mEmail);
     }
 
-    private void loadAccount(String email){
+    private void loadAccount(String email) {
         Intent intent = new Intent(this, HomeActivity.class);
         intent.putExtra("email", email);
         startActivity(intent);
@@ -233,7 +239,7 @@ public class SignInActivity extends LifecycleLoggingActivity {
     }
 
     private void signOut() {
-       mGoogleSignInClient.signOut()
+        mGoogleSignInClient.signOut()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -241,6 +247,7 @@ public class SignInActivity extends LifecycleLoggingActivity {
                     }
                 });
     }
+
     private void revokeAccess() {
         mGoogleSignInClient.revokeAccess()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
@@ -252,17 +259,15 @@ public class SignInActivity extends LifecycleLoggingActivity {
     }
 
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
         super.onDestroy();
+
+        //unregistering using local broadcast manager
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(myReceiver);
+        //null the receivers to prevent ish
+        myReceiver = null;
     }
 
-    public static LiveData getAllUsers(UserViewModel mUserViewModel, String TAG) {
-        LiveData<List<User>> mAllUsers = mUserViewModel.getAllUsers();
-        List<User> allUsers = mAllUsers.getValue();
-        if (mAllUsers == null){Log.d(TAG, "allusers is null obj");}
-        else {Log.d(TAG, "allusers is not null obj");}
-        return  mAllUsers;
-    }
 
     /**
      * Shows the progress UI and hides the login form.
@@ -299,31 +304,139 @@ public class SignInActivity extends LifecycleLoggingActivity {
             mSignInView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
-    // *********** Register and unregister receivers
-    //register receiver when app resumes and unregister when app pauses
-    //register on create then unregister on Destroy
-    @Override
-    protected void onResume() {
-        super.onResume();
-        LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver, myFilter);
+
+    
+    @OnClick({R.id.login, R.id.signup})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.login:
+                attemptLogin();
+                break;
+            case R.id.signup:
+                openSignUpDialog("username");
+                break;
+        }
+    }
+
+
+    private void attemptLogin() {
+
+        // Reset errors.
+        etUser.setError(null);
+        etPassword.setError(null);
+
+        // Store values at the time of the login attempt.
+        String user = etUser.getText().toString();
+        String password = etPassword.getText().toString();
+
+        boolean cancel = false;
+        View focusView = null;
+
+        // Check for a valid password, if the user entered one.
+        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+            etPassword.setError(getString(R.string.error_invalid_password));
+            focusView = etPassword;
+            cancel = true;
+        }
+
+        // Check for a valid email address.
+        if (TextUtils.isEmpty(user)) {
+            etUser.setError(getString(R.string.error_field_required));
+            focusView = etUser;
+            cancel = true;
+        } // Check for a valid email address.
+        else if (TextUtils.isEmpty(password)) {
+            etPassword.setError(getString(R.string.error_field_required));
+            focusView = etPassword;
+            cancel = true;
+        }
+
+
+        if (cancel) {
+            // There was an error; don't attempt login and focus the first
+            // form field with an error.
+            focusView.requestFocus();
+        } else {
+            // Show a progress spinner, and kick off a background task to
+            // perform the user login attempt.
+            checkCredentials(user, password);
+            //showProgress(true);
+
+        }
+    }
+
+    private void checkCredentialsGoogle(final String email) {
+        //google checking credentials. signup if it doesnt exist
+        LiveData<User> user = mUserViewModel.getUserByName(email);
+
+        if (user != null){
+            goToHome(user.getValue().getUserId());
+        }
+        else{
+            openSignUpDialog(email);
+
+            //TODO register email;
+        }
+    }
+
+    private void openSignUpDialog(String action) {
+        SignupDialog signup = new SignupDialog();
+        Bundle bundle = new Bundle();
+        bundle.putString("action", action);
+        signup.setArguments(bundle);
+        signup.show(getSupportFragmentManager(), "SignUpDialog");
 
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        //unregistering using local broadcast manager
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(myReceiver);
-       //null the receivers to prevent ish
-        myReceiver = null;
+
+    private void checkCredentials(final String name, final String password) {
+        //showprogess
+        LiveData<User> user = mUserViewModel.getUserByName(name);
+
+        if (user != null){
+            if(user.getValue().getPassword().equals(password)){
+                //showprogress(false)
+                goToHome(user.getValue().getUserId());
+
+            }else{
+                etUser.setError("Invalid Username or Password");
+            }
+        }
+        else{
+            etUser.setError("Invalid Username or Password");
+        }
+    }
+
+
+    private boolean isPasswordValid(String password) {
+        return (password.length() > 3);
+    }
+
+    private void goToHome(long id) {
+        /*pass email and Id to mainActivity*/
+        Intent intent = new Intent(this, HomeActivity.class);
+
+        intent.putExtra("id", id );
+        startActivity(intent);
+        //finish();
+
+        //showProgress(false);
+    }
+    //****************** sign up dialog listener **********
+
+    public void onSignUp(DialogFragment dialog, User user){
+        //signup
+        //showprogress
+
+
+        //gotohome
+
     }
 
     //******************** SignInReceiver ********************
     public class SignInReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            // TODO: This method is called when the BroadcastReceiver is receiving
-            // an Intent broadcast.
             showProgress(false);
             makeToast(context, "user added");
             //register successful

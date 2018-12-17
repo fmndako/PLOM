@@ -157,7 +157,6 @@ public class LoginActivity extends LifecycleLoggingActivity {
             }
 
     private void goToHome() {
-        /*pass email and Id to mainActivity*/
         Intent intent = new Intent(this, ListActivity.class);
         //intent.putExtra("email", mUser.getEmail());
         //
