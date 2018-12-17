@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ws.wolfsoft.livo.MainActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".HomeActivity">
 
 
 
@@ -12,14 +13,14 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/linear"
+        android:layout_above="@+id/hlinear"
 
         >
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/bg"
+           app:srcCompat="@drawable/bell_off"
             android:scaleType="centerCrop"
             android:layout_marginBottom="25dp"
             />
@@ -35,7 +36,7 @@
 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/menu"
+                app:srcCompat="@drawable/menu"
                 android:layout_gravity="left"
                 />
 
@@ -88,7 +89,7 @@
                         android:layout_weight="1"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:src="@drawable/fb"
+                        app:srcCompat="@drawable/borrowing"
                         android:layout_gravity="center"
                         android:gravity="bottom"
 
@@ -96,7 +97,7 @@
 
                     <customfonts.MyTextView
                         android:layout_weight="1"
-                        android:id="@+id/signin1"
+                        android:id="@+id/hsignin1"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:text="225 Followers"
@@ -111,7 +112,7 @@
                 <ImageView
                     android:layout_width="100dp"
                     android:layout_height="100dp"
-                    android:src="@drawable/userimg"
+                    android:src="@drawable/cash_money"
 
                     android:gravity="bottom"
 
@@ -131,7 +132,7 @@
                         android:layout_weight="1"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:src="@drawable/twitter"
+                        android:src="@drawable/giving"
                         android:layout_gravity="center"
                         android:gravity="bottom"
 
@@ -142,7 +143,7 @@
                     <customfonts.MyTextView
                         android:gravity="center"
                         android:layout_weight="1"
-                        android:id="@+id/signup1"
+                        android:id="@+id/hsignup1"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:text="315 Followers"
@@ -163,7 +164,7 @@
     </FrameLayout>
 
     <LinearLayout
-        android:id="@+id/linear"
+        android:id="@+id/hlinear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -179,7 +180,7 @@
 
             <customfonts.MyTextView
                 android:layout_weight="1"
-                android:id="@+id/username"
+                android:id="@+id/husername"
                 android:textSize="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -194,7 +195,7 @@
 
             <customfonts.MyTextView
                 android:layout_weight="1"
-                android:id="@+id/username1"
+                android:id="@+id/husername1"
                 android:textSize="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -226,7 +227,7 @@
 
             <customfonts.MyTextView
                 android:layout_weight="1"
-                android:id="@+id/emil"
+                android:id="@+id/hemil"
                 android:textSize="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -240,7 +241,7 @@
 
             <customfonts.MyTextView
                 android:layout_weight="1"
-                android:id="@+id/email1"
+                android:id="@+id/hemail1"
                 android:textSize="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -270,7 +271,7 @@
 
             <customfonts.MyTextView
                 android:layout_weight="1"
-                android:id="@+id/password"
+                android:id="@+id/hpassword"
                 android:textSize="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -284,7 +285,7 @@
 
             <customfonts.MyTextView
                 android:layout_weight="1"
-                android:id="@+id/pass1"
+                android:id="@+id/hpass1"
                 android:textSize="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -313,7 +314,7 @@
 
             <customfonts.MyTextView
                 android:layout_weight="1"
-                android:id="@+id/facebook"
+                android:id="@+id/hfacebook"
                 android:textSize="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -327,7 +328,7 @@
 
             <Switch
                 android:layout_weight="1"
-                android:id="@+id/switch1"
+                android:id="@+id/hswitch1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="16dp"
@@ -335,7 +336,7 @@
                 />
 
             <!--<ToggleButton-->
-            <!--android:id="@+id/ToggleButton1"-->
+            <!--android:id="@+id/hToggleButton1"-->
             <!--android:layout_width="120dp"-->
             <!--android:layout_height="32dp"-->
             <!--android:paddingLeft="20dp"-->
@@ -359,7 +360,7 @@
 
             <customfonts.MyTextView
                 android:layout_weight="1"
-                android:id="@+id/twitter"
+                android:id="@+id/htwitter"
                 android:textSize="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -374,7 +375,7 @@
 
             <Switch
                 android:layout_weight="1"
-                android:id="@+id/switch2"
+                android:id="@+id/hswitch2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="16dp"
@@ -398,7 +399,7 @@
 
             <customfonts.MyTextView
                 android:layout_weight="1"
-                android:id="@+id/google"
+                android:id="@+id/hgoogle"
                 android:textSize="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -412,7 +413,7 @@
 
             <customfonts.MyTextView
                 android:layout_weight="1"
-                android:id="@+id/google1"
+                android:id="@+id/hgoogle1"
                 android:textSize="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
