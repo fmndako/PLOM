@@ -145,8 +145,8 @@ public class HomeActivity extends LifecycleLoggingActivity {
         mEmail = getIntent().getStringExtra("email");
         log(TAG, mEmail + "the email");
         //
-
-        getUser();
+    //TODO get user livedata
+        //getUser();
 
 
     }
@@ -161,15 +161,6 @@ public class HomeActivity extends LifecycleLoggingActivity {
         startActivity(listIntent);
     }
 
-    private void getUser() {
-        //get user id fromm db
-        showProgress(true, progressBar, mContext);
-
-        //get user from database using getUserAsyncTask
-        GetUserAsyncTask task = new GetUserAsyncTask();
-        task.execute(mEmail);
-        log(TAG, "user id = ");
-    }
 
     private void getLoans(long user_id) {
         //observer
@@ -264,31 +255,4 @@ public class HomeActivity extends LifecycleLoggingActivity {
         }
     }
 
-
-    private class GetUserAsyncTask extends AsyncTask<String, Void, User> {
-
-        @Override
-        protected void onPreExecute() {
-            log(TAG, "preexecute");
-            //TODO implement a progress bar
-            //showProgress(true);
-        }
-
-        protected User doInBackground(final String... params) {
-            return mUserViewModel.getUser(params[0]);
-        }
-
-        protected void onPostExecute(User result) {
-            log(TAG, "postexecute");
-            //save result as mUser
-            if (result != null){
-                makeToast(mContext, "user Not null" + result.getUserId());
-                getLoans(mUser.getUserId());
-            }
-            //stop progress bar
-            //showProgress(false);
-            //load loans
-            //c
-        }
-    }
 }

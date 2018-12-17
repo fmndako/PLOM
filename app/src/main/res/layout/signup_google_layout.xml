@@ -113,6 +113,7 @@
             android:layout_marginBottom="50dp"
             android:letterSpacing="0.2"/>
 
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
