@@ -146,10 +146,20 @@ public class HomeActivity extends LifecycleLoggingActivity {
         makeToast(mContext, id + "");
         //
     //TODO get user livedata
-        //getUser();
+        //
+        UserViewModel userViewModel = ViewModelProviders.of(this).get(
+                UserViewModel.class
+        );
 
-
-    }
+        userViewModel.getAllUser().observe(this, new Observer<List<User>>() {
+            @Override
+            public void onChanged(@Nullable final List<User> users) {
+                for (User i : users){
+                    log(TAG, i.getEmail());
+                    log(TAG, i.getUserName());
+                }
+            }});
+            }
 
     private void viewLoans(int selection) {
         //go to listActivity

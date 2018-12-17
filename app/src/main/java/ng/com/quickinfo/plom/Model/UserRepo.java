@@ -31,6 +31,11 @@ public class UserRepo {
         mAllUsers = mUserDao.getAllUsers();
     }
     // get user
+
+    public LiveData<List<User>> getAllUsers() {
+        return mAllUsers;
+    }
+
     public LiveData<User> getUserByEmail(String email){
         return mUserDao.getUserByEmail(email);
     }

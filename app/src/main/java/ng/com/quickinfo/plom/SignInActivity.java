@@ -408,8 +408,10 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
                 //showprogress(false)
                 goToHome(user.getUserId());
 
+
             }else{
-                etUser.setError("Invalid Username or Password");
+                //TODO change
+                etUser.setError("Invalid Username or Password" + user.getPassword());
                 etUser.requestFocus();
             }
         }

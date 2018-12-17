@@ -125,7 +125,6 @@ public class SignupDialog extends DialogFragment {
 
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
-                log("signup frag", s + "" );
                 String confirmpass = signupconfirmpass.getText().toString();
                 String pass = signuppass.getText().toString();
                 if( (!confirmpass.isEmpty())  && (!s.toString().equals(confirmpass))){
@@ -161,11 +160,6 @@ public class SignupDialog extends DialogFragment {
     }
 
 
-    private void attemptGoogleSignUp() {
-        User user = new User("", "", mEmail, "");
-        mListener.onSignUp(this, user);
-    }
-
     @OnClick({ R.id.signupsignup, R.id.signuplogin})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -200,7 +194,8 @@ public class SignupDialog extends DialogFragment {
             focusView = signupemail;
             cancel = true;
 
-        }else if (!isUserAvailable(user)){
+        }
+        if (!isUserAvailable(user)){
             log("SignUpDlg", "isuserAvailble");
 
             signupuser.setError("Username already exists");
@@ -248,6 +243,7 @@ public class SignupDialog extends DialogFragment {
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
+
             registerUser(user, password);
             //showProgress(true);
 
@@ -263,7 +259,10 @@ public class SignupDialog extends DialogFragment {
     private boolean isEmailAvailable(String email) {
         User user = userViewModel.getUserByEmail(email).getValue();
         if (user!=null) {
+            log("Email", "User" + user.getEmail());
+
             return false;
+        } else{ log("Email", "Null");
         }
         return true;
     }
