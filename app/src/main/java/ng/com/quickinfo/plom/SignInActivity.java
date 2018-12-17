@@ -49,18 +49,22 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
 
     //register Broadcast receivers
     public static final String userRegisteredAction = "ng.com.quickinfo.plom.Sign_in";
+    public String keepLoginName = "Keeper";
     SignInReceiver myReceiver;
     IntentFilter myFilter;
     @BindView(R.id.user)
     EditText etUser;
     @BindView(R.id.pass)
     EditText etPassword;
-    @BindView(R.id.cbNotify)
-    CheckBox cbNotify;
+    @BindView(R.id.cbKeepSignedIn)
+    CheckBox cbKeepSignedIn;
     @BindView(R.id.login)
     TextView login;
     @BindView(R.id.signup)
     TextView signup;
+
+    //keep signed in
+    int keepSignIn;
 
     private Context mContext;
     //ViewModel
@@ -90,13 +94,7 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         if (account != null) {
             Log.d(TAG, "account is not  null" + account.getObfuscatedIdentifier());
-            //updateUI(account.getEmail());
-            // registerMyReceivers();
-            //start next activity with email
-            loadAccount(account.getEmail());
-            //startActivity(new Intent(this, ListActivity.class));
-            //register receivers
-
+            checkCredentialsGoogle(account.getEmail());
         }
         //continue
         //updateUI();
@@ -125,7 +123,10 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
         sharedPref = Utilities.MyPref.getSharedPref(mContext);
         editor = sharedPref.edit();
 
-
+        keepSignIn = sharedPref.getInt(keepLoginName, 0);
+        if(keepSignIn !=0){
+            goToHome(sharedPref.getLong("user_id", 0));
+        }
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -186,7 +187,7 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
             Log.w(TAG, "signInResult:failed code=" + getStatusCodeString(e.getStatusCode()));
             showProgress(false);
-            makeToast(mContext, "Google signin unsuccessful");
+            makeToast(mContext, "Network Error");
 
         }
 
@@ -321,6 +322,7 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
     }
 
 
+
     private void attemptLogin() {
 
         // Reset errors.
@@ -361,23 +363,30 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
+            if(cbKeepSignedIn.isChecked()){
+            editor.putInt(keepLoginName, 1);}
             checkCredentials(user, password);
-            //showProgress(true);
+
+                        //showProgress(true);
 
         }
     }
 
     private void checkCredentialsGoogle(final String email) {
         //google checking credentials. signup if it doesnt exist
-        LiveData<User> user = mUserViewModel.getUserByName(email);
+        User user = mUserViewModel.getUserByName(email).getValue();
 
         if (user != null){
-            goToHome(user.getValue().getUserId());
+            goToHome(user.getUserId());
         }
         else{
-            openSignUpDialog(email);
+            //openSignUpDialog(email);
 
-            //TODO register email;
+            //TODO register email; or create user
+            User newUser = new User("", "", email, "");
+            new UserRepo.UserAsyncTask(mUserViewModel,
+                    HomeActivity.userAddAction).execute(newUser);
+
         }
     }
 
@@ -393,19 +402,20 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
 
     private void checkCredentials(final String name, final String password) {
         //showprogess
-        LiveData<User> user = mUserViewModel.getUserByName(name);
-
+        User user = mUserViewModel.getUserByName(name).getValue();
         if (user != null){
-            if(user.getValue().getPassword().equals(password)){
+            if(user.getPassword().equals(password)){
                 //showprogress(false)
-                goToHome(user.getValue().getUserId());
+                goToHome(user.getUserId());
 
             }else{
                 etUser.setError("Invalid Username or Password");
+                etUser.requestFocus();
             }
         }
         else{
             etUser.setError("Invalid Username or Password");
+            etUser.requestFocus();
         }
     }
 
@@ -415,6 +425,7 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
     }
 
     private void goToHome(long id) {
+        showProgress(false);
         /*pass email and Id to mainActivity*/
         Intent intent = new Intent(this, HomeActivity.class);
 
@@ -428,6 +439,7 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
 
     public void onSignUp(DialogFragment dialog, User user){
         dialog.dismiss();
+        showProgress(true);
         //showprogress
         new UserRepo.UserAsyncTask(mUserViewModel,
                 HomeActivity.userAddAction).execute(user);
@@ -435,6 +447,7 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
         //gotohome
 
     }
+
 
     //******************** SignInReceiver ********************
     public class SignInReceiver extends BroadcastReceiver {
@@ -446,7 +459,15 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
                      //get id from intent and go to home screen
                     makeToast(context, "user added");
                     long id = intent.getLongExtra("id", 0);
-                    if(id!=0){goToHome(id);}
+                    if(id!=0){
+
+                        if (cbKeepSignedIn.isChecked()){
+                            keepSignIn = 1;
+                            editor.putInt(keepLoginName, 1);
+                            editor.putLong("user_id", id);
+                        }
+                        goToHome(id);
+                    }
                     break;
             }
 

@@ -16,21 +16,15 @@
         android:paddingLeft="60dp"
         android:paddingRight="60dp">
         <!--progress bar-->
-        <LinearLayout
 
-            android:id="@+id/llProgressView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-        >
             <ProgressBar
                 android:id="@+id/login_signin_progress"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_centerHorizontal="true"
                 android:layout_centerInParent="true"
                 android:visibility="gone" />
-        </LinearLayout>
+
         <!--login form-->
         <LinearLayout
             android:id="@+id/llLoginView"
@@ -113,7 +107,7 @@
                 android:orientation="horizontal"
                 >
                 <CheckBox
-                    android:id="@+id/cbNotify"
+                    android:id="@+id/cbKeepSignedIn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="7dp"

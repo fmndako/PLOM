@@ -9,7 +9,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
+        android:gravity="bottom"
         android:paddingLeft="60dp"
         android:paddingRight="60dp">
 
@@ -180,7 +180,35 @@
                     android:textColor="#fff"
                     />
 
+
+
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/signupsignup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#009a9a"
+                android:text="Signup"
+                android:textColor="#d9e5f3"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_gravity="bottom"
+                android:padding="16dp"
+                android:layout_marginBottom="50dp"
+                android:letterSpacing="0.2"/>
+
+            <TextView
+                android:id="@+id/signuplogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+
+                android:text="Already have an Account ?"
+                android:textColor="#d9e5f3"
+                android:letterSpacing="0.1"/>
+
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -189,41 +217,41 @@
         </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingLeft="60dp"
-        android:paddingRight="60dp"
-        android:orientation="vertical"
-        android:gravity="bottom"
-        android:layout_marginBottom="20dp"
-        >
-        <TextView
-            android:id="@+id/signupsignup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#009a9a"
-            android:text="Signup"
-            android:textColor="#d9e5f3"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:layout_gravity="bottom"
-            android:padding="16dp"
-            android:layout_marginBottom="50dp"
-            android:letterSpacing="0.2"/>
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:paddingLeft="60dp"-->
+        <!--android:paddingRight="60dp"-->
+        <!--android:orientation="vertical"-->
+        <!--android:gravity="bottom"-->
+        <!--android:layout_marginBottom="20dp"-->
+        <!--&gt;-->
+        <!--<TextView-->
+            <!--android:id="@+id/signupsignup"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:background="#009a9a"-->
+            <!--android:text="Signup"-->
+            <!--android:textColor="#d9e5f3"-->
+            <!--android:textStyle="bold"-->
+            <!--android:gravity="center"-->
+            <!--android:layout_gravity="bottom"-->
+            <!--android:padding="16dp"-->
+            <!--android:layout_marginBottom="50dp"-->
+            <!--android:letterSpacing="0.2"/>-->
 
-        <TextView
-            android:id="@+id/signuplogin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
+        <!--<TextView-->
+            <!--android:id="@+id/signuplogin"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:gravity="center"-->
 
-            android:text="Already have an Account ?"
-            android:textColor="#d9e5f3"
-            android:letterSpacing="0.1"/>
+            <!--android:text="Already have an Account ?"-->
+            <!--android:textColor="#d9e5f3"-->
+            <!--android:letterSpacing="0.1"/>-->
 
 
-    </LinearLayout>
+    <!--</LinearLayout>-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

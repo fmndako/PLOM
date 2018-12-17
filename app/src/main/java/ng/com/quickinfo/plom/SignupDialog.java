@@ -1,22 +1,32 @@
 package ng.com.quickinfo.plom;
 
 import android.app.Dialog;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.android.gms.common.util.DataUtils;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import ng.com.quickinfo.plom.Model.User;
+import ng.com.quickinfo.plom.Utils.Utilities;
+import ng.com.quickinfo.plom.ViewModel.UserViewModel;
+
+import static ng.com.quickinfo.plom.Utils.Utilities.log;
 
 
 public class SignupDialog extends DialogFragment {
@@ -26,14 +36,12 @@ public class SignupDialog extends DialogFragment {
     // Use this instance of the interface to deliver action events
     SignupDialogListener mListener;
 
+    //View Model
+    UserViewModel userViewModel;
+
 
     String mAction;
-    @BindView(R.id.gsignupemail)
-    EditText gsignupemail;
-    @BindView(R.id.gsignupnumber)
-    EditText gsignupnumber;
-    @BindView(R.id.gsignupsignup)
-    TextView gsignupsignup;
+
     Unbinder unbinder;
     @BindView(R.id.signupemail)
     EditText signupemail;
@@ -50,6 +58,9 @@ public class SignupDialog extends DialogFragment {
     @BindView(R.id.signuplogin)
     TextView signuplogin;
 
+
+
+
     //email
     String mEmail;
     //Override on create
@@ -62,28 +73,67 @@ public class SignupDialog extends DialogFragment {
         // Get the layout inflater
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
+
+        // Inflate and set the layout for the dialog
+        // Pass null as the parent view because its going in the dialog layout
+
         //get from args
         Bundle bundle = getArguments();
         mAction = bundle.getString("action");
-        View view;
         if (mAction != "username") {
-            view = inflater.inflate(R.layout.signup_google_layout, null);
-            mEmail = mAction;
-        } else {
 
-            view = inflater.inflate(R.layout.signup_layout, null);
         }
+        View view = inflater.inflate(R.layout.signup_layout, null);
         //butterknife
+        builder.setView(view);
+        userViewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
         ButterKnife.bind(this, view);
         //TODO set on text listenenr for confrim password
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
 
+        setTextListener();
+
         return builder.create();
     }
 
-    private void getValues() {
+    private void setTextListener() {
 
+        signupconfirmpass.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {}
+
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+                if(!s.toString().equals(signuppass.getText().toString())){
+                    signupconfirmpass.setError("Passwords do not match");
+
+                }
+            }
+        });
+        signuppass.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {}
+
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+                log("signup frag", s + "" );
+                String confirmpass = signupconfirmpass.getText().toString();
+                String pass = signuppass.getText().toString();
+                if( (!confirmpass.isEmpty())  && (!s.toString().equals(confirmpass))){
+                    signupconfirmpass.setError("Passwords do not match");
+
+                }
+            }
+        });
     }
 
     // Override the Fragment.onAttach() method to instantiate the OffsetDialogListener
@@ -98,28 +148,18 @@ public class SignupDialog extends DialogFragment {
         } catch (ClassCastException e) {
             // The activity doesn't implement the interface, throw exception
             throw new ClassCastException(context.toString()
-                    + " must implement OffsetDialogListener");
+                    + " must implement SignupDialogListener");
         }
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // TODO: inflate a fragment view
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        unbinder = ButterKnife.bind(this, rootView);
-        return rootView;
-    }
+
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unbinder.unbind();
+
     }
 
-    @OnClick(R.id.gsignupsignup)
-    public void onViewClicked() {
-        attemptGoogleSignUp();
-    }
 
     private void attemptGoogleSignUp() {
         User user = new User("", "", mEmail, "");
@@ -143,13 +183,42 @@ public class SignupDialog extends DialogFragment {
         // Reset errors.
         signupuser.setError(null);
         signuppass.setError(null);
+        signupemail.setError(null);
         
         // Store values at the time of the login attempt.
         String user = signupuser.getText().toString();
         String password = signuppass.getText().toString();
-
+        String email = signupemail.getText().toString();
         boolean cancel = false;
         View focusView = null;
+
+
+        //check useremail availability
+        if(!isEmailAvailable(email)){
+            log("SignUpDlg", "isemailAvailble");
+            signupemail.setError("Email address already exists");
+            focusView = signupemail;
+            cancel = true;
+
+        }else if (!isUserAvailable(user)){
+            log("SignUpDlg", "isuserAvailble");
+
+            signupuser.setError("Username already exists");
+            focusView = signupuser;
+            cancel = true;
+
+        }
+        //check email validity
+        if(!TextUtils.isEmpty(email) && !isEmailValid(email)){
+            signupemail.setError("Enter Valid Email Address");
+            focusView = signupemail;
+            cancel = true;
+
+
+        }
+
+
+
 
         // Check for a valid password, if the user entered one.
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
@@ -171,6 +240,7 @@ public class SignupDialog extends DialogFragment {
         }
 
 
+
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
@@ -190,13 +260,33 @@ public class SignupDialog extends DialogFragment {
         mListener.onSignUp(this, user);
     }
 
+    private boolean isEmailAvailable(String email) {
+        User user = userViewModel.getUserByEmail(email).getValue();
+        if (user!=null) {
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isUserAvailable(String name) {
+        User user = userViewModel.getUserByName(name).getValue();
+        if (user!=null) {
+            return false;
+        }
+        return true;
+    }
     private boolean isPasswordValid(String password) {
         return (password.length() > 3) && password.equals(
                 signupconfirmpass.getText().toString()) ;
     }
+
+    private boolean isEmailValid(String email) {
+        return (email.length() > 3) && email.contains("@") ;
+    }
     //*********** interface *************
     public interface SignupDialogListener {
         public void onSignUp(DialogFragment dialog, User user);
+
 
     }
 }
