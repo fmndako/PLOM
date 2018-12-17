@@ -1,10 +1,14 @@
 package ng.com.quickinfo.plom;
 
 import android.app.Dialog;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
@@ -17,6 +21,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.android.gms.common.util.DataUtils;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,6 +44,11 @@ public class SignupDialog extends DialogFragment {
 
     //View Model
     UserViewModel userViewModel;
+
+    //shared pref
+    private SharedPreferences sharedPref;
+    private SharedPreferences.Editor editor;
+
 
 
     String mAction;
@@ -87,6 +98,11 @@ public class SignupDialog extends DialogFragment {
         //butterknife
         builder.setView(view);
         userViewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
+
+        //shared pref
+        sharedPref = Utilities.MyPref.getSharedPref(getActivity().getApplicationContext());
+        editor = sharedPref.edit();
+
         ButterKnife.bind(this, view);
         //TODO set on text listenenr for confrim password
         // Inflate and set the layout for the dialog
@@ -164,6 +180,9 @@ public class SignupDialog extends DialogFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.signupsignup:
+                //TODO restore
+               // checkAvailability();
+
                 attemptSignUp();
                 break;
             case R.id.signuplogin:
@@ -171,6 +190,8 @@ public class SignupDialog extends DialogFragment {
                 break;
         }
     }
+
+
 
     private void attemptSignUp() {
 
@@ -188,14 +209,14 @@ public class SignupDialog extends DialogFragment {
 
 
         //check useremail availability
-        if(!isEmailAvailable(email)){
+        if(!TextUtils.isEmpty(email) &&!isEmailAvailable(email)){
             log("SignUpDlg", "isemailAvailble");
             signupemail.setError("Email address already exists");
             focusView = signupemail;
             cancel = true;
 
         }
-        if (!isUserAvailable(user)){
+        if (!TextUtils.isEmpty(user) && !isUserAvailable(user)){
             log("SignUpDlg", "isuserAvailble");
 
             signupuser.setError("Username already exists");
@@ -222,8 +243,12 @@ public class SignupDialog extends DialogFragment {
             cancel = true;
         }
 
+        if (TextUtils.isEmpty(email)) {
+            signupemail.setError(getString(R.string.error_field_required));
+            focusView = signupemail;
+            cancel = true;}
         // Check for a valid user address.
-        if (TextUtils.isEmpty(user)) {
+        else if (TextUtils.isEmpty(user)) {
             signupuser.setError(getString(R.string.error_field_required));
             focusView = signupuser;
             cancel = true;
@@ -251,28 +276,40 @@ public class SignupDialog extends DialogFragment {
     }
 
     private void registerUser(String mUser, String password) {
-        User user = new User(mUser,signupnumber.getText().toString(),
-                signupemail.getText().toString(), password);
-        mListener.onSignUp(this, user);
+
+            User user = new User(mUser,signupnumber.getText().toString(),
+                    signupemail.getText().toString(), password);
+            mListener.onSignUp(this, user);
+
+
     }
 
     private boolean isEmailAvailable(String email) {
-        User user = userViewModel.getUserByEmail(email).getValue();
-        if (user!=null) {
-            log("Email", "User" + user.getEmail());
 
-            return false;
-        } else{ log("Email", "Null");
-        }
-        return true;
+        //true if first timer else false
+        return sharedPref.getBoolean(email, true);
+            }
+
+    public void checkAvailability(){
+        log("email", isEmailAvailable(signupemail.getText().toString())+"");
+        log("email user", isUserAvailable(signupuser.getText().toString())+"");
+
     }
+//
+//        timatme@googlemail.com
+//                fati
+//        timatme@googlemail.com
+//                fatima
+//        gyyyg@
+//                tyy
+//        ggff@
+//                tthh
+//        timatme@googlemail.com
+//                fati
+//        fatima
 
     private boolean isUserAvailable(String name) {
-        User user = userViewModel.getUserByName(name).getValue();
-        if (user!=null) {
-            return false;
-        }
-        return true;
+        return sharedPref.getBoolean(name, true);
     }
     private boolean isPasswordValid(String password) {
         return (password.length() > 3) && password.equals(

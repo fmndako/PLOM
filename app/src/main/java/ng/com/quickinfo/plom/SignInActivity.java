@@ -13,6 +13,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
@@ -32,6 +33,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import java.util.List;
+import java.util.Observer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -374,20 +376,31 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
 
     private void checkCredentialsGoogle(final String email) {
         //google checking credentials. signup if it doesnt exist
-        User user = mUserViewModel.getUserByName(email).getValue();
 
-        if (user != null){
-            goToHome(user.getUserId());
-        }
-        else{
-            //openSignUpDialog(email);
-
-            //TODO register email; or create user
+        if(sharedPref.getBoolean(email, true)){
+            //first timer
             User newUser = new User("", "", email, "");
+            editor.putBoolean(email, false);
             new UserRepo.UserAsyncTask(mUserViewModel,
                     HomeActivity.userAddAction).execute(newUser);
 
+        } else {
+            //not first timer
+            mUserViewModel.getUserByEmail(email).observe(this, new android.arch.lifecycle.Observer <User>()  {
+                @Override
+                public void onChanged(@Nullable final User user) {
+                    if (user != null){
+                           //showprogress(false)
+                            goToHome(user.getUserId());
+
+
+                        }
+                                    }
+            });
+
+
         }
+
     }
 
     private void openSignUpDialog(String action) {
@@ -402,23 +415,29 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
 
     private void checkCredentials(final String name, final String password) {
         //showprogess
-        User user = mUserViewModel.getUserByName(name).getValue();
-        if (user != null){
-            if(user.getPassword().equals(password)){
-                //showprogress(false)
-                goToHome(user.getUserId());
+        mUserViewModel.getUserByName(name).observe(this, new android.arch.lifecycle.Observer <User>()  {
+            @Override
+            public void onChanged(@Nullable final User user) {
+                    if (user != null){
+                        if(user.getPassword().equals(password)){
+                            //showprogress(false)
+                            goToHome(user.getUserId());
 
 
-            }else{
-                //TODO change
-                etUser.setError("Invalid Username or Password" + user.getPassword());
-                etUser.requestFocus();
-            }
-        }
-        else{
-            etUser.setError("Invalid Username or Password");
-            etUser.requestFocus();
-        }
+                        }else{
+                            //TODO change
+                            etUser.setError("Invalid Username or Password" + user.getPassword());
+                            etUser.requestFocus();
+                        }
+                    }
+                    else{
+                        etUser.setError("Invalid Username or Password");
+                        etUser.requestFocus();
+                    }
+                }
+            });
+
+
     }
 
 
@@ -442,6 +461,11 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
     public void onSignUp(DialogFragment dialog, User user){
         dialog.dismiss();
         showProgress(true);
+        editor.putBoolean(user.getEmail(), false);
+        if (!user.getUserName().isEmpty()){
+            editor.putBoolean(user.getUserName(), false);
+        }
+        editor.commit();
         //showprogress
         new UserRepo.UserAsyncTask(mUserViewModel,
                 HomeActivity.userAddAction).execute(user);
