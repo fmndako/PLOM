@@ -18,7 +18,6 @@ import android.widget.CheckBox;
 import android.widget.Spinner;
 
 import java.util.Calendar;
-import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,7 +31,6 @@ import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
 import static ng.com.quickinfo.plom.Utils.Utilities.dateToString;
 import static ng.com.quickinfo.plom.Utils.Utilities.log;
 import static ng.com.quickinfo.plom.Utils.Utilities.makeToast;
-import static ng.com.quickinfo.plom.Utils.Utilities.stringToDate;
 
 public class AddLoanActivity extends AppCompatActivity {
 
@@ -73,7 +71,7 @@ public class AddLoanActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_loan_activity);
+        setContentView(R.layout.activity_add_loan);
         ButterKnife.bind(this);
 
         //contxt

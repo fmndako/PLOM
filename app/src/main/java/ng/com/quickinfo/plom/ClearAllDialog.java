@@ -16,7 +16,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import ng.com.quickinfo.plom.Model.Offset;
 import ng.com.quickinfo.plom.Utils.DateInputMask;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
 
@@ -41,7 +40,7 @@ public class ClearAllDialog extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         // Get the layout inflater
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.clear_dialog, null);
+        View view = inflater.inflate(R.layout.dialog_clear_loan, null);
 
         //butterknife
         unbinder = ButterKnife.bind(this, view);

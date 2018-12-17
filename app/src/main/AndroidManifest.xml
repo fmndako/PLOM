@@ -15,7 +15,6 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".AddLoanActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".LoginActivity" />
         <activity android:name=".SignInActivity"
             android:theme="@style/AppTheme.NoActionBar"
             >

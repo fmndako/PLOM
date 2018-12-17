@@ -142,7 +142,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.detail_activity);
+        setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
 
         //context
