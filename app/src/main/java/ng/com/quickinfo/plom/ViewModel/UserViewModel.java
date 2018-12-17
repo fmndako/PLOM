@@ -28,8 +28,8 @@ public class UserViewModel extends AndroidViewModel {
 
     }
 
-    public void insert(User user) {
-        mUserRepo.insert(user);
+    public long insert(User user) {
+        return mUserRepo.insert(user);
     }
 
     public LiveData<User> getUserById(long id ) {

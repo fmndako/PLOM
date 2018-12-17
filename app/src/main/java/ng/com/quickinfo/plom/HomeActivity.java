@@ -97,10 +97,10 @@ public class HomeActivity extends LifecycleLoggingActivity {
     //initiate viewmodel
     LoanViewModel mLoanViewModel;
     UserViewModel mUserViewModel;
-    String mEmail;
+    long id;
     Context mContext;
 
-    public static final String userClearedAction = "package ng.com.quickinfo.plom.USER_ADDED";
+    public static final String userAddAction = "package ng.com.quickinfo.plom.USER_ADDED";
     public static final String userUpdateAction = "package ng.com.quickinfo.plom.USER_UPDATED";
     public static final String userDeleteAction = "package ng.com.quickinfo.plom.USER_DELETED";
 
@@ -142,8 +142,8 @@ public class HomeActivity extends LifecycleLoggingActivity {
         //context
         mContext = getApplicationContext();
         //get email from intent
-        mEmail = getIntent().getStringExtra("email");
-        log(TAG, mEmail + "the email");
+        id = getIntent().getLongExtra("id", 0);
+        makeToast(mContext, id + "");
         //
     //TODO get user livedata
         //getUser();

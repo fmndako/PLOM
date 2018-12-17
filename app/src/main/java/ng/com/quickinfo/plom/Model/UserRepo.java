@@ -43,8 +43,8 @@ public class UserRepo {
         return mUserDao.getUserByName(user);
     }
     //insert user
-    public void insert (User user) {
-        mUserDao.addUser(user);
+    public long insert (User user) {
+        return mUserDao.addUser(user);
     }
     //delete user
 
@@ -52,7 +52,7 @@ public class UserRepo {
         mUserDao.deleteUser(user);
     }
     //*************** async task ****************
-    public static class UserAsyncTask extends AsyncTask<User, Void, Void> {
+    public static class UserAsyncTask extends AsyncTask<User, Void ,Long> {
 
         String mAction;
 
@@ -64,23 +64,25 @@ public class UserRepo {
         }
 
         @Override
-        protected Void doInBackground(User... params) {
+        protected Long doInBackground(User... params) {
             if (mAction.equals(HomeActivity.userDeleteAction)) {
                 userViewModel.delete(params[0]);
+                return null;
             } else {
-                userViewModel.insert(params[0]);
+                return userViewModel.insert(params[0]);
 
 
             }
 
-            return null;
+
         }
 
         @Override
-        protected void onPostExecute(Void Void) {
+        protected void onPostExecute(Long result) {
             log("Database Utils", mAction);
             Intent intent = new Intent();
             intent.setAction(mAction);
+            intent.putExtra("id", result);
             LocalBroadcastManager.getInstance(
                     userViewModel.getApplication().getApplicationContext()).sendBroadcast(intent);
 

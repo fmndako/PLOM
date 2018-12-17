@@ -37,6 +37,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ng.com.quickinfo.plom.Model.User;
+import ng.com.quickinfo.plom.Model.UserRepo;
 import ng.com.quickinfo.plom.Utils.Utilities;
 import ng.com.quickinfo.plom.ViewModel.UserViewModel;
 
@@ -116,6 +117,7 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
         //create broadcast receivers
         myReceiver = new SignInReceiver();
         myFilter = new IntentFilter(userRegisteredAction);
+        myFilter.addAction(HomeActivity.userAddAction);
         LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver, myFilter);
 
 
@@ -425,9 +427,10 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
     //****************** sign up dialog listener **********
 
     public void onSignUp(DialogFragment dialog, User user){
-        //signup
+        dialog.dismiss();
         //showprogress
-
+        new UserRepo.UserAsyncTask(mUserViewModel,
+                HomeActivity.userAddAction).execute(user);
 
         //gotohome
 
@@ -438,10 +441,16 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
         @Override
         public void onReceive(Context context, Intent intent) {
             showProgress(false);
-            makeToast(context, "user added");
-            //register successful
-            registerUserSuccesful();
-        }
+            switch (intent.getAction()){
+                case HomeActivity.userAddAction:
+                     //get id from intent and go to home screen
+                    makeToast(context, "user added");
+                    long id = intent.getLongExtra("id", 0);
+                    if(id!=0){goToHome(id);}
+                    break;
+            }
+
+                }
     }
 }
 
