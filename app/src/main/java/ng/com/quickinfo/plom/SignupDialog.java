@@ -13,6 +13,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import butterknife.BindView;
@@ -59,6 +60,10 @@ public class SignupDialog extends DialogFragment {
     TextView signupsignup;
     @BindView(R.id.signuplogin)
     TextView signuplogin;
+    @BindView(R.id.signupoldpass)
+    TextView signupoldpass;
+    @BindView(R.id.llOldPassword)
+    LinearLayout llOldPassword;
 
 
 
@@ -83,9 +88,12 @@ public class SignupDialog extends DialogFragment {
         Bundle bundle = getArguments();
         mAction = bundle.getString("action");
         if (mAction != "username") {
+            //TODO
+            setProfile();
+
 
         }
-        View view = inflater.inflate(R.layout.dialog_signup, null);
+        View view = inflater.inflate(R.layout.dialog_profile, null);
         //butterknife
         builder.setView(view);
         userViewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
@@ -95,9 +103,6 @@ public class SignupDialog extends DialogFragment {
         editor = sharedPref.edit();
 
         ButterKnife.bind(this, view);
-        //TODO set on text listenenr for confrim password
-        // Inflate and set the layout for the dialog
-        // Pass null as the parent view because its going in the dialog layout
 
         setTextListener();
 
@@ -171,7 +176,7 @@ public class SignupDialog extends DialogFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.signupsignup:
-                //TODO restore
+                //TODO depends on action
                // checkAvailability();
 
                 attemptSignUp();
@@ -190,7 +195,7 @@ public class SignupDialog extends DialogFragment {
         signupuser.setError(null);
         signuppass.setError(null);
         signupemail.setError(null);
-        
+
         // Store values at the time of the login attempt.
         String user = signupuser.getText().toString();
         String password = signuppass.getText().toString();
@@ -266,6 +271,17 @@ public class SignupDialog extends DialogFragment {
         }
     }
 
+    private void setProfile(){
+        //TODO set profile if action is edit profile
+        //show old password linearlayout :visible
+        //change hint of password to new password
+        //change button text to Update
+        //do not show the alreadylogin account text
+        //disable user and email address edit view
+        llOldPassword.setVisibility(View.VISIBLE);
+
+
+    }
     private void registerUser(String mUser, String password) {
 
             User user = new User(mUser,signupnumber.getText().toString(),
