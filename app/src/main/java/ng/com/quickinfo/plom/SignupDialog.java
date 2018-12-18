@@ -1,14 +1,10 @@
 package ng.com.quickinfo.plom;
 
 import android.app.Dialog;
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
@@ -16,13 +12,8 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import com.google.android.gms.common.util.DataUtils;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -94,7 +85,7 @@ public class SignupDialog extends DialogFragment {
         if (mAction != "username") {
 
         }
-        View view = inflater.inflate(R.layout.signup_layout, null);
+        View view = inflater.inflate(R.layout.dialog_signup, null);
         //butterknife
         builder.setView(view);
         userViewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);

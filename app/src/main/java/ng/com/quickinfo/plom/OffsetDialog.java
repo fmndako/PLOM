@@ -1,6 +1,5 @@
 package ng.com.quickinfo.plom;
 
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,12 +8,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.DatePicker;
 import android.widget.EditText;
-
-import java.util.Date;
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,8 +18,6 @@ import ng.com.quickinfo.plom.Model.Offset;
 import ng.com.quickinfo.plom.Utils.DateInputMask;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
 
-import static ng.com.quickinfo.plom.Utils.Utilities.dateToString;
-import static ng.com.quickinfo.plom.Utils.Utilities.dateToString1;
 import static ng.com.quickinfo.plom.Utils.Utilities.stringToDate;
 
 
@@ -55,7 +47,7 @@ public class OffsetDialog extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         // Get the layout inflater
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.offset_dialog, null);
+        View view = inflater.inflate(R.layout.dialog_offset, null);
 
         //butterknife
         unbinder = ButterKnife.bind(this, view);
