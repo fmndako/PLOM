@@ -7,12 +7,9 @@
     tools:context=".HomeActivity">
 
 
-
-
-
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_above="@+id/hlinear"
 
         >
@@ -20,39 +17,38 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-           app:srcCompat="@drawable/bell_off"
-            android:scaleType="centerCrop"
             android:layout_marginBottom="25dp"
-            />
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/gradiant" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
+            android:layout_height="wrap_content"
             android:gravity="top"
+            android:orientation="vertical"
             android:padding="16dp">
-
-            <ImageView
-
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/menu"
-                android:layout_gravity="left"
-                />
-
 
 
             <customfonts.MyTextView
+                android:id="@+id/tvUser"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Profile"
-                android:textColor="#fff"
-                android:textSize="20dp"
-                android:gravity="center"
-                />
+                android:layout_weight="1"
+                android:gravity="right"
+                android:text="@string/email"
+                android:textColor="@color/gray"
+                android:textSize="20dp" />
 
-
-
+            <customfonts.MyTextView
+                android:id="@+id/tvEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:paddingTop="10dp"
+                android:text="@string/email"
+                android:textColor="@color/button_signin"
+                android:textSize="20dp" />
 
 
         </LinearLayout>
@@ -61,100 +57,109 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="bottom">
-
-
-
-
-
+            android:gravity="bottom"
+            android:orientation="vertical">
 
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                >
+                android:orientation="horizontal">
 
 
                 <LinearLayout
-                    android:layout_weight="1"
+                    android:id="@+id/llBorrows"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
                     android:layout_marginBottom="20dp"
-                    >
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
                     <ImageView
-                        android:layout_weight="1"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        app:srcCompat="@drawable/borrowing"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:layout_weight="1"
                         android:gravity="bottom"
 
-                        />
+                        app:srcCompat="@drawable/borrowing" />
 
                     <customfonts.MyTextView
-                        android:layout_weight="1"
-                        android:id="@+id/hsignin1"
+                        android:id="@+id/tvSizeBorrows"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:text="225 Followers"
+                        android:layout_weight="1"
 
                         android:gravity="center"
-                        android:textSize="12dp"
+                        android:text="0 Borrowed"
                         android:textColor="#85ffffff"
-                        />
+                        android:textSize="12dp" />
+
+                    <customfonts.MyTextView
+                        android:id="@+id/tvTotalBorrows"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+
+                        android:text="N 2000"
+                        android:textColor="#85ffffff"
+                        android:textSize="12dp" />
 
                 </LinearLayout>
 
                 <ImageView
                     android:layout_width="100dp"
                     android:layout_height="100dp"
-                    android:src="@drawable/cash_money"
+                    android:background="@drawable/rectangle_main_logo"
 
                     android:gravity="bottom"
-
-                    />
-
+                    app:srcCompat="@drawable/lending" />
 
 
                 <LinearLayout
-                    android:layout_weight="1"
+                    android:id="@+id/llLends"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
                     android:layout_marginBottom="20dp"
-                    >
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
                     <ImageView
-                        android:layout_weight="1"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:src="@drawable/giving"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:layout_gravity="center"
+                        android:layout_weight="1"
                         android:gravity="bottom"
+                        android:src="@drawable/giving"
 
-                        />
-
+                        app:srcCompat="@drawable/giving" />
 
 
                     <customfonts.MyTextView
-                        android:gravity="center"
-                        android:layout_weight="1"
-                        android:id="@+id/hsignup1"
+                        android:id="@+id/tvSizeLends"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:text="315 Followers"
                         android:layout_gravity="center"
-                        android:textSize="12dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="0 Lent"
                         android:textColor="#85ffffff"
-                        />
+                        android:textSize="12dp" />
+
+                    <customfonts.MyTextView
+                        android:id="@+id/tvTotalLends"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="N 2000"
+                        android:textColor="#85ffffff"
+                        android:textSize="12dp" />
 
 
                 </LinearLayout>
-
 
 
             </LinearLayout>
@@ -174,47 +179,45 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            >
+            android:orientation="horizontal">
 
 
             <customfonts.MyTextView
-                android:layout_weight="1"
-                android:id="@+id/husername"
-                android:textSize="16dp"
+                android:id="@+id/tvTotalActive"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Username"
-                android:textColor="#a2a1b8"
-                android:maxLength="12"
+                android:layout_weight="1"
                 android:background="#0000"
-                android:padding="16dp"
-                android:gravity="left"
-                />
-
-
-            <customfonts.MyTextView
-                android:layout_weight="1"
-                android:id="@+id/husername1"
-                android:textSize="16dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Jay patel"
-                android:textColorHint="#181737"
+                android:gravity="center"
+                android:hint="15 Active Loans"
+                android:maxLength="12"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
                 android:textColor="#181737"
-                android:maxLength="12"
-                android:background="#0000"
-                android:padding="16dp"
-                android:gravity="right"
-                />
+                android:textColorHint="#181737"
+                android:textSize="16dp" />
         </LinearLayout>
 
-        <View
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#dad8d8"/>
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
 
+            <customfonts.MyTextView
+                android:id="@+id/tvSizeAll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#0000"
+                android:gravity="center"
+                android:hint="20 Loan Transactions"
+                android:maxLength="12"
+                android:paddingBottom="10dp"
+                android:textColor="#181737"
+                android:textColorHint="#1b193b"
+                android:textSize="16dp" />
+        </LinearLayout>
 
 
         <LinearLayout
@@ -224,35 +227,20 @@
             >
 
 
-
             <customfonts.MyTextView
-                android:layout_weight="1"
-                android:id="@+id/hemil"
-                android:textSize="16dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Email"
-                android:textColor="#a2a1b8"
-                android:maxLength="12"
-                android:background="#0000"
-                android:padding="16dp"
-                android:gravity="left"/>
-
-
-            <customfonts.MyTextView
-                android:layout_weight="1"
                 android:id="@+id/hemail1"
-                android:textSize="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColorHint="#1b193b"
-                android:hint="jay@wolfsoft.ws"
-                android:textColor="#181737"
-                android:maxLength="12"
+                android:layout_weight="1"
                 android:background="#0000"
-                android:padding="16dp"
-                android:gravity="right"
-                />
+                android:gravity="center"
+                android:hint="20 Loan Transactions"
+                android:maxLength="12"
+                android:padding="1dp"
+                android:paddingBottom="10dp"
+                android:textColor="#181737"
+                android:textColorHint="#1b193b"
+                android:textSize="16dp" />
         </LinearLayout>
 
         />
@@ -270,34 +258,31 @@
 
 
             <customfonts.MyTextView
-                android:layout_weight="1"
                 android:id="@+id/hpassword"
-                android:textSize="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Password"
-                android:textColor="#a2a1b8"
-                android:maxLength="12"
+                android:layout_weight="1"
                 android:background="#0000"
+                android:gravity="right"
+                android:maxLength="12"
                 android:padding="16dp"
-                android:gravity="left"
-                />
+                android:text="Deficit:"
+                android:textColor="#a2a1b8"
+                android:textSize="16dp" />
 
             <customfonts.MyTextView
-                android:layout_weight="1"
-                android:id="@+id/hpass1"
-                android:textSize="16dp"
+                android:id="@+id/tvDeficit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColorHint="#1b193b"
-                android:inputType="textPassword"
-                android:hint="*********"
-                android:textColor="#181737"
-                android:maxLength="12"
+                android:layout_weight="1"
                 android:background="#0000"
+                android:gravity="left"
+                android:hint="N0000"
+                android:maxLength="12"
                 android:padding="16dp"
-                android:gravity="right"
-                />
+                android:textColor="#181737"
+                android:textColorHint="#1b193b"
+                android:textSize="16dp" />
         </LinearLayout>
 
         <View
@@ -313,27 +298,30 @@
             >
 
             <customfonts.MyTextView
-                android:layout_weight="1"
-                android:id="@+id/hfacebook"
-                android:textSize="16dp"
+                android:id="@+id/tvTotalAllText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Facebook"
-                android:textColor="#a2a1b8"
-                android:maxLength="12"
+                android:layout_weight="1"
                 android:background="#0000"
+                android:gravity="right"
+                android:maxLength="12"
                 android:padding="16dp"
-                android:gravity="left"
-                />
+                android:text="Loan Sum:"
+                android:textColor="#a2a1b8"
+                android:textSize="16dp" />
 
-            <Switch
-                android:layout_weight="1"
-                android:id="@+id/hswitch1"
+            <customfonts.MyTextView
+                android:id="@+id/tvTotalAll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
+                android:layout_weight="1"
+                android:background="#0000"
                 android:gravity="left"
-                />
+                android:maxLength="12"
+                android:padding="16dp"
+                android:text="Loan Sum:"
+                android:textColor="#a2a1b8"
+                android:textSize="16dp" />
 
             <!--<ToggleButton-->
             <!--android:id="@+id/hToggleButton1"-->
@@ -356,33 +344,143 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+
             >
-
-            <customfonts.MyTextView
-                android:layout_weight="1"
-                android:id="@+id/htwitter"
-                android:textSize="16dp"
+<!--start of date loans-->
+            <LinearLayout
+                android:id="@+id/llDueSoon"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Twitter"
-                android:textColor="#a2a1b8"
-                android:maxLength="12"
-                android:background="#0000"
-                android:padding="16dp"
-                android:gravity="left"
-                />
-
-
-            <Switch
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
                 android:layout_weight="1"
-                android:id="@+id/hswitch2"
+                android:background="@drawable/rectangle_date_duesoon"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="bottom"
+                    app:srcCompat="@drawable/error" />
+
+
+                <customfonts.MyTextView
+                    android:id="@+id/tvSizeDueSoon"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="0 Lent"
+                    android:textColor="@color/date_color"
+                    android:textSize="12dp" />
+
+                <customfonts.MyTextView
+                    android:id="@+id/tvTotalDueSoon"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="N 2000"
+                    android:textColor="@color/date_color"
+                    android:textSize="12dp" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llDue"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:gravity="left"
-                />
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:layout_marginBottom="20dp"
+                android:layout_weight="1"
+                android:background="@drawable/rectangle_date_due"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="bottom"
+                    app:srcCompat="@drawable/error" />
 
 
+                <customfonts.MyTextView
+                    android:id="@+id/tvSizeDue"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="0 Lent"
+                    android:textColor="@color/date_color"
+                    android:textSize="12dp" />
+
+                <customfonts.MyTextView
+                    android:id="@+id/tvTotalDue"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="N 2000"
+                    android:textColor="@color/date_color"
+                    android:textSize="12dp" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llOverDue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/rectangle_date_overdue"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="bottom"
+
+                    app:srcCompat="@drawable/error" />
+
+
+                <customfonts.MyTextView
+                    android:id="@+id/tvSizeOverdue"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="0 Lent"
+                    android:textColor="@color/date_color"
+                    android:textSize="12dp" />
+
+                <customfonts.MyTextView
+                    android:id="@+id/tvTotalOverdue"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="N 2000"
+                    android:textColor="@color/date_color"
+                    android:textSize="12dp" />
+
+
+            </LinearLayout>
+<!--end of date-->
         </LinearLayout>
 
         <View
@@ -398,32 +496,24 @@
             >
 
             <customfonts.MyTextView
-                android:layout_weight="1"
                 android:id="@+id/hgoogle"
-                android:textSize="16dp"
+                style="@style/AppTheme.Buttons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Google+"
-                android:textColor="#a2a1b8"
-                android:maxLength="12"
-                android:background="#0000"
-                android:padding="16dp"
-                android:gravity="left"
-                />
+                android:layout_weight="1"
+                android:text="Logout"
+                android:textSize="16dp"
+                android:visibility="invisible" />
 
             <customfonts.MyTextView
-                android:layout_weight="1"
-                android:id="@+id/hgoogle1"
-                android:textSize="16dp"
+                android:id="@+id/tvSignOut"
+                style="@style/AppTheme.Buttons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="connected"
-                android:textColorHint="#181737"
-                android:maxLength="12"
-                android:background="#0000"
-                android:padding="16dp"
-                android:gravity="right"
-                />
+                android:layout_weight="1"
+                android:text="Logout"
+                android:textSize="16dp" />
+
         </LinearLayout>
 
 

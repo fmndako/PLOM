@@ -7,11 +7,19 @@
     <color name="colorPrimary">#2196F3</color>
     <color name="colorPrimaryLight">#64b5f6</color>
     <color name="colorPrimaryDark">#1976D2</color>
-    <color name="colorAccent">#0092FF</color>
+    <color name="colorAccent">@color/button_signin</color>
+    <color name="colorAccentReal">#0092FF</color>
     <color name="colorTextPrimary">@android:color/white</color>
     <color name="colorScreenBackground">#fff3e0</color>
     <color name="colorTextHint">#E0E0E0</color>
     <color name="some_red">#ff0080</color>
+    <color name="button_signin">#009a9a</color>
+    <color name="main_logo">#A7FFFC</color>
+    <color name="date_color">@color/white</color>
+    <color name="date_due">#F48E30</color>
+    <color name="date_duesoon">#FFFC73</color>
+    <color name="date_overdue">#FF0010</color>
+
 
     <!--sign up-->
     <color name="background_color">#B2B2FF</color>

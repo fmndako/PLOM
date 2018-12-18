@@ -10,9 +10,16 @@
     </style>
 
     <!--for sign in button or all red buttons-->
-    <style name="AppTheme.SignInButton" parent="Widget.AppCompat.Button.Colored">
-        <item name="colorButtonNormal">@color/some_red</item>
-        <item name="android:textColor">@color/gray</item>
+    <style name="AppTheme.Buttons" parent="Widget.AppCompat.Button">
+        <item name="android:textColor">#d9e5f3</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@drawable/rectangle_gradient</item>
+        <item name="android:gravity">center</item>
+        <item name="layout_gravity">bottom</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:letterSpacing">0.2</item>
+
      </style>
 
     <style name="AppTheme.NoActionBar">

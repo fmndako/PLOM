@@ -13,18 +13,18 @@
             android:name=".ListActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".AddLoanActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".SignInActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            >
+        <activity
+            android:name=".AddLoanActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SignInActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SignUpActivity" />
         <activity
             android:name=".HomeActivity"
             android:label="@string/title_activity_main3" />
@@ -36,7 +36,8 @@
         <receiver
             android:name=".BroadcastReceivers.PostAsyncTaskReceiver"
             android:enabled="true"
-            android:exported="false"></receiver>
+            android:exported="false" />
+
     </application>
 
 </manifest>

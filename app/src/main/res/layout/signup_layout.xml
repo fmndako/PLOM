@@ -257,12 +257,12 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:layout_marginBottom="400dp">
+
         <ImageView
             android:layout_width="80dp"
             android:layout_height="80dp"
-            app:srcCompat="@drawable/lending"
-            android:background="@color/white"
-            />
+            android:background="@drawable/rectangle_main_logo"
+            app:srcCompat="@drawable/lending" />
     </LinearLayout>
 
 
