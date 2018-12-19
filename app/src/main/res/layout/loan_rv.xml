@@ -160,11 +160,11 @@
                 android:background="#E3E3E3"></LinearLayout>
 
             <LinearLayout
-                android:id="@+id/llNotify"
+                android:id="@+id/llNotifyGone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/ivTLRAlert"

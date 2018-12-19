@@ -37,7 +37,8 @@
                 android:gravity="right"
                 android:text="@string/email"
                 android:textColor="@color/gray"
-                android:textSize="20dp" />
+                android:textSize="20dp"
+                android:visibility="gone" />
 
             <customfonts.MyTextView
                 android:id="@+id/tvEmail"
@@ -76,71 +77,64 @@
                     app:srcCompat="@drawable/lending" />
 
 
-                <LinearLayout
-                    android:id="@+id/llLends"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="20dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:gravity="bottom"
-                        android:src="@drawable/giving"
-
-                        app:srcCompat="@drawable/giving" />
-
-
-                    <customfonts.MyTextView
-                        android:id="@+id/tvSizeLends"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="0 Lent"
-                        android:textColor="#85ffffff"
-                        android:textSize="12dp" />
-
-                    <customfonts.MyTextView
-                        android:id="@+id/tvTotalLends"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="N 2000"
-                        android:textColor="#85ffffff"
-                        android:textSize="12dp" />
-
-
-                </LinearLayout>
-
+               <!--total view-->
+                <!--end-->
 
             </LinearLayout>
         </LinearLayout>
 
 
     </FrameLayout>
+<!--totals-->
+    <LinearLayout
+        android:id="@+id/llTotal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fl"
+        android:layout_marginBottom="20dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
 
+        <customfonts.MyTextView
+            android:id="@+id/tvSizeLends"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="0 Lent"
+            android:textColor="@color/button_signin"
+            android:textSize="16dp" />
+
+        <customfonts.MyTextView
+            android:id="@+id/tvTotalLends"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="N 2000"
+            android:textColor="@color/button_signin"
+            android:textSize="16dp" />
+
+
+    </LinearLayout>
+<!--total-->
     <LinearLayout
         android:id="@+id/hlinear"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
-        android:layout_below="@+id/fl"
+        android:layout_below="@+id/llTotal"
         android:orientation="vertical">
 
 
         <ProgressBar
             android:id="@+id/register_progress"
-            style="?android:attr/progressBarStyleLarge"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:visibility="gone" />
 

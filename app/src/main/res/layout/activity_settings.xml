@@ -26,7 +26,7 @@
                 android:gravity="left"
                 android:maxLength="12"
                 android:padding="16dp"
-                android:text="Keep me sign in:"
+                android:text="Profile"
                 android:textColor="#a2a1b8"
                 android:textSize="16dp" />
 
@@ -36,7 +36,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="View" />
+                android:text="Edit" />
 
 
         </LinearLayout>
@@ -73,10 +73,10 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
 
-                android:textColor="@color/colorTex"
                 android:entries="@array/planets_array"
+                android:spinnerMode="dropdown"
 
-                />
+                android:textColor="@color/colorTex" />
 
         </LinearLayout>
 
@@ -112,7 +112,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="left"
-                android:padding="16dp" />
+                android:padding="16dp"
+                android:splitTrack="false"
+                tools:checked="true" />
 
             <!--<ToggleButton-->
             <!--android:id="@+id/ToggleButton1"-->
@@ -124,7 +126,56 @@
 
             <!--/>-->
         </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#dad8d8" />
 
+        <LinearLayout
+            android:id="@+id/llReminderDays"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <customfonts.MyTextView
+                android:id="@+id/tvSelectDaysText"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="#0000"
+                android:gravity="right"
+                android:maxLength="12"
+                android:padding="5dp"
+                android:text="Enter days:"
+                android:textColor="#a2a1b8"
+                android:textSize="12dp" />
+
+            <EditText
+                android:id="@+id/tvReminderDays"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="#0000"
+                android:gravity="center"
+                android:inputType="number"
+                android:maxLength="2"
+                android:padding="10dp"
+                android:text="7"
+                android:textColor="#a2a1b8"
+                android:textSize="16dp" />
+
+
+            <!--<ToggleButton-->
+            <!--android:id="@+id/ToggleButton1"-->
+            <!--android:layout_width="120dp"-->
+            <!--android:layout_height="32dp"-->
+            <!--android:paddingLeft="20dp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:background="@drawable/toogle_switch"-->
+
+            <!--/>-->
+        </LinearLayout>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -152,11 +203,15 @@
 
             <Switch
                 android:id="@+id/sKeepMeIn"
+
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="left"
-                android:padding="16dp" />
+                android:padding="16dp"
+                android:textOff="No"
+                android:textOn="Yes"
+                tools:checked="true" />
 
 
         </LinearLayout>

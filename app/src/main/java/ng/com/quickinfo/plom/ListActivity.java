@@ -9,6 +9,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -30,13 +31,18 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import customfonts.MyTextView;
 import ng.com.quickinfo.plom.Model.Loan;
 import ng.com.quickinfo.plom.Model.LoanRepo;
+import ng.com.quickinfo.plom.Model.User;
 import ng.com.quickinfo.plom.Utils.FilterUtils;
 import ng.com.quickinfo.plom.Utils.Utilities;
 import ng.com.quickinfo.plom.View.LoanListAdapter;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
+import ng.com.quickinfo.plom.ViewModel.UserViewModel;
 
+import static ng.com.quickinfo.plom.Utils.FilterUtils.getItemCount;
+import static ng.com.quickinfo.plom.Utils.FilterUtils.getTotalSum;
 import static ng.com.quickinfo.plom.Utils.Utilities.intentToLoan;
 import static ng.com.quickinfo.plom.Utils.Utilities.log;
 import static ng.com.quickinfo.plom.Utils.Utilities.makeToast;
@@ -48,13 +54,28 @@ public class ListActivity extends LifecycleLoggingActivity implements
     //intent for signout and revoke access
     ListReceiver ListReceiver;
     IntentFilter intentfilter;
+    @BindView(R.id.tvUser)
+    MyTextView tvUser;
+    @BindView(R.id.tvEmail)
+    MyTextView tvEmail;
+
+    @BindView(R.id.tvSizeLends)
+    MyTextView tvSize;
+    @BindView(R.id.tvTotalLends)
+    MyTextView tvTotal;
+
+
 
     //adapter
     //loads the RV
     private RecyclerView recyclerView;
     private LoanListAdapter adapter;
 
-
+    //shared pref
+    private SharedPreferences sharedPref;
+    private SharedPreferences.Editor editor;
+    String currency;
+    int reminderDays;
     //loan
     private List<Loan> mLoans;
 
@@ -92,7 +113,11 @@ public class ListActivity extends LifecycleLoggingActivity implements
         mContext = getApplicationContext();
         Utilities.showProgress(true, mRegisterProgress, mContext);
 
-
+        //shared pref
+        sharedPref = Utilities.MyPref.getSharedPref(mContext);
+        editor = sharedPref.edit();
+        currency = sharedPref.getString("currency","N" );
+        reminderDays = sharedPref.getInt("reminderDays", 7);
         //intent
         //TODO can get the email address from shared pref
         //mEmail = getIntent().getStringExtra("email");
@@ -103,10 +128,10 @@ public class ListActivity extends LifecycleLoggingActivity implements
         mEmail = Utilities.MyPref.getSharedPref(mContext).getString("email", null);
         makeToast(mContext, mEmail);
 
-       //register receiver
+        //register receiver
         registerMyReceivers();
         //set collapsing tool bar
-        setToolBar(mEmail);
+        setToolBar(mUserId);
         ////unregister receivers
         //        unRegisterMyReceivers();
         loadRV(loanType);
@@ -115,7 +140,7 @@ public class ListActivity extends LifecycleLoggingActivity implements
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                goToHome();
+                addNewLoan();
             }
         });
 
@@ -129,59 +154,30 @@ public class ListActivity extends LifecycleLoggingActivity implements
 
     private void startDetailActivity(long loan_id) {
         //starts detail activity
-        Intent detailIntent = new Intent (this, DetailActivity.class);
+        Intent detailIntent = new Intent(this, DetailActivity.class);
         detailIntent.putExtra("loan_id", loan_id);
         startActivity(detailIntent);
     }
 
-    private void setToolBar(String mEmail) {
+    private void setToolBar(long id) {
 
-        //set toolbar string to mEmail
-        //load rV
-        //loadRV();
-    }
+        UserViewModel userViewModel = ViewModelProviders.of(this).get(
+                UserViewModel.class
+        );
 
-    /**
-     * Shows the progress UI and hides the login form.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    private void showProgress(final boolean show) {
-        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-        // for very easy animations. If available, use these APIs to fade-in
-        // the progress spinner.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-//            mSignInView.setVisibility(show ? View.GONE : View.VISIBLE);
-//            mSignInView.animate().setDuration(shortAnimTime).alpha(
-//                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-//                @Override
-//                public void onAnimationEnd(Animator animation) {
-//                    mSignInView.setVisibility(show ? View.GONE : View.VISIBLE);
-//                }
-//            });
-            mRegisterProgress.setVisibility(show ? View.VISIBLE : View.GONE);
-            mRegisterProgress.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mRegisterProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+        userViewModel.getUserById(id).observe(this, new Observer<User>() {
+            @Override
+            public void onChanged(@Nullable final User user) {
+                tvEmail.setText(user.getEmail());
+                if(!user.getUserName().isEmpty()){
+                    tvUser.setText(user.getUserName());
+                    tvUser.setVisibility(View.VISIBLE);
                 }
-            });
-        } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
-            mRegisterProgress.setVisibility(show ? View.VISIBLE : View.GONE);
-            //mSignInView.setVisibility(show ? View.GONE : View.VISIBLE);
-        }
+            }
+        });
     }
 
-    private void startSignUpActivity(String mEmail) {
-        Intent intent = new Intent(this, SignUpActivity.class);
-        intent.putExtra("email", mEmail);
-        startActivityForResult(intent, NEW_USER_ACTIVITY_REQUEST_CODE);
-    }
-
-    private void goToHome() {
+    private void addNewLoan() {
         Intent intent = new Intent(this, AddLoanActivity.class);
         intent.putExtra("loantype", loanType);
         startActivityForResult(intent, NEW_LOAN_ACTIVITY_REQUEST_CODE);
@@ -199,7 +195,7 @@ public class ListActivity extends LifecycleLoggingActivity implements
             @Override
             public void onChanged(@Nullable final List<Loan> loans) {
                 // Update the cached copy of the loans in the adapter.
-                log(TAG, loans.size() +"size");
+                log(TAG, loans.size() + "size");
                 mLoans = loans;
                 switch (loanType) {
                     case 1:
@@ -213,21 +209,27 @@ public class ListActivity extends LifecycleLoggingActivity implements
 
                         break;
                     case 4:
-                        mLoans = FilterUtils.dateFilterList(loans).get(0);
+                        mLoans = FilterUtils.dateIsDue(loans);
 
                         break;
                     case 5:
-                        mLoans = FilterUtils.dateFilterList(loans).get(1);
+                        mLoans = FilterUtils.dateIsDueSoon(loans, reminderDays);
                         break;
                     case 6:
-                        mLoans = FilterUtils.dateFilterList(loans).get(2);
+                        mLoans = FilterUtils.dateIsOverDue(loans);
 
                         break;
+                    case 7:
+                        mLoans =FilterUtils.Notifications(loans);
+                        break;
+
                 }
                 //TODO after all, setLoans to mLoans
                 adapter.setLoans(loans);
+                tvSize.setText("" + getItemCount(loans) + " Loans");
+                tvTotal.setText(currency + getTotalSum(loans));
                 //TODO update other UI
-                log(TAG, adapter.getItemCount()+"");
+                log(TAG, adapter.getItemCount() + "");
                 //Utilities.log(TAG, getTotalLends(loans)+"");
                 Date date = Calendar.getInstance().getTime();
                 log(TAG, Utilities.dateToString(date));
@@ -248,7 +250,7 @@ public class ListActivity extends LifecycleLoggingActivity implements
             @Override
             public boolean onQueryTextSubmit(String query) {
                 log(TAG, query);
-               // if( ! searchView.isIconified()) {
+                // if( ! searchView.isIconified()) {
 //                    searchView.setIconified(true);
 //                }
 //                item.collapseActionView();
@@ -267,7 +269,6 @@ public class ListActivity extends LifecycleLoggingActivity implements
         });
 
 
-
         return true;
     }
 
@@ -279,15 +280,13 @@ public class ListActivity extends LifecycleLoggingActivity implements
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id  == R.id.action_settings){
+        if (id == R.id.action_settings) {
             return true;
         }
 
 
         return super.onOptionsItemSelected(item);
     }
-
-
 
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -322,15 +321,14 @@ public class ListActivity extends LifecycleLoggingActivity implements
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d(TAG, intent.getAction());
-            switch (intent.getAction()){
+            switch (intent.getAction()) {
                 case DetailActivity.loanInsertAction:
                     makeToast(mContext, "Loan added");
                     break;
             }
 
 
-
         }
     }
 
-    }
+}

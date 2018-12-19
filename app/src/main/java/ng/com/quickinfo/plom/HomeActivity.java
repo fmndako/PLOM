@@ -4,18 +4,15 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.FloatingActionButton;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -24,6 +21,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import customfonts.MyTextView;
 import ng.com.quickinfo.plom.Model.Loan;
 import ng.com.quickinfo.plom.Model.User;
 import ng.com.quickinfo.plom.Utils.FilterUtils;
@@ -34,7 +32,7 @@ import ng.com.quickinfo.plom.ViewModel.UserViewModel;
 import static ng.com.quickinfo.plom.Utils.FilterUtils.activeLoans;
 import static ng.com.quickinfo.plom.Utils.FilterUtils.dateFilterList;
 import static ng.com.quickinfo.plom.Utils.FilterUtils.getItemCount;
-import static ng.com.quickinfo.plom.Utils.FilterUtils.getTotalLends;
+import static ng.com.quickinfo.plom.Utils.FilterUtils.getTotalSum;
 import static ng.com.quickinfo.plom.Utils.Utilities.log;
 import static ng.com.quickinfo.plom.Utils.Utilities.makeToast;
 import static ng.com.quickinfo.plom.Utils.Utilities.showProgress;
@@ -42,57 +40,65 @@ import static ng.com.quickinfo.plom.Utils.Utilities.showProgress;
 public class HomeActivity extends LifecycleLoggingActivity {
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
-    @BindView(R.id.ivAll)
-    ImageView ivAll;
-    @BindView(R.id.tvTotalAll)
-    TextView tvTotalAll;
-    @BindView(R.id.tvSizeAll)
-    TextView tvSizeAll;
-    @BindView(R.id.tvTotalOverdue)
-    TextView tvTotalOverdue;
-    @BindView(R.id.fabOverSoon)
-    FloatingActionButton fabOverSoon;
-    @BindView(R.id.tvSizeOverdue)
-    TextView tvSizeOverdue;
-    @BindView(R.id.tvTotalDue)
-    TextView tvTotalDue;
-    @BindView(R.id.fabDue)
-    FloatingActionButton fabDue;
-    @BindView(R.id.tvSizeDue)
-    TextView tvSizeDue;
-    @BindView(R.id.fabDueSoon)
-    FloatingActionButton fabDueSoon;
-    @BindView(R.id.tvSizeDueSoon)
-    TextView tvSizeDueSoon;
-    @BindView(R.id.tvTotalDueSoon)
-    TextView tvTotalDueSoon;
-    @BindView(R.id.ivBorrow)
-    ImageView ivBorrow;
-    @BindView(R.id.tvTotalBorrows)
-    TextView tvTotalBorrows;
-    @BindView(R.id.tvSizeBorrows)
-    TextView tvSizeBorrows;
-    @BindView(R.id.ivLends)
-    ImageView ivLends;
-    @BindView(R.id.tvLendsTotal)
-    TextView tvLendsTotal;
-    @BindView(R.id.tvSizeLends)
-    TextView tvSizeLends;
-    @BindView(R.id.flOverdue)
-    FrameLayout flOverdue;
-    @BindView(R.id.flDue)
-    FrameLayout flDue;
-    @BindView(R.id.flDueSoon)
-    FrameLayout flDueSoon;
-    @BindView(R.id.flOthers)
-    FrameLayout flOthers;
-    @BindView(R.id.flBorrow)
-    FrameLayout flBorrow;
+    @BindView(R.id.tvUserGone)
+    MyTextView tvUserGone;
+    @BindView(R.id.tvEmail)
+    MyTextView tvEmail;
+    @BindView(R.id.tvCountBorrows)
+    MyTextView tvCountBorrows;
+    @BindView(R.id.tvSumBorrows)
+    MyTextView tvSumBorrows;
+    @BindView(R.id.llBorrows)
+    LinearLayout llBorrows;
+    @BindView(R.id.tvCountLends)
+    MyTextView tvCountLends;
+    @BindView(R.id.tvSumLends)
+    MyTextView tvSumLends;
+    @BindView(R.id.llLends)
+    LinearLayout llLends;
+    @BindView(R.id.tvDeficit)
+    MyTextView tvDeficit;
+
+    @BindView(R.id.tvSumAll)
+    MyTextView tvSumAll;
+    @BindView(R.id.tvCountDueSoon)
+    MyTextView tvCountDueSoon;
+    @BindView(R.id.tvSumDueSoon)
+    MyTextView tvSumDueSoon;
+    @BindView(R.id.llDueSoon)
+    LinearLayout llDueSoon;
+    @BindView(R.id.tvCountDue)
+    MyTextView tvCountDue;
+    @BindView(R.id.tvSumDue)
+    MyTextView tvSumDue;
+    @BindView(R.id.llDue)
+    LinearLayout llDue;
+    @BindView(R.id.tvCountOverdue)
+    MyTextView tvCountOverdue;
+    @BindView(R.id.tvSumOverdue)
+    MyTextView tvSumOverdue;
+    @BindView(R.id.tvActiveCount)
+    MyTextView tvActiveCount;
+    @BindView(R.id.tvClearedCount)
+    MyTextView tvClearedCount;
+    @BindView(R.id.llOverDue)
+    LinearLayout llOverDue;
+    @BindView(R.id.hlinear)
+    LinearLayout hlinear;
+    @BindView(R.id.tvOverallCount)
+    MyTextView tvOverallCount;
 
     private String TAG = getClass().getSimpleName();
 
     //user
     private User mUser;
+    //shared pref
+    private SharedPreferences sharedPref;
+    private SharedPreferences.Editor editor;
+    String currency;
+    int reminderDays;
+
+
 
     //initiate viewmodel
     LoanViewModel mLoanViewModel;
@@ -110,14 +116,15 @@ public class HomeActivity extends LifecycleLoggingActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.navigation_home:
-
+                case R.id.navigation_settings:
+                    startActivity(new Intent(HomeActivity.this, ActivitySettings.class));
 
                     return true;
-                case R.id.navigation_dashboard:
-                    viewLoans(2);
+                case R.id.navigation_search:
+                    viewLoans(1);
                     return true;
                 case R.id.navigation_notifications:
+                    viewLoans(7);
                     return true;
             }
             return false;
@@ -128,7 +135,7 @@ public class HomeActivity extends LifecycleLoggingActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_home_inprogress);
         ButterKnife.bind(this);
 
         //handle nav
@@ -141,25 +148,44 @@ public class HomeActivity extends LifecycleLoggingActivity {
 
         //context
         mContext = getApplicationContext();
-        //get email from intent
+        
+        //shared pref
+        sharedPref = Utilities.MyPref.getSharedPref(mContext);
+        editor = sharedPref.edit();
+        currency = sharedPref.getString("currency","N" );
+        reminderDays = sharedPref.getInt("reminderDays", 7);
+        //get id from intent
+    
         id = getIntent().getLongExtra("id", 0);
         makeToast(mContext, id + "");
-        //
-    //TODO get user livedata
-        //
+        showProgress(true, progressBar, mContext);
+       //user live datat
         UserViewModel userViewModel = ViewModelProviders.of(this).get(
                 UserViewModel.class
         );
 
-        userViewModel.getAllUser().observe(this, new Observer<List<User>>() {
+        userViewModel.getUserById(id).observe(this, new Observer<User>() {
             @Override
-            public void onChanged(@Nullable final List<User> users) {
-                for (User i : users){
-                    log(TAG, i.getEmail());
-                    log(TAG, i.getUserName());
-                }
-            }});
+            public void onChanged(@Nullable final User user) {
+                mUser = user;
+                updateUI();
             }
+        });
+    }
+
+    private void updateUI() {
+        //user components
+        tvEmail.setText(mUser.getEmail());
+        if(!mUser.getUserName().isEmpty()){
+            tvUserGone.setVisibility(View.VISIBLE);
+            tvUserGone.setText(mUser.getUserName());
+        }
+
+        //loan components
+        getLoans();
+
+
+    }
 
     private void viewLoans(int selection) {
         //go to listActivity
@@ -172,65 +198,86 @@ public class HomeActivity extends LifecycleLoggingActivity {
     }
 
 
-    private void getLoans(long user_id) {
+    private void getLoans() {
         //observer
-        mLoanViewModel.getLoansByUserId(user_id).observe(this, new Observer<List<Loan>>() {
+        mLoanViewModel.getLoansByUserId(id).observe(this, new Observer<List<Loan>>() {
             @Override
             public void onChanged(@Nullable final List<Loan> loans) {
                 // Update the cached copy of the loans in the adapter.
-                List<Loan> mLoans = activeLoans(loans);
+
+                //loans by user
+                int countAllLoans = getItemCount(loans);
+
+
+                
+                List<Loan> activeLoans = activeLoans(loans);
 
                 //lends
-                List<List<Loan>> loanType = FilterUtils.loanType(mLoans);
+                List<List<Loan>> loanType = FilterUtils.loanType(activeLoans);
                 int lendCount = getItemCount(loanType.get(0));
-                int lendTotal = getTotalLends(loanType.get(0));
-                tvLendsTotal.setText(String.valueOf(lendTotal));
-                tvSizeLends.setText(String.valueOf(lendCount));
+                int lendTotal = getTotalSum(loanType.get(0));
+                tvSumLends.setText(currency + String.valueOf(lendTotal));
+                tvCountLends.setText(String.valueOf(lendCount));
                 log(TAG, "lends:" + lendCount + ":" +
                         lendTotal);
 
                 //borrow
                 int borrowCount = getItemCount(loanType.get(1));
-                int borrowTotal = getTotalLends(loanType.get(1));
-                tvTotalBorrows.setText(String.valueOf(borrowTotal));
-                tvSizeBorrows.setText(String.valueOf(borrowCount));
+                int borrowTotal = getTotalSum(loanType.get(1));
+                tvSumBorrows.setText(currency + String.valueOf(borrowTotal));
+                tvCountBorrows.setText(String.valueOf(borrowCount));
                 log(TAG, "Borrows:" + borrowCount + ":" + borrowTotal);
 
-                //all
-                int allCount = borrowCount + lendCount;
-                int allTotal = lendTotal - borrowTotal;
-                tvTotalAll.setText(String.valueOf(allTotal));
-                tvSizeAll.setText(String.valueOf(allCount));
-                log(TAG, "all:" + allCount + ":" + allTotal);
+                //active count and sum
+                int activeCount = borrowCount + lendCount;
+                int deficit = borrowTotal - lendTotal;
+
+                //TODO
+                //TODO
+                tvActiveCount.setText(activeCount+ " Active Loans");
+                //tvCountActive.setText(String.valueOf(allCount));
+
+                //cleared
+                tvClearedCount.setText((countAllLoans - activeCount) + " Cleared Loans");
+                //deficit
+                tvDeficit.setText(deficit+"");
+                //total loans
+                tvOverallCount.setText(countAllLoans + "Total");
+                tvSumAll.setText(currency + borrowTotal+lendTotal + "");
 
                 //datelist
-                List<List<Loan>> byDateLoans = dateFilterList(mLoans);
+                List<List<Loan>> byDateLoans = dateFilterList(activeLoans, reminderDays);
 
                 //duesoon
+
                 int dueSoonCount = getItemCount(byDateLoans.get(0));
-                int dueSoonTotal = getTotalLends(byDateLoans.get(0));
-                tvTotalDueSoon.setText(String.valueOf(dueSoonTotal));
-                tvSizeDueSoon.setText(String.valueOf(dueSoonCount));
-                log(TAG, "DueSoon:" + dueSoonCount + ":" + dueSoonTotal);
+                if(dueSoonCount!=0){
+                    llDueSoon.setVisibility(View.VISIBLE);
+                int dueSoonTotal = getTotalSum(byDateLoans.get(0));
+                tvSumDueSoon.setText( currency + String.valueOf(dueSoonTotal));
+                tvCountDueSoon.setText(String.valueOf(dueSoonCount));
+                log(TAG, "DueSoon:" + dueSoonCount + ":" + dueSoonTotal);}
 
                 //due
                 int dueCount = getItemCount(byDateLoans.get(1));
-                int dueTotal = getTotalLends(byDateLoans.get(1));
-                tvTotalDue.setText(String.valueOf(dueTotal));
-                tvSizeDue.setText(String.valueOf(dueCount));
-                log(TAG, "Due:" + dueCount + ":" + dueTotal);
+                if(dueCount!= 0){
+                    llDue.setVisibility(View.VISIBLE);
+                int dueTotal = getTotalSum(byDateLoans.get(1));
+                tvSumDue.setText( currency + String.valueOf(dueTotal));
+                tvCountDue.setText(String.valueOf(dueCount));
+                log(TAG, "Due:" + dueCount + ":" + dueTotal);}
 
                 //overdue
                 int overDueCount = getItemCount(byDateLoans.get(2));
-                int overDueTotal = getTotalLends(byDateLoans.get(2));
-                tvTotalOverdue.setText(String.valueOf(overDueTotal));
-                tvSizeOverdue.setText(String.valueOf(overDueCount));
-                log(TAG, "overDue:" + overDueCount + ":" + overDueTotal);
-
+                if(overDueCount!=0) {
+                    llOverDue.setVisibility(View.VISIBLE);
+                    int overDueTotal = getTotalSum(byDateLoans.get(2));
+                    tvSumOverdue.setText(currency + String.valueOf(overDueTotal));
+                    tvCountOverdue.setText(String.valueOf(overDueCount));
+                    log(TAG, "overDue:" + overDueCount + ":" + overDueTotal);
+                }
 
                 //TODO update other UI
-                log(TAG, getItemCount(mLoans) + "");
-                log(TAG, getTotalLends(mLoans) + "");
                 Date date = Calendar.getInstance().getTime();
                 log(TAG, Utilities.dateToString(date));
 
@@ -241,28 +288,35 @@ public class HomeActivity extends LifecycleLoggingActivity {
         log(TAG, "stopprogress");
     }
 
-    @OnClick({R.id.ivAll, R.id.fabOverSoon, R.id.fabDue, R.id.fabDueSoon, R.id.ivBorrow, R.id.ivLends})
+    @OnClick({R.id.llBorrows,
+            R.id.tvSumLends, R.id.llLends, R.id.tvDeficit, R.id.tvSumAll, R.id.llDueSoon, R.id.llDue, R.id.llOverDue})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.ivAll:
+            case R.id.llBorrows:
+                viewLoans(2);
+                break;
+            case R.id.tvSumLends:
                 viewLoans(1);
                 break;
-            case R.id.fabOverSoon:
-                viewLoans(6);
+            case R.id.llLends:
+
+                viewLoans(1);
                 break;
-            case R.id.fabDue:
-                viewLoans(5);
+
+            case R.id.tvDeficit:
                 break;
-            case R.id.fabDueSoon:
+            case R.id.tvSumAll:
+                viewLoans(1);
+                break;
+            case R.id.llDueSoon:
                 viewLoans(4);
                 break;
-            case R.id.ivBorrow:
-                viewLoans(3);
+            case R.id.llDue:
+                viewLoans(5);
                 break;
-            case R.id.ivLends:
-                viewLoans(2);
+            case R.id.llOverDue:
+                viewLoans(6);
                 break;
         }
     }
-
 }

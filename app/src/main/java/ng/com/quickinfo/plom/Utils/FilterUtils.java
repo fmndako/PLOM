@@ -2,6 +2,7 @@ package ng.com.quickinfo.plom.Utils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class FilterUtils {
         else return 0;
     }
 
-    public static int getTotalLends(List<Loan> mLoans){
+    public static int getTotalSum(List<Loan> mLoans){
         int sum = 0;
         if (mLoans != null){
             for (int x = 0; x<mLoans.size(); x++ ){
@@ -71,8 +72,10 @@ public class FilterUtils {
     }
 
     //repayment date filters (due date)
+
+
     //loan Type filter filters
-    public static List<List<Loan>> dateFilterList (List<Loan> loans){
+    public static List<List<Loan>> dateFilterList (List<Loan> loans, int days){
         //returns a list(3) of list of loans by date filters
         List<List<Loan>> dateList = new ArrayList<>();
         List<Loan> dueSoonLoans = new ArrayList<>();
@@ -82,13 +85,13 @@ public class FilterUtils {
         Date today = Calendar.getInstance().getTime();
         for (Loan loan: loans){
 
-            if (loanIsDue(loan, today)){
-                dueLoans.add(loan);}
+            if (isOverDue(loan.getDateToRepay())){
+                overDueLoans.add(loan);}
 
-            else if (loanIsOverDue(loan, today)){
-                overDueLoans.add(loan);
-            }else if (loanIsDueSoon(loan, today, 7)){
+            else if (isDueSoon(loan.getDateToRepay(), days)){
                 dueSoonLoans.add(loan);
+            }else if (isToday(loan.getDateToRepay())){
+                dueLoans.add(loan);
             }
         }
         dateList.add(dueSoonLoans);
@@ -97,53 +100,86 @@ public class FilterUtils {
         return dateList;
     }
 
+    public static List<Loan> dateIsDue (List<Loan> loans){
+        List<Loan> dueLoans = new ArrayList<>();
+
+        for (Loan loan: loans){
+
+        if (isToday(loan.getDateToRepay())){
+                dueLoans.add(loan);
+            }
+        }
+        return dueLoans;
+    }
+
+    public static List<Loan> dateIsDueSoon (List<Loan> loans, int days){
+        List<Loan> dueSoonLoans = new ArrayList<>();
+
+        for (Loan loan: loans){
+
+            if (isDueSoon(loan.getDateToRepay(), days)) {
+                dueSoonLoans.add(loan);
+            }
+        }
+        return dueSoonLoans;
+    }
+
+    public static List<Loan> dateIsOverDue (List<Loan> loans){
+        List<Loan> Loans = new ArrayList<>();
+
+        for (Loan loan: loans){
+
+            if (isOverDue(loan.getDateToRepay())) {
+                Loans.add(loan);
+            }
+        }
+        return Loans;
+    }
+
+    public static List<Loan> Notifications (List<Loan> loans) {
+        List<Loan> Loans = new ArrayList<>();
+
+        for (Loan loan : loans) {
+
+            if (loan.getNotify()!=0) {
+                Loans.add(loan);
+            }
+        }
+        return Loans;
+    }
     //filter helper functions (loan type)
     public static boolean typeIsLend(Loan loan){
         return (loan.getLoanType() == 0);
     }
 
     //time filter helper functions
-    public static boolean loanIsDue(Loan loan, Date today){
-        //returns true if datetorepay is same as today
-        Date repay = loan.getDateToRepay();
-        Calendar calToday = Calendar.getInstance();
-        Calendar calRepay = Calendar.getInstance();
-        calToday.setTime(today);
-        calRepay.setTime(repay);
-        Utilities.log("date:due", calToday.toString()+ calRepay.toString()
-                + ": "+ calToday.equals(calRepay) + "");
-        return loan.getDateToRepay().compareTo(today)==1;
-    }
-    public static boolean loanIsDueSoon(Loan loan,Date today,  int reminderDays){
+
+    public static boolean isDueSoon(Date date,  int reminderDays){
         //returns true if date is before today and after reminder number of days
-        Date daysAgo = new Date(today.getTime() - reminderDays*24*60*60);
+        Date today = Calendar.getInstance().getTime();
+        Date daysAgo = new Date(today.getTime() - (reminderDays*24*60*60*1000));
 
-        Date repay =    loan.getDateToRepay();
+
         Calendar calToday = Calendar.getInstance();
         Calendar calRepay = Calendar.getInstance();
         calToday.setTime(today);
-        calRepay.setTime(repay);
+        calRepay.setTime(date);
 
 
-        Utilities.log("duesoondate:", dateToString(today) + ": " +
-                dateToString(loan.getDateToRepay())
-                +":"+reminderDays+
-                (loan.getDateToRepay().before(today) & !(loan.getDateToRepay().getTime() <  daysAgo.getTime())) + "");
-
-        //today is not less than days ago
-        return (loan.getDateToRepay().before(today) & !(loan.getDateToRepay().getTime() <  daysAgo.getTime()));
+        return (date.before(today) && date.after(daysAgo));
 
 
     }
-    public static boolean loanIsOverDue(Loan loan, Date today){
+    public static boolean isOverDue(Date date){
         //returns true if date of repayment is after today
-        Utilities.log("Overduedate:", dateToString(today) + ": " +
-
-                dateToString(loan.getDateToRepay()) +":"
-                     +(loan.getDateToRepay().after(today)) + "");
-        return (loan.getDateToRepay().after(today));
+        return (date.after(Calendar.getInstance().getTime()));
     }
 
 
+
+    public static boolean isToday(Date date){
+
+        return (dateToString(date).equals(dateToString(Calendar.getInstance().getTime())));
+    }
 
 }

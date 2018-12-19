@@ -10,6 +10,19 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/fl">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_above="@+id/hlinear"
 
         >
@@ -37,7 +50,8 @@
                 android:gravity="right"
                 android:text="@string/email"
                 android:textColor="@color/gray"
-                android:textSize="20dp" />
+                android:textSize="20dp"
+                android:visibility="gone" />
 
             <customfonts.MyTextView
                 android:id="@+id/tvEmail"
@@ -80,31 +94,31 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_weight="1"
-                        android:gravity="bottom"
 
+                        android:gravity="bottom"
                         app:srcCompat="@drawable/borrowing" />
 
                     <customfonts.MyTextView
-                        android:id="@+id/tvSizeBorrows"
+                        android:id="@+id/tvCountBorrows"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
 
                         android:gravity="center"
                         android:text="0 Borrowed"
-                        android:textColor="#85ffffff"
-                        android:textSize="12dp" />
+                        android:textColor="@color/white"
+                        android:textSize="14dp" />
 
                     <customfonts.MyTextView
-                        android:id="@+id/tvTotalBorrows"
+                        android:id="@+id/tvSumBorrows"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
 
                         android:text="N 2000"
-                        android:textColor="#85ffffff"
-                        android:textSize="12dp" />
+                        android:textColor="@color/white"
+                        android:textSize="14dp" />
 
                 </LinearLayout>
 
@@ -137,26 +151,26 @@
 
 
                     <customfonts.MyTextView
-                        android:id="@+id/tvSizeLends"
+                        android:id="@+id/tvCountLends"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
                         android:layout_weight="1"
                         android:gravity="center"
                         android:text="0 Lent"
-                        android:textColor="#85ffffff"
-                        android:textSize="12dp" />
+                        android:textColor="@color/white"
+                        android:textSize="14dp" />
 
                     <customfonts.MyTextView
-                        android:id="@+id/tvTotalLends"
+                        android:id="@+id/tvSumLends"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
                         android:layout_weight="1"
                         android:gravity="center"
                         android:text="N 2000"
-                        android:textColor="#85ffffff"
-                        android:textSize="12dp" />
+                        android:textColor="@color/white"
+                        android:textSize="14dp" />
 
 
                 </LinearLayout>
@@ -183,7 +197,7 @@
 
 
             <customfonts.MyTextView
-                android:id="@+id/tvTotalActive"
+                android:id="@+id/tvActiveCount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -205,13 +219,13 @@
 
 
             <customfonts.MyTextView
-                android:id="@+id/tvSizeAll"
+                android:id="@+id/tvClearedCount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="#0000"
                 android:gravity="center"
-                android:hint="20 Loan Transactions"
+                android:hint="5 Cleared"
                 android:maxLength="12"
                 android:paddingBottom="10dp"
                 android:textColor="#181737"
@@ -228,13 +242,13 @@
 
 
             <customfonts.MyTextView
-                android:id="@+id/hemail1"
+                android:id="@+id/tvOverallCount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="#0000"
                 android:gravity="center"
-                android:hint="20 Loan Transactions"
+                android:hint="20 Total"
                 android:maxLength="12"
                 android:padding="1dp"
                 android:paddingBottom="10dp"
@@ -250,6 +264,7 @@
             android:layout_height="1dp"
             android:background="#dad8d8"/>
 
+        <!--deficit-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -285,12 +300,13 @@
                 android:textSize="16dp" />
         </LinearLayout>
 
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="#dad8d8"/>
 
-
+        <!--total sum-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -298,7 +314,7 @@
             >
 
             <customfonts.MyTextView
-                android:id="@+id/tvTotalAllText"
+                android:id="@+id/tvSumAllText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -311,7 +327,7 @@
                 android:textSize="16dp" />
 
             <customfonts.MyTextView
-                android:id="@+id/tvTotalAll"
+                android:id="@+id/tvSumAll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -333,6 +349,8 @@
 
             <!--/>-->
         </LinearLayout>
+
+
 
         <View
             android:layout_width="match_parent"
@@ -367,7 +385,7 @@
 
 
                 <customfonts.MyTextView
-                    android:id="@+id/tvSizeDueSoon"
+                    android:id="@+id/tvCountDueSoon"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -378,7 +396,7 @@
                     android:textSize="12dp" />
 
                 <customfonts.MyTextView
-                    android:id="@+id/tvTotalDueSoon"
+                    android:id="@+id/tvSumDueSoon"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -412,7 +430,7 @@
 
 
                 <customfonts.MyTextView
-                    android:id="@+id/tvSizeDue"
+                    android:id="@+id/tvCountDue"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -423,7 +441,7 @@
                     android:textSize="12dp" />
 
                 <customfonts.MyTextView
-                    android:id="@+id/tvTotalDue"
+                    android:id="@+id/tvSumDue"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -457,7 +475,7 @@
 
 
                 <customfonts.MyTextView
-                    android:id="@+id/tvSizeOverdue"
+                    android:id="@+id/tvCountOverdue"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -468,7 +486,7 @@
                     android:textSize="12dp" />
 
                 <customfonts.MyTextView
-                    android:id="@+id/tvTotalOverdue"
+                    android:id="@+id/tvSumOverdue"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -504,15 +522,6 @@
                 android:text="Logout"
                 android:textSize="16dp"
                 android:visibility="invisible" />
-
-            <customfonts.MyTextView
-                android:id="@+id/tvSignOut"
-                style="@style/AppTheme.Buttons"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Logout"
-                android:textSize="16dp" />
 
         </LinearLayout>
 
