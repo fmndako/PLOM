@@ -11,6 +11,7 @@
         android:id="@+id/fl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
 
         >
 
@@ -37,7 +38,7 @@
                 android:gravity="right"
                 android:text="@string/email"
                 android:textColor="@color/gray"
-                android:textSize="20dp"
+                android:textSize="12sp"
                 android:visibility="gone" />
 
             <customfonts.MyTextView
@@ -49,7 +50,7 @@
                 android:paddingTop="10dp"
                 android:text="@string/email"
                 android:textColor="@color/button_signin"
-                android:textSize="20dp" />
+                android:textSize="12dp" />
 
 
         </LinearLayout>
@@ -91,7 +92,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/fl"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="5dp"
         android:layout_weight="1"
         android:orientation="horizontal">
 
@@ -102,10 +103,10 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="5dp"
+            android:padding="1dp"
             android:text="0 Lent"
             android:textColor="@color/button_signin"
-            android:textSize="16dp" />
+            android:textSize="12sp" />
 
         <customfonts.MyTextView
             android:id="@+id/tvTotalLends"
@@ -117,7 +118,7 @@
             android:padding="5dp"
             android:text="N 2000"
             android:textColor="@color/button_signin"
-            android:textSize="16dp" />
+            android:textSize="12sp" />
 
 
     </LinearLayout>

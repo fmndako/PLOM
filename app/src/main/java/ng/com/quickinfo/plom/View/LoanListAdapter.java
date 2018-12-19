@@ -81,7 +81,8 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
             if(loan.getOffset()!=0){
                 //get)ffsetTotal - AmountgetoffsetTotal -ge
                 int offsets = getOffsetTotal(loan.getId());
-                holder.amountView.setText(currency + (amount - offsets) );
+                holder.balanceView.setText(
+                        holder.balanceView.getText().toString()+" "+currency + (amount - offsets) );
                 holder.balanceView.setVisibility(View.VISIBLE);
 
             }
@@ -163,13 +164,7 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
 
     }
 
-    private boolean isOnNotice(Date date, int reminderDays) {
-
-        return (isToday(date) || isDueSoon(date, reminderDays) || isOverDue(date));
-    }
-
     private int getOffsetTotal(long id) {
-
         return 1;
     }
 
@@ -188,6 +183,10 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
     @Override
     public int getItemCount() {
         return FilterUtils.getItemCount(mLoans);
+    }
+
+    public int getItemSum() {
+        return FilterUtils.getTotalSum(mLoans);
     }
 
     //startactivity

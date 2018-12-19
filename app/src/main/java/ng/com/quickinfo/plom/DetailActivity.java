@@ -1,5 +1,6 @@
 package ng.com.quickinfo.plom;
 
+import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.BroadcastReceiver;
@@ -487,6 +488,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         switch (id) {
             case R.id.action_settings:
                 // User chose the "Settings" item, show the app settings UI...
+                startActivity(startSettings(mContext, mLoan.getUser_id()));
                 return true;
 
             case R.id.action_share:
@@ -521,6 +523,12 @@ public class DetailActivity extends LifecycleLoggingActivity implements
                 return super.onOptionsItemSelected(item);
 
         }
+    }
+
+    public static Intent startSettings(Context mContext, long id    ) {
+        Intent intent = new Intent(mContext, ActivitySettings.class);
+        intent.putExtra("user_id", id);
+        return intent;
     }
 
     // *************** share **********************8

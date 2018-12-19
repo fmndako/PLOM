@@ -21,6 +21,7 @@
     </FrameLayout>
 
     <FrameLayout
+        android:id="@+id/fl"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/hlinear"
@@ -50,7 +51,7 @@
                 android:gravity="right"
                 android:text="@string/email"
                 android:textColor="@color/gray"
-                android:textSize="20dp"
+                android:textSize="12dp"
                 android:visibility="gone" />
 
             <customfonts.MyTextView
@@ -59,10 +60,10 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="right"
-                android:paddingTop="10dp"
+                android:paddingTop="@style/TextAppearance.MaterialComponents.Headline5"
                 android:text="@string/email"
                 android:textColor="@color/button_signin"
-                android:textSize="20dp" />
+                android:textSize="13sp" />
 
 
         </LinearLayout>
@@ -95,6 +96,7 @@
                         android:layout_gravity="center"
                         android:layout_weight="1"
 
+                        android:background="@color/white"
                         android:gravity="bottom"
                         app:srcCompat="@drawable/borrowing" />
 
@@ -144,9 +146,10 @@
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
                         android:layout_weight="1"
+                        android:background="@color/white"
                         android:gravity="bottom"
-                        android:src="@drawable/giving"
 
+                        android:src="@drawable/giving"
                         app:srcCompat="@drawable/giving" />
 
 
@@ -506,31 +509,12 @@
             android:layout_height="1dp"
             android:background="#dad8d8" />
 
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <android.support.design.widget.BottomNavigationView
+            android:id="@+id/navigation"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            >
-
-            <customfonts.MyTextView
-                android:id="@+id/hgoogle"
-                style="@style/AppTheme.Buttons"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Logout"
-                android:textSize="16dp"
-                android:visibility="invisible" />
-
-        </LinearLayout>
-
-
-
-
-
-
-
+            android:background="@color/gray"
+            app:menu="@menu/navigation" />
     </LinearLayout>
 
 

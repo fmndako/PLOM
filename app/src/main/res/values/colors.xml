@@ -6,7 +6,8 @@
 -->
     <color name="colorPrimary">#2196F3</color>
     <color name="colorPrimaryLight">#64b5f6</color>
-    <color name="colorPrimaryDark">#1976D2</color>
+    <color name="colorPrimaryDark">@color/button_signin</color>
+    <color name="colorPrimaryDarkR">#1976D2</color>
     <color name="colorAccent">@color/button_signin</color>
     <color name="colorAccentReal">#0092FF</color>
     <color name="colorTextPrimary">@android:color/white</color>

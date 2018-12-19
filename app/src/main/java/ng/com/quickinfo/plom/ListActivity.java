@@ -41,6 +41,7 @@ import ng.com.quickinfo.plom.View.LoanListAdapter;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
 import ng.com.quickinfo.plom.ViewModel.UserViewModel;
 
+import static ng.com.quickinfo.plom.DetailActivity.startSettings;
 import static ng.com.quickinfo.plom.Utils.FilterUtils.getItemCount;
 import static ng.com.quickinfo.plom.Utils.FilterUtils.getTotalSum;
 import static ng.com.quickinfo.plom.Utils.Utilities.intentToLoan;
@@ -226,6 +227,7 @@ public class ListActivity extends LifecycleLoggingActivity implements
                 }
                 //TODO after all, setLoans to mLoans
                 adapter.setLoans(loans);
+
                 tvSize.setText("" + getItemCount(loans) + " Loans");
                 tvTotal.setText(currency + getTotalSum(loans));
                 //TODO update other UI
@@ -263,6 +265,8 @@ public class ListActivity extends LifecycleLoggingActivity implements
             public boolean onQueryTextChange(String newText) {
                 log(TAG, newText);
                 adapter.setLoans(FilterUtils.searchLoans(mLoans, newText));
+                tvSize.setText(adapter.getItemCount()+ "Loans");
+                tvTotal.setText(currency + adapter.getItemSum());
 
                 return false;
             }
@@ -281,6 +285,7 @@ public class ListActivity extends LifecycleLoggingActivity implements
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            startActivity(startSettings(mContext, mUserId));
             return true;
         }
 

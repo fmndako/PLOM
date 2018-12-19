@@ -27,16 +27,22 @@
         </activity>
         <activity
             android:name=".HomeActivity"
-            android:label="@string/title_activity_main3" />
+            android:label="@string/title_activity_main3"
+            android:theme="@style/AppTheme.NoActionBar"
+            />
+
         <activity
+
             android:name=".DetailActivity"
             android:label="@string/title_activity_detail"
             android:theme="@style/AppTheme.NoActionBar" />
-
-        <receiver
-            android:name=".BroadcastReceivers.PostAsyncTaskReceiver"
-            android:enabled="true"
-            android:exported="false" />
+        <activity
+            android:name=".ActivitySettings"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <!--<receiver-->
+            <!--android:name=".BroadcastReceivers.PostAsyncTaskReceiver"-->
+            <!--android:enabled="true"-->
+            <!--android:exported="false" />-->
 
     </application>
 

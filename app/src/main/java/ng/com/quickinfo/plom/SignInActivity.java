@@ -238,8 +238,10 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
     private void loadAccount(String email) {
         Intent intent = new Intent(this, HomeActivity.class);
         intent.putExtra("email", email);
+        //TODO
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(intent);
-        finish();
+
     }
 
     private void signOut() {
