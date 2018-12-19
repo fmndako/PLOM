@@ -105,7 +105,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                >
+                android:visibility="gone">
+
                 <CheckBox
                     android:id="@+id/cbKeepSignedIn"
                     android:layout_width="match_parent"
@@ -194,9 +195,9 @@
         <ImageView
             android:layout_width="80dp"
             android:layout_height="80dp"
+            android:background="@drawable/rectangle_main_logo"
             app:srcCompat="@drawable/lending"
-            android:background="@color/white"
-            />
+                 />
     </LinearLayout>
 
 
