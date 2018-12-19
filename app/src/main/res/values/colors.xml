@@ -24,14 +24,14 @@
     <!--sign up-->
     <color name="background_color">#B2B2FF</color>
     <color name="my_background">#0000ff</color>
-    <color name="white">#FFFFFF</color>
+    <color name="white">#FFF</color>
     <color name="black">#000000</color>
     <color name="white_greyish">#EEEEEE</color>
     <color name="button_selectorcolor">#9E9E9E</color>
     <color name="add_loan_text_color">#000000</color>
     <color name="add_loan_hint_color">#ccc</color>
     <color name="gray">#D3D3D3</color>
-    <color name="green">#00b200</color>
+    <color name="green">#3ABA39</color>
     <color name="red">#e50000</color>
     <color name="detail_gray">#f2f2f2</color>
 

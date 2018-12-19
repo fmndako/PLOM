@@ -708,6 +708,8 @@
                         />
                 </LinearLayout>
 
+
+
                 <!--*********Date Cleared**********-->
 
                 <LinearLayout
@@ -750,6 +752,45 @@
                     android:padding="16dp"
                     />
 
+                <!--*********Date Cleared**********-->
+
+                <LinearLayout
+
+                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
+
+                    <customfonts.MyTextView
+                        android:id="@+id/tvDetailNotifyText"
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Notification"
+                        android:textColor="@color/colorSub"
+
+                        />
+
+                    <Switch
+                        android:id="@+id/sDetailNotify"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="left"
+                        android:padding="16dp" />
+                </LinearLayout>
+
+
+                <View
+                    android:layout_marginTop="16dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colordevider"
+                    android:padding="16dp"
+                    />
                 <!--********Contact lender ************88-->
                 <LinearLayout
                     android:layout_width="match_parent"
