@@ -90,7 +90,11 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
             //loantype
             if(loan.getLoanType()!=0){
                 holder.borrowView.setVisibility(View.VISIBLE);
+                holder.lendView.setVisibility(View.GONE);
+            }else{
+                holder.borrowView.setVisibility(View.GONE);
                 holder.lendView.setVisibility(View.VISIBLE);
+
             }
 
             //clear
@@ -125,8 +129,10 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
             if (isOn){
                 holder.llNotify.setVisibility(View.VISIBLE);
                 holder.commentView.setText(comment);
-                holder.alertView.setBackgroundColor(color);
                 if(loan.getNotify()!=0){
+                    holder.notifyOff.setVisibility(View.GONE);
+                    holder.notifyOn.setVisibility(View.VISIBLE);
+                }else{
                     holder.notifyOff.setVisibility(View.GONE);
                     holder.notifyOn.setVisibility(View.VISIBLE);
                 }
@@ -202,7 +208,7 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
 
     class LoanViewHolder extends RecyclerView.ViewHolder {
         private TextView nameView, amountView,  dateTakenView, commentView, remarksView, balanceView;
-        private ImageView borrowView, lendView, notifyOn, notifyOff, alertView;
+        private ImageView borrowView, lendView, notifyOn, notifyOff;
         private LinearLayout llClear, llNotify;
 
         private LoanViewHolder(View itemView) {
@@ -219,7 +225,6 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
             lendView = itemView.findViewById(R.id.ivLoanType);
             notifyOn= itemView.findViewById(R.id.ivLRVNotifyOn);
             notifyOff = itemView.findViewById(R.id.ivLRVNotifyOff);
-            alertView = itemView.findViewById(R.id.ivTLRAlert);
 
             llClear = itemView.findViewById(R.id.llClearGone);
             llNotify = itemView.findViewById(R.id.llNotifyGone);

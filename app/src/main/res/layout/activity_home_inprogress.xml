@@ -122,7 +122,7 @@
                         android:layout_weight="1"
                         android:gravity="center"
 
-                        android:text="N 2000"
+                        android:text="0"
                         android:textColor="@color/white"
                         android:textSize="14dp" />
 
@@ -175,7 +175,7 @@
                         android:layout_gravity="center"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="N 2000"
+                        android:text="0"
                         android:textColor="@color/white"
                         android:textSize="14dp" />
 
@@ -211,7 +211,6 @@
                 android:background="#0000"
                 android:gravity="center"
                 android:hint="15 Active Loans"
-                android:maxLength="12"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
                 android:textColor="#181737"
@@ -233,7 +232,6 @@
                 android:background="#0000"
                 android:gravity="center"
                 android:hint="5 Cleared"
-                android:maxLength="12"
                 android:paddingBottom="10dp"
                 android:textColor="#181737"
                 android:textColorHint="#1b193b"
@@ -256,7 +254,6 @@
                 android:background="#0000"
                 android:gravity="center"
                 android:hint="20 Total"
-                android:maxLength="12"
                 android:padding="1dp"
                 android:paddingBottom="10dp"
                 android:textColor="#181737"
@@ -369,16 +366,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:divider="?android:dividerHorizontal"
+            android:showDividers="middle"
 
             >
-<!--start of date loans-->
+            <!--start of date loans-->
             <LinearLayout
                 android:id="@+id/llDueSoon"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="10dp"
                 android:layout_weight="1"
-                android:background="@drawable/rectangle_date_duesoon"
                 android:orientation="vertical"
                 android:visibility="gone">
 
@@ -423,7 +421,6 @@
                 android:layout_margin="10dp"
                 android:layout_marginBottom="20dp"
                 android:layout_weight="1"
-                android:background="@drawable/rectangle_date_due"
                 android:orientation="vertical"
                 android:visibility="gone">
 
@@ -467,7 +464,6 @@
                 android:layout_height="match_parent"
                 android:layout_margin="10dp"
                 android:layout_weight="1"
-                android:background="@drawable/rectangle_date_overdue"
                 android:orientation="vertical"
                 android:visibility="gone">
 
@@ -505,7 +501,7 @@
 
 
             </LinearLayout>
-<!--end of date-->
+            <!--end of date-->
         </LinearLayout>
 
         <View

@@ -11,7 +11,6 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".ListActivity"
-            android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".AddLoanActivity"
@@ -27,14 +26,12 @@
         </activity>
         <activity
             android:name=".HomeActivity"
-            android:label="@string/title_activity_main3"
             android:theme="@style/AppTheme.NoActionBar"
             />
 
         <activity
 
             android:name=".DetailActivity"
-            android:label="@string/title_activity_detail"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ActivitySettings"
