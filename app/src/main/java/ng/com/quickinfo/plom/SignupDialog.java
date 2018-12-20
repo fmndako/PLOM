@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
@@ -21,6 +22,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import ng.com.quickinfo.plom.Model.User;
+import ng.com.quickinfo.plom.Model.UserRepo;
 import ng.com.quickinfo.plom.Utils.Utilities;
 import ng.com.quickinfo.plom.ViewModel.UserViewModel;
 
@@ -70,6 +72,7 @@ public class SignupDialog extends DialogFragment {
 
     //email
     String mEmail;
+    User mUser;
     //Override on create
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -89,7 +92,8 @@ public class SignupDialog extends DialogFragment {
         mAction = bundle.getString("action");
         if (mAction != "username") {
             //TODO
-            setProfile();
+
+            setProfile(bundle.getLong(ActivitySettings.Pref_User, 0));
 
 
         }
@@ -178,8 +182,9 @@ public class SignupDialog extends DialogFragment {
             case R.id.signupsignup:
                 //TODO depends on action
                // checkAvailability();
+                if(mAction!= "username"){attemptUpdate();}
+                else{attemptSignUp();}
 
-                attemptSignUp();
                 break;
             case R.id.signuplogin:
                 dismiss();
@@ -187,6 +192,54 @@ public class SignupDialog extends DialogFragment {
         }
     }
 
+    private void attemptUpdate() {
+        //TODO
+        mUser.setNumber(signupnumber.getText().toString());
+
+        if (mUser.getUserName().isEmpty()){
+            //gmail update
+            //mListener.onSignUp(this, mUser);
+            updateUser(mUser);
+
+        }
+        else{
+            //user update
+            boolean cancel = false;
+
+            String pass = signuppass.getText().toString();
+            if (isPasswordValid(pass) && pass.equals(mUser.getPassword())){
+                signupoldpass.setError("Incorrect PassWord");
+                signupoldpass.requestFocus();
+                cancel=true;
+
+            }
+            if(!isPasswordValid(pass)){
+                //update
+                signuppass.setError("Invalid Password");
+                signuppass.requestFocus();
+                cancel = true;
+
+            }
+
+            if(!cancel){
+                mUser.setPassword(pass);
+                updateUser(mUser);
+            }
+
+            }
+
+        }
+
+    private void updateUser(User user) {
+        UserRepo.UserAsyncTask task = new UserRepo.UserAsyncTask(
+                userViewModel, HomeActivity.userUpdateAction
+        );
+
+        task.execute(user);
+        dismiss();
+
+
+}
 
 
     private void attemptSignUp() {
@@ -271,14 +324,51 @@ public class SignupDialog extends DialogFragment {
         }
     }
 
-    private void setProfile(){
+    private void setProfile(long id){
+
         //TODO set profile if action is edit profile
         //show old password linearlayout :visible
         //change hint of password to new password
         //change button text to Update
         //do not show the alreadylogin account text
         //disable user and email address edit view
-        llOldPassword.setVisibility(View.VISIBLE);
+
+
+         userViewModel.getUserById(id).observe(this, new android.arch.lifecycle.Observer <User>()  {
+            @Override
+            public void onChanged(@Nullable final User user) {
+                if (user != null){
+                    if(user.getPassword().equals(signupoldpass.getText().toString())){
+                        mUser = user;
+                        if(user.getUserName().isEmpty()){
+                            //if gmail
+                            signupconfirmpass.setVisibility(View.GONE);
+                            signuppass.setVisibility(View.GONE);
+
+
+                        }else{
+                            //user name profile
+                            llOldPassword.setVisibility(View.VISIBLE);
+                            signuppass.setText("New password");
+                            signupconfirmpass.setText("Confirm new password");
+                            signupuser.setEnabled(false);
+
+                        }
+                        signuplogin.setVisibility(View.GONE);
+                        signupsignup.setText(R.string.action_update);
+                        signupemail.setEnabled(false);
+
+
+
+
+                    }}}
+        });
+
+
+
+
+
+
 
 
     }
@@ -302,18 +392,6 @@ public class SignupDialog extends DialogFragment {
         log("email user", isUserAvailable(signupuser.getText().toString())+"");
 
     }
-//
-//        timatme@googlemail.com
-//                fati
-//        timatme@googlemail.com
-//                fatima
-//        gyyyg@
-//                tyy
-//        ggff@
-//                tthh
-//        timatme@googlemail.com
-//                fati
-//        fatima
 
     private boolean isUserAvailable(String name) {
         return sharedPref.getBoolean(name, true);
@@ -326,6 +404,12 @@ public class SignupDialog extends DialogFragment {
     private boolean isEmailValid(String email) {
         return (email.length() > 3) && email.contains("@") ;
     }
+
+    public boolean isPassWordMatch(String pass) {
+
+        return isPasswordValid(pass) && pass.equals(mUser.getPassword());
+    }
+
     //*********** interface *************
     public interface SignupDialogListener {
         public void onSignUp(DialogFragment dialog, User user);

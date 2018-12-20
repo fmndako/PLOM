@@ -110,27 +110,6 @@ public class HomeActivity extends LifecycleLoggingActivity {
     public static final String userUpdateAction = "package ng.com.quickinfo.plom.USER_UPDATED";
     public static final String userDeleteAction = "package ng.com.quickinfo.plom.USER_DELETED";
 
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.navigation_settings:
-                    startActivity(new Intent(HomeActivity.this, ActivitySettings.class));
-
-                    return true;
-                case R.id.navigation_search:
-                    viewLoans(1);
-                    return true;
-                case R.id.navigation_notifications:
-                    viewLoans(7);
-                    return true;
-            }
-            return false;
-        }
-    };
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,8 +118,8 @@ public class HomeActivity extends LifecycleLoggingActivity {
         ButterKnife.bind(this);
 
         //handle nav
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        //BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        //navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         //handles viewmodel
         mLoanViewModel = ViewModelProviders.of(this).get(LoanViewModel.class);
@@ -289,18 +268,22 @@ public class HomeActivity extends LifecycleLoggingActivity {
     }
 
     @OnClick({R.id.llBorrows,
-            R.id.tvSumLends, R.id.llLends, R.id.tvDeficit, R.id.tvSumAll, R.id.llDueSoon, R.id.llDue, R.id.llOverDue})
+            R.id.tvSumLends,R.id.navigation_notifications, R.id.navigation_settings, R.id.llLends, R.id.tvDeficit, R.id.tvSumAll, R.id.llDueSoon, R.id.llDue, R.id.llOverDue})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.llBorrows:
                 viewLoans(2);
                 break;
-            case R.id.tvSumLends:
-                viewLoans(1);
-                break;
             case R.id.llLends:
 
                 viewLoans(1);
+                break;
+            case R.id.navigation_settings:
+                startActivity(new Intent(HomeActivity.this, ActivitySettings.class));
+
+                break;
+            case R.id.navigation_notifications:
+                viewLoans(7);
                 break;
 
             case R.id.tvDeficit:

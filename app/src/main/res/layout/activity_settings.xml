@@ -73,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
 
-                android:entries="@array/planets_array"
+                android:entries="@array/currency_array"
                 android:spinnerMode="dropdown"
 
                 android:textColor="@color/colorTex" />
@@ -224,12 +224,35 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
 
 
             <customfonts.MyTextView
                 android:id="@+id/tvSignOut"
+                style="@style/AppTheme.Buttons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Sign Out" />
+
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#dad8d8" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+
+            <customfonts.MyTextView
+                android:id="@+id/tvDeleteAccount"
                 style="@style/AppTheme.Buttons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

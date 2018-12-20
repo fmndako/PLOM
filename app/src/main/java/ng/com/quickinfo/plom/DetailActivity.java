@@ -274,7 +274,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
             tvDetailEmailValue.setText(mLoan.getEmail());
 
             //repayment details
-            tvDetailDateToRepayValue.setText(mLoan.getDateToRepay().toString());
+            tvDetailDateToRepayValue.setText(dateToString1(mLoan.getDateToRepay()));
             if (mLoan.getRepaymentOption() != 0) {
                 tvDetailRepaymentOptionValue.setText(R.string.repayment_option_several);
             }
@@ -527,7 +527,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
     public static Intent startSettings(Context mContext, long id    ) {
         Intent intent = new Intent(mContext, ActivitySettings.class);
-        intent.putExtra("user_id", id);
+        intent.putExtra(ActivitySettings.Pref_User, id);
         return intent;
     }
 

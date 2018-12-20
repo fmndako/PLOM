@@ -50,15 +50,14 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
 
     //register Broadcast receivers
     public static final String userRegisteredAction = "ng.com.quickinfo.plom.Sign_in";
-    public String keepLoginName = "Keeper";
+
     SignInReceiver myReceiver;
     IntentFilter myFilter;
     @BindView(R.id.user)
     EditText etUser;
     @BindView(R.id.pass)
     EditText etPassword;
-    @BindView(R.id.cbKeepSignedIn)
-    CheckBox cbKeepSignedIn;
+
     @BindView(R.id.login)
     TextView login;
     @BindView(R.id.signup)
@@ -124,9 +123,11 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
         sharedPref = Utilities.MyPref.getSharedPref(mContext);
         editor = sharedPref.edit();
 
-        keepSignIn = sharedPref.getInt(keepLoginName, 0);
-        if(keepSignIn !=0){
-            goToHome(sharedPref.getLong("user_id", 0));
+        if(sharedPref.getBoolean(ActivitySettings.Pref_Keeper, false)){
+            //TODO uncomment after debugging
+            //goToHome(sharedPref.getLong(ActivitySettings.Pref_User, 0));
+            //true
+            makeToast(mContext, "keep in in");
         }
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
@@ -366,8 +367,6 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            if(cbKeepSignedIn.isChecked()){
-            editor.putInt(keepLoginName, 1);}
             checkCredentials(user, password);
 
                         //showProgress(true);
@@ -381,7 +380,7 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
         if(sharedPref.getBoolean(email, true)){
             //first timer
             User newUser = new User("", "", email, "");
-            editor.putBoolean(email, false);
+            mEmail = email;
             new UserRepo.UserAsyncTask(mUserViewModel,
                     HomeActivity.userAddAction).execute(newUser);
 
@@ -401,6 +400,10 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
 
 
         }
+        editor.putBoolean(email, false);
+        editor.putBoolean(ActivitySettings.Pref_Keeper, true);
+        editor.commit();
+        makeToast(mContext, "email changed; editor edited");
 
     }
 
@@ -465,6 +468,7 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
         editor.putBoolean(user.getEmail(), false);
         if (!user.getUserName().isEmpty()){
             editor.putBoolean(user.getUserName(), false);
+
         }
         editor.commit();
         //showprogress
@@ -488,17 +492,12 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
                     long id = intent.getLongExtra("id", 0);
                     if(id!=0){
 
-                        if (cbKeepSignedIn.isChecked()){
-                            keepSignIn = 1;
-                            editor.putInt(keepLoginName, 1);
-                            editor.putLong("user_id", id);
-                        }
+
                         goToHome(id);
                     }
                     break;
             }
-
-                }
+        }
     }
 }
 

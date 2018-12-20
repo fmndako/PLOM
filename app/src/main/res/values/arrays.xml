@@ -14,4 +14,20 @@
         <item>One time</item>
         <item>Several</item>
     </array>
+
+    <array name="currency_array">
+        <item>NG</item>
+        <item>US</item>
+        <item>CA</item>
+        <item>MX</item>
+        <item>GB</item>
+        <item>DE</item>
+        <item>PL</item>
+        <item>RU</item>
+        <item>JP</item>
+        <item>CN</item>
+
+
+
+    </array>
 </resources>

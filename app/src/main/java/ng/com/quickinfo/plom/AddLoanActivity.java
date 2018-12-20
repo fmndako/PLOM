@@ -143,7 +143,7 @@ public class AddLoanActivity extends AppCompatActivity {
         spLoanType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                makeToast(mContext, "item selected spinner" + i + l);
+                //makeToast(mContext, "item selected spinner" + i + l);
 
             }
 

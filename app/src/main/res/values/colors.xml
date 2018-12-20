@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 -->
-    <color name="colorPrimary">@color/button_signin</color>
+    <color name="colorPrimary">@color/gradient</color>
     <color name="colorPrimaryLight">#64b5f6</color>
     <color name="colorPrimaryDark">#1976D2</color>
     <color name="colorAccent">@color/button_signin</color>
@@ -19,7 +19,7 @@
     <color name="date_due">#F48E30</color>
     <color name="date_duesoon">#FFFC73</color>
     <color name="date_overdue">#FF0010</color>
-
+    <color name="gradient">#27384c</color>
 
     <!--sign up-->
     <color name="background_color">#B2B2FF</color>

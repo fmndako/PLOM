@@ -285,6 +285,7 @@ public class ListActivity extends LifecycleLoggingActivity implements
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            //start settings activity with userId
             startActivity(startSettings(mContext, mUserId));
             return true;
         }

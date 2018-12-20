@@ -82,6 +82,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:maxLines="1"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
                             android:text="Lemon peel Base ball"
                             android:letterSpacing="0.1"
                             android:textStyle="bold"
@@ -146,7 +147,7 @@
                         android:gravity="center"
                         android:text=" 10000000"
 
-                        android:textColor="@color/colorSub"
+                        android:textColor="@color/date_due"
                         android:textSize="16sp" />
 
 
@@ -178,10 +179,11 @@
                     android:layout_marginLeft="10dp"
                     android:layout_weight="1"
                     android:paddingLeft="5dp"
+                    android:textStyle="bold"
 
-                    android:text="6h 21m - 1 stop , DXB"
+                    android:text="Due Soon"
                     android:textAppearance="@android:style/TextAppearance.Small"
-                    android:textColor="#b2b2b2" />
+                    android:textColor="#000" />
 
                 <ImageView
                     android:id="@+id/ivLRVNotifyOn"
@@ -190,15 +192,15 @@
                     android:layout_gravity="center"
                     android:layout_marginRight="10dp"
                     android:visibility="visible"
-                    app:srcCompat="@drawable/bell_off" />
+                    app:srcCompat="@drawable/bell_ring" />
 
                 <ImageView
                     android:id="@+id/ivLRVNotifyOff"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:visibility="visible"
-                    app:srcCompat="@drawable/bell_ring" />
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/bell_off" />
 
 
             </LinearLayout>

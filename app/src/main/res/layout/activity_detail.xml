@@ -10,7 +10,7 @@
     tools:openDrawer="start"
     android:orientation="vertical"
     tools:context=".DetailActivity"
-    android:background="#f2f2f2">
+    android:background="#fff">
 
     <!--<include-->
         <!--android:id="@+id/toolbar"-->
@@ -62,8 +62,9 @@
                 android:id="@+id/slider"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
-                app:srcCompat="@drawable/cash_money"
-                android:background="#fff"
+                app:srcCompat="@drawable/lending"
+
+                android:background="@drawable/rectangle_main_logo"
                 />
 
 
@@ -116,6 +117,8 @@
 
                 <!--*********if Offset**********-->
 
+                <!--*********Iphone price**********-->
+
                 <LinearLayout
                     android:id="@+id/llDetailOffsetBalance"
                     android:padding="16dp"
@@ -123,49 +126,30 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:gravity="center"
+                    android:layout_gravity="center"
                     >
 
                     <customfonts.MyTextView
-
-                        android:id="@+id/free"
-                        android:layout_width="110dp"
-                        android:layout_height="28dp"
-                        android:text=""
-                        android:textColor="#fff"
-                        android:gravity="center"
-
-                        />
-
-                    <LinearLayout
-
-                        android:layout_marginLeft="16dp"
+                        android:layout_weight="1"
+                        android:id="@+id/est"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        >
+                        android:text="Balance:"
+                        android:textSize="13dp"
+                        android:textColor="@color/colorSub"
+                        />
 
-                        <customfonts.MyTextView
-                            android:layout_weight="1"
-                            android:id="@+id/est"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Balance:"
-                            android:textSize="13dp"
-                            android:textColor="@color/colorSub"
-                            />
-
-                        <customfonts.MyTextView
-                            android:layout_weight="0.8"
-                            android:id="@+id/tvDetailAmountBalanceValue"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="31"
-                            android:textSize="18dp"
-                            android:textColor="@color/colorTex"
-                            />
-                    </LinearLayout>
+                    <customfonts.MyTextView
+                        android:layout_weight="0.8"
+                        android:id="@+id/tvDetailAmountBalanceValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="31"
+                        android:textSize="18dp"
+                        android:textColor="@color/colorTex"
+                        />
                 </LinearLayout>
+
 
 
 
@@ -569,7 +553,7 @@
                         android:layout_weight="0.5"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="wed Thu jan 18"
+                        android:text="Wed Jan 11 2018"
                         android:textColor="@color/colorTex"
 
                         />
@@ -779,6 +763,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:clickable="false"
                         android:gravity="left"
                         android:padding="16dp" />
                 </LinearLayout>

@@ -95,7 +95,7 @@
                             android:layout_marginTop="5dp"
                             android:layout_marginBottom="5dp"
 
-                            android:background="@drawable/rectangle_red"
+                            android:background="@drawable/retangle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
@@ -498,7 +498,7 @@
             android:id="@+id/signUpBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/rectangle_red"
+            style="@style/AppTheme.Buttons"
             android:text="@string/submit"
             android:textSize="16dp"
             android:textColor="#fff"

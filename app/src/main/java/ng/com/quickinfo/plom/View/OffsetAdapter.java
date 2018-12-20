@@ -9,8 +9,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import ng.com.quickinfo.plom.Model.Offset;
@@ -128,7 +126,6 @@ public class OffsetAdapter extends BaseAdapter {
         viewHolder.discription.setText(offset.getRemarks());
         viewHolder.date.setText(dateToString1(
                 offset.getDateOffset()));
-
 
 
 
