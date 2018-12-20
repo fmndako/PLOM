@@ -44,6 +44,11 @@ public class LoanRepo {
         mLoanDao.deleteLoan(loan);
     }
 
+    //service
+    public List<Loan> getLoans(long id){
+        return mLoanDao.getLoans(id);
+    }
+
 
     // ************************   Loan insert async task *************
     public static class LoanAsyncTask extends AsyncTask<Loan, Void, Void> {

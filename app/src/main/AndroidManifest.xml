@@ -6,12 +6,13 @@
         android:allowBackup="true"
         android:icon="@drawable/lending"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+
+        android:roundIcon="@drawable/rectangle_main_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:icon="@drawable/lending"
             android:name=".ListActivity"
+            android:icon="@drawable/lending"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".AddLoanActivity"
@@ -42,7 +43,11 @@
         <receiver
             android:name=".Receivers.NotificationReceiver"
             android:enabled="true"
-            android:exported="true"></receiver>
+            android:exported="true" />
+
+        <service
+            android:name=".Service.MyIntentService"
+            android:exported="false"></service>
     </application>
 
 </manifest>

@@ -47,9 +47,7 @@ import static ng.com.quickinfo.plom.Utils.Utilities.makeToast;
 
 public class ActivitySettings extends LifecycleLoggingActivity {
 
-    public String keepLoginName = "Keeper";
-    //keep signed in
-    int keepSignIn;
+
     @BindView(R.id.tvProfile)
     MyTextView tvProfile;
     @BindView(R.id.tvViewProfile)
@@ -89,6 +87,7 @@ public class ActivitySettings extends LifecycleLoggingActivity {
 
     public static String Pref_ReminderDays = "ng.com.quickinfo.PLOM.reminder_days";
     public static String Pref_Currency = "ng.com.quickinfo.PLOM.currency";
+    public static String Pref_Currency_sp = "ng.com.quickinfo.PLOM.currency";
     public static String Pref_Notification = "ng.com.quickinfo.PLOM.notification";
     boolean keepMeIn;
     boolean notification;
@@ -131,6 +130,7 @@ public class ActivitySettings extends LifecycleLoggingActivity {
 
         mUserId = sharedPref.getLong(Pref_User, 0) ;
         updateUI();
+        setListener();
 
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
@@ -187,6 +187,7 @@ public class ActivitySettings extends LifecycleLoggingActivity {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 //setCurrency(i);
                 editor.putString(Pref_Currency, getCurrency(array[i]));
+                editor.putInt(Pref_Currency_sp, i);
                 editor.commit();
                 makeToast(mContext, getCurrency(array[i]));
 
@@ -218,12 +219,12 @@ public class ActivitySettings extends LifecycleLoggingActivity {
         if(sharedPref.getBoolean(Pref_Notification, true)){
             sNotifications.setChecked(true);
             llReminderDays.setVisibility(View.VISIBLE);
-            tvReminderDays.setText(sharedPref.getInt(Pref_ReminderDays, 7));
+            tvReminderDays.setText(sharedPref.getInt(Pref_ReminderDays, 7) + "");
 
 
         }
 
-        spCurrency.setSelection(sharedPref.getInt(Pref_Currency, 0));
+        spCurrency.setSelection(sharedPref.getInt(Pref_Currency_sp,0));
 
     }
 

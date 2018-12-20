@@ -32,10 +32,11 @@
 
             <customfonts.MyTextView
                 android:id="@+id/tvViewProfile"
-                style="@style/AppTheme.Buttons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:textStyle="italic"
+                android:textColor="@color/colorblue"
                 android:text="Edit" />
 
 
@@ -176,45 +177,7 @@
 
             <!--/>-->
         </LinearLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#dad8d8" />
 
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <customfonts.MyTextView
-                android:id="@+id/tvKeepMein"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="#0000"
-                android:gravity="left"
-                android:maxLength="12"
-                android:padding="16dp"
-                android:text="Keep me sign in:"
-                android:textColor="#a2a1b8"
-                android:textSize="16dp" />
-
-
-            <Switch
-                android:id="@+id/sKeepMeIn"
-
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="left"
-                android:padding="16dp"
-                android:textOff="No"
-                android:textOn="Yes"
-                tools:checked="true" />
-
-
-        </LinearLayout>
 
         <View
             android:layout_width="match_parent"

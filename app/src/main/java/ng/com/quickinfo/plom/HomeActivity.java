@@ -31,6 +31,9 @@ import ng.com.quickinfo.plom.ViewModel.UserViewModel;
 
 import static ng.com.quickinfo.plom.Utils.FilterUtils.activeLoans;
 import static ng.com.quickinfo.plom.Utils.FilterUtils.dateFilterList;
+import static ng.com.quickinfo.plom.Utils.FilterUtils.dateIsDue;
+import static ng.com.quickinfo.plom.Utils.FilterUtils.dateIsDueSoon;
+import static ng.com.quickinfo.plom.Utils.FilterUtils.dateIsOverDue;
 import static ng.com.quickinfo.plom.Utils.FilterUtils.getItemCount;
 import static ng.com.quickinfo.plom.Utils.FilterUtils.getTotalSum;
 import static ng.com.quickinfo.plom.Utils.Utilities.log;
@@ -196,7 +199,7 @@ public class HomeActivity extends LifecycleLoggingActivity {
                 int lendCount = getItemCount(loanType.get(0));
                 int lendTotal = getTotalSum(loanType.get(0));
                 tvSumLends.setText(currency + String.valueOf(lendTotal));
-                tvCountLends.setText(String.valueOf(lendCount));
+                tvCountLends.setText(String.valueOf(lendCount) + " Lend");
                 log(TAG, "lends:" + lendCount + ":" +
                         lendTotal);
 
@@ -204,12 +207,13 @@ public class HomeActivity extends LifecycleLoggingActivity {
                 int borrowCount = getItemCount(loanType.get(1));
                 int borrowTotal = getTotalSum(loanType.get(1));
                 tvSumBorrows.setText(currency + String.valueOf(borrowTotal));
-                tvCountBorrows.setText(String.valueOf(borrowCount));
+                tvCountBorrows.setText(String.valueOf(borrowCount) + " Borrow");
                 log(TAG, "Borrows:" + borrowCount + ":" + borrowTotal);
 
                 //active count and sum
                 int activeCount = borrowCount + lendCount;
                 int deficit = borrowTotal - lendTotal;
+                int loanSum = borrowTotal + lendTotal;
 
                 //TODO
                 //TODO
@@ -219,41 +223,43 @@ public class HomeActivity extends LifecycleLoggingActivity {
                 //cleared
                 tvClearedCount.setText((countAllLoans - activeCount) + " Cleared Loans");
                 //deficit
-                tvDeficit.setText(deficit+"");
+                tvDeficit.setText(currency + deficit+"");
                 //total loans
-                tvOverallCount.setText(countAllLoans + "Total");
-                tvSumAll.setText(currency + borrowTotal+lendTotal + "");
+                tvOverallCount.setText(countAllLoans + " Total");
+                tvSumAll.setText(currency + loanSum + "");
 
-                //datelist
-                List<List<Loan>> byDateLoans = dateFilterList(activeLoans, reminderDays);
 
                 //duesoon
+                List<Loan> isDueSoon= dateIsDueSoon(activeLoans, reminderDays);
 
-                int dueSoonCount = getItemCount(byDateLoans.get(0));
+                int dueSoonCount = getItemCount(isDueSoon);
                 if(dueSoonCount!=0){
                     llDueSoon.setVisibility(View.VISIBLE);
-                int dueSoonTotal = getTotalSum(byDateLoans.get(0));
+                int dueSoonTotal = getTotalSum(isDueSoon);
                 tvSumDueSoon.setText( currency + String.valueOf(dueSoonTotal));
-                tvCountDueSoon.setText(String.valueOf(dueSoonCount));
+                tvCountDueSoon.setText("Due soon: "+ String.valueOf(dueSoonCount));
                 log(TAG, "DueSoon:" + dueSoonCount + ":" + dueSoonTotal);}
 
                 //due
-                int dueCount = getItemCount(byDateLoans.get(1));
+                List<Loan> isDue = dateIsDue(activeLoans);
+                int dueCount = getItemCount(isDue);
                 if(dueCount!= 0){
                     llDue.setVisibility(View.VISIBLE);
-                int dueTotal = getTotalSum(byDateLoans.get(1));
+                int dueTotal = getTotalSum(isDue);
                 tvSumDue.setText( currency + String.valueOf(dueTotal));
-                tvCountDue.setText(String.valueOf(dueCount));
+                tvCountDue.setText("Due today: "+ String.valueOf(dueCount));
                 log(TAG, "Due:" + dueCount + ":" + dueTotal);}
 
                 //overdue
-                int overDueCount = getItemCount(byDateLoans.get(2));
+                List<Loan> isOverDue = dateIsOverDue(activeLoans);
+
+                int overDueCount = getItemCount(isOverDue);
                 if(overDueCount!=0) {
                     llOverDue.setVisibility(View.VISIBLE);
-                    int overDueTotal = getTotalSum(byDateLoans.get(2));
+                    int overDueTotal = getTotalSum(isOverDue);
                     tvSumOverdue.setText(currency + String.valueOf(overDueTotal));
-                    tvCountOverdue.setText(String.valueOf(overDueCount));
-                    log(TAG, "overDue:" + overDueCount + ":" + overDueTotal);
+                    tvCountOverdue.setText("Over due: "+ String.valueOf(overDueCount));
+                    log(TAG, "Over Due:" + overDueCount + ":" + overDueTotal);
                 }
 
                 //TODO update other UI
@@ -268,15 +274,18 @@ public class HomeActivity extends LifecycleLoggingActivity {
     }
 
     @OnClick({R.id.llBorrows,
-            R.id.tvSumLends,R.id.navigation_notifications, R.id.navigation_settings, R.id.llLends, R.id.tvDeficit, R.id.tvSumAll, R.id.llDueSoon, R.id.llDue, R.id.llOverDue})
+            R.id.tvSumLends,R.id.navigation_notifications, R.id.navigation_settings,
+            R.id.llLends, R.id.tvOverallCount, R.id.tvSumAll, R.id.llDueSoon, R.id.llDue, R.id.llOverDue})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.llBorrows:
-                viewLoans(2);
+                log(TAG, "borrow");
+                viewLoans(3);
+
                 break;
             case R.id.llLends:
 
-                viewLoans(1);
+                viewLoans(2);
                 break;
             case R.id.navigation_settings:
                 startActivity(new Intent(HomeActivity.this, ActivitySettings.class));
@@ -286,7 +295,8 @@ public class HomeActivity extends LifecycleLoggingActivity {
                 viewLoans(7);
                 break;
 
-            case R.id.tvDeficit:
+            case R.id.tvOverallCount:
+                viewLoans(0);
                 break;
             case R.id.tvSumAll:
                 viewLoans(1);

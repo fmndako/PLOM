@@ -55,10 +55,6 @@ public class ListActivity extends LifecycleLoggingActivity implements
     //intent for signout and revoke access
     ListReceiver ListReceiver;
     IntentFilter intentfilter;
-    @BindView(R.id.tvUser)
-    MyTextView tvUser;
-    @BindView(R.id.tvEmail)
-    MyTextView tvEmail;
 
     @BindView(R.id.tvSizeLends)
     MyTextView tvSize;
@@ -90,7 +86,6 @@ public class ListActivity extends LifecycleLoggingActivity implements
     private Context mContext;
     //initiate viewmodel
     LoanViewModel mLoanViewModel;
-    private String mEmail;
     private long mUserId;
 
     int loanType;
@@ -117,22 +112,16 @@ public class ListActivity extends LifecycleLoggingActivity implements
         //shared pref
         sharedPref = Utilities.MyPref.getSharedPref(mContext);
         editor = sharedPref.edit();
-        currency = sharedPref.getString("currency","N" );
-        reminderDays = sharedPref.getInt("reminderDays", 7);
+        currency = sharedPref.getString(ActivitySettings.Pref_Currency,"N" );
+        reminderDays = sharedPref.getInt(ActivitySettings.Pref_ReminderDays, 7);
         //intent
-        //TODO can get the email address from shared pref
-        //mEmail = getIntent().getStringExtra("email");
-        mUserId = getIntent().getLongExtra("user_id", 1);
+        mUserId = getIntent().getLongExtra(ActivitySettings.Pref_User, 1);
         loanType = getIntent().getIntExtra("loanType", 1);
 
 
-        mEmail = Utilities.MyPref.getSharedPref(mContext).getString("email", null);
-        makeToast(mContext, mEmail);
 
         //register receiver
         registerMyReceivers();
-        //set collapsing tool bar
-        setToolBar(mUserId);
         ////unregister receivers
         //        unRegisterMyReceivers();
         loadRV(loanType);
@@ -149,7 +138,6 @@ public class ListActivity extends LifecycleLoggingActivity implements
 
     public void onHandlerInteraction(long loan_id) {
         //my own listener created in the loanadapter class
-        Utilities.makeToast(this, "" + loan_id);
         startDetailActivity(loan_id);
     }
 
@@ -158,24 +146,6 @@ public class ListActivity extends LifecycleLoggingActivity implements
         Intent detailIntent = new Intent(this, DetailActivity.class);
         detailIntent.putExtra("loan_id", loan_id);
         startActivity(detailIntent);
-    }
-
-    private void setToolBar(long id) {
-
-        UserViewModel userViewModel = ViewModelProviders.of(this).get(
-                UserViewModel.class
-        );
-
-        userViewModel.getUserById(id).observe(this, new Observer<User>() {
-            @Override
-            public void onChanged(@Nullable final User user) {
-                tvEmail.setText(user.getEmail());
-                if(!user.getUserName().isEmpty()){
-                    tvUser.setText(user.getUserName());
-                    tvUser.setVisibility(View.VISIBLE);
-                }
-            }
-        });
     }
 
     private void addNewLoan() {
@@ -197,8 +167,9 @@ public class ListActivity extends LifecycleLoggingActivity implements
             public void onChanged(@Nullable final List<Loan> loans) {
                 // Update the cached copy of the loans in the adapter.
                 log(TAG, loans.size() + "size");
-                mLoans = loans;
                 switch (loanType) {
+                    case 0:
+                        mLoans = loans;
                     case 1:
                         mLoans = FilterUtils.activeLoans(loans);
                         break;
@@ -210,11 +181,11 @@ public class ListActivity extends LifecycleLoggingActivity implements
 
                         break;
                     case 4:
-                        mLoans = FilterUtils.dateIsDue(loans);
+                        mLoans = FilterUtils.dateIsDueSoon(loans, reminderDays);
 
                         break;
                     case 5:
-                        mLoans = FilterUtils.dateIsDueSoon(loans, reminderDays);
+                        mLoans = FilterUtils.dateIsDue(loans);
                         break;
                     case 6:
                         mLoans = FilterUtils.dateIsOverDue(loans);
@@ -225,14 +196,12 @@ public class ListActivity extends LifecycleLoggingActivity implements
                         break;
 
                 }
-                //TODO after all, setLoans to mLoans
-                adapter.setLoans(loans);
+                adapter.setLoans(mLoans);
 
-                tvSize.setText("" + getItemCount(loans) + " Loans");
-                tvTotal.setText(currency + getTotalSum(loans));
+
+                tvSize.setText("" + adapter.getItemCount() + " Loans");
+                tvTotal.setText(currency + adapter.getItemSum());
                 //TODO update other UI
-                log(TAG, adapter.getItemCount() + "");
-                //Utilities.log(TAG, getTotalLends(loans)+"");
                 Date date = Calendar.getInstance().getTime();
                 log(TAG, Utilities.dateToString(date));
             }

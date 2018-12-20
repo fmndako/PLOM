@@ -424,6 +424,7 @@
                     android:gravity="center"
                     android:text="0 Lent"
                     android:textColor="@color/date_color"
+                    android:textStyle="bold"
                     android:textSize="12dp" />
 
                 <customfonts.MyTextView
@@ -435,6 +436,7 @@
                     android:gravity="center"
                     android:text="N 2000"
                     android:textColor="@color/date_color"
+                    android:textStyle="bold"
                     android:textSize="12dp" />
 
 
@@ -468,6 +470,7 @@
                     android:gravity="center"
                     android:text="0 Lent"
                     android:textColor="@color/date_color"
+                    android:textStyle="bold"
                     android:textSize="12dp" />
 
                 <customfonts.MyTextView
@@ -479,6 +482,7 @@
                     android:gravity="center"
                     android:text="N 2000"
                     android:textColor="@color/date_color"
+                    android:textStyle="bold"
                     android:textSize="12dp" />
 
 
@@ -512,6 +516,7 @@
                     android:gravity="center"
                     android:text="0 Lent"
                     android:textColor="@color/date_color"
+                    android:textStyle="bold"
                     android:textSize="12dp" />
 
                 <customfonts.MyTextView
@@ -523,6 +528,7 @@
                     android:gravity="center"
                     android:text="N 2000"
                     android:textColor="@color/date_color"
+                    android:textStyle="bold"
                     android:textSize="12dp" />
 
 

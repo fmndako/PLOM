@@ -20,6 +20,9 @@ public interface LoanDao {
     @Query("select * from loan_table where id = :id")
     LiveData<Loan> getItembyId(long id);
 
+    @Query("select * from loan_table where id = :id")
+    List<Loan> getLoans(long id);
+
     @Query("select * from loan_table where user_id = :id")
     LiveData<List<Loan>>  getItembyUserId(long id);
 

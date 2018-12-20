@@ -70,7 +70,7 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
             Loan loan = mLoans.get(position);
             amount = loan.getAmount();
             holder.nameView.setText(loan.getName());
-            holder.dateTakenView.setText(dateToString1(loan.getDateToRepay()));
+            holder.dateTakenView.setText(dateToString1(loan.getDateTaken()));
             holder.amountView.setText(currency + amount + "");
             //remarks
             if(!loan.getRemarks().isEmpty()){
@@ -105,29 +105,29 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
             Date date = loan.getDateToRepay();
             //duesoon
             Boolean isOn = false;
-            String comment = "Due on ";
+            String comment = "Due on: ";
             int color = R.color.green;
 
             if(isToday(date)){
                 isOn = true;
-                comment = "Due Today:";
+                comment = "Due Today: ";
                 color = R.color.date_due;
             }
             else if (isDueSoon(date, reminderDays)){
                 isOn = true;
-                comment = "Due very soon:";
+                comment = "Due very soon: ";
                 color = R.color.date_duesoon;
 
 
             }
             else if (isOverDue(date)){
                 isOn = true;
-                comment = "Due since ";
+                comment = "Due since: ";
                 color = R.color.date_overdue;
             }
             //notify
             //holder.llNotify.setVisibility(View.VISIBLE);
-            holder.commentView.setText(comment  + "    " +
+            holder.commentView.setText(comment  + " " +
             dateToString1(loan.getDateToRepay()));
             if(loan.getNotify()!=0){
                     holder.notifyOff.setVisibility(View.GONE);

@@ -4,9 +4,9 @@
     tools:context="ng.com.quickinfo.plom.ListActivity">
     <item
         android:id="@+id/action_settings"
-        android:orderInCategory="100"
+        android:icon="@drawable/settings_outline"
         android:title="@string/action_settings"
-        app:showAsAction="never" />
+        app:showAsAction="always" />
     <item
         android:id="@+id/searchView"
         android:icon="@android:drawable/ic_menu_search"
