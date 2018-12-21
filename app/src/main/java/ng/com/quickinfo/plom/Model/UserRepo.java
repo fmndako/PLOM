@@ -84,7 +84,7 @@ public class UserRepo {
 
         @Override
         protected void onPostExecute(Long result) {
-            log("Database Utils", mAction);
+            log("UserRepo", mAction);
             Intent intent = new Intent();
             intent.setAction(mAction);
             intent.putExtra("id", result);

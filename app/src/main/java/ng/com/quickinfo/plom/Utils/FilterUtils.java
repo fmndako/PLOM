@@ -10,6 +10,7 @@ import ng.com.quickinfo.plom.Model.Loan;
 
 import static android.service.autofill.Validators.or;
 import static ng.com.quickinfo.plom.Utils.Utilities.dateToString;
+import static ng.com.quickinfo.plom.Utils.Utilities.log;
 
 public class FilterUtils {
     //search
@@ -172,7 +173,9 @@ public class FilterUtils {
     }
     public static boolean isOverDue(Date date){
         //returns true if date of repayment is after today
-        return (date.after(Calendar.getInstance().getTime()));
+        //TODO logic wrong
+        log("Date", dateToString(date) +" : " + Calendar.getInstance().getTime());
+        return (Calendar.getInstance().getTime().after(date));
     }
 
 

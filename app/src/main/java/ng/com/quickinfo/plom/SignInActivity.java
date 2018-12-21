@@ -125,7 +125,10 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
 
         if(sharedPref.getBoolean(ActivitySettings.Pref_Keeper, false)){
             //TODO uncomment after debugging
-            //goToHome(sharedPref.getLong(ActivitySettings.Pref_User, 0));
+            long id = sharedPref.getLong(ActivitySettings.Pref_User, 0);
+            if(id!=0){
+                goToHome(id);
+            }
             //true
             makeToast(mContext, "keep in in");
         }
@@ -196,54 +199,6 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
 
     }
 
-    private void updateUI(String email) {
-        //if first timer
-        boolean userFirstLogin = sharedPref.getBoolean(email, true);
-        if (userFirstLogin) {
-            //register
-            //start sign up dialog and sign up
-            registerUser(email);
-            //change first timer = false
-            log(TAG, "user first login");
-            //save user to shared pref
-        }
-        //else
-        else {
-            log(TAG, "not user first login");
-            //change sharedpreff user to email
-            editor.putString("email", email);
-            editor.apply();
-            //enter system
-            loadAccount(email);
-
-        }
-
-    }
-    //TODO remove all 3
-    private void registerUser(String email) {
-        User user = new User("username", "333", email, "jjjj");
-        mEmail = email;
-        log(TAG, "registerUser");
-       // mUserViewModel.insert(user, mContext);
-
-    }
-
-    private void registerUserSuccesful() {
-        log(TAG, mEmail + "registerUserSuccessful");//change shared pref to false if successfull
-        editor.putBoolean(mEmail, false);
-        editor.putString("email", mEmail);
-        editor.apply();
-        loadAccount(mEmail);
-    }
-
-    private void loadAccount(String email) {
-        Intent intent = new Intent(this, HomeActivity.class);
-        intent.putExtra("email", email);
-        //TODO
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-        startActivity(intent);
-
-    }
 
     private void signOut() {
         mGoogleSignInClient.signOut()
@@ -381,8 +336,12 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
             //first timer
             User newUser = new User("", "", email, "");
             mEmail = email;
+
             new UserRepo.UserAsyncTask(mUserViewModel,
                     HomeActivity.userAddAction).execute(newUser);
+            editor.putBoolean(email, false);
+            editor.commit();
+            log(TAG, "first timer email");
 
         } else {
             //not first timer
@@ -390,8 +349,8 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
                 @Override
                 public void onChanged(@Nullable final User user) {
                     if (user != null){
-                           //showprogress(false)
-                            goToHome(user.getUserId());
+                        log(TAG,  "Email exist");
+                        goToHome(user.getUserId());
 
 
                         }
@@ -400,10 +359,7 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
 
 
         }
-        editor.putBoolean(email, false);
-        editor.putBoolean(ActivitySettings.Pref_Keeper, true);
-        editor.commit();
-        makeToast(mContext, "email changed; editor edited");
+
 
     }
 
@@ -419,27 +375,40 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
 
     private void checkCredentials(final String name, final String password) {
         //showprogess
-        mUserViewModel.getUserByName(name).observe(this, new android.arch.lifecycle.Observer <User>()  {
-            @Override
-            public void onChanged(@Nullable final User user) {
+        if(sharedPref.getBoolean(name, true)) {
+            //first timer
+            makeToast(mContext, "Please register!");
+            log(TAG, "first timer user");
+
+
+
+        }
+        else{
+
+            mUserViewModel.getUserByName(name).observe(this, new android.arch.lifecycle.Observer <User>()  {
+                @Override
+                public void onChanged(@Nullable final User user) {
                     if (user != null){
+                        log(TAG, "not first timer, " + name);
                         if(user.getPassword().equals(password)){
                             //showprogress(false)
+                            log(TAG, "user password verified");
                             goToHome(user.getUserId());
 
 
                         }else{
                             //TODO change
-                            etUser.setError("Invalid Username or Password" + user.getPassword());
-                            etUser.requestFocus();
+                            etPassword.setError("Invalid Password");
+                            etPassword.requestFocus();
                         }
                     }
-                    else{
-                        etUser.setError("Invalid Username or Password");
-                        etUser.requestFocus();
-                    }
+
                 }
             });
+            }
+
+
+
 
 
     }
@@ -455,6 +424,11 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
         Intent intent = new Intent(this, HomeActivity.class);
 
         intent.putExtra("id", id );
+        editor.putLong(ActivitySettings.Pref_User, id);
+        editor.commit();
+        makeToast(mContext, "email changed; editor edited");
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
         startActivity(intent);
         //finish();
 
@@ -465,6 +439,7 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
     public void onSignUp(DialogFragment dialog, User user){
         dialog.dismiss();
         showProgress(true);
+        try{Thread.sleep(2000);}catch (Exception e){}
         editor.putBoolean(user.getEmail(), false);
         if (!user.getUserName().isEmpty()){
             editor.putBoolean(user.getUserName(), false);
@@ -484,20 +459,29 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
     public class SignInReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            showProgress(false);
             switch (intent.getAction()){
                 case HomeActivity.userAddAction:
                      //get id from intent and go to home screen
                     makeToast(context, "user added");
                     long id = intent.getLongExtra("id", 0);
+
                     if(id!=0){
-
-
+                        setPreferences(id);
                         goToHome(id);
                     }
                     break;
             }
         }
+    }
+
+    private void setPreferences(long id) {
+        editor.putInt(ActivitySettings.Pref_ReminderDays, 7);
+        editor.putLong(ActivitySettings.Pref_User, id);
+        editor.putBoolean(ActivitySettings.Pref_Keeper, true);
+        editor.putString(ActivitySettings.Pref_Currency, ActivitySettings.getCurrency("NG"));
+        editor.commit();
+
+
     }
 }
 

@@ -134,12 +134,12 @@ public class HomeActivity extends LifecycleLoggingActivity {
         //shared pref
         sharedPref = Utilities.MyPref.getSharedPref(mContext);
         editor = sharedPref.edit();
-        currency = sharedPref.getString("currency","N" );
-        reminderDays = sharedPref.getInt("reminderDays", 7);
+        currency = sharedPref.getString(ActivitySettings.Pref_Currency,"N" );
+        reminderDays = sharedPref.getInt(ActivitySettings.Pref_ReminderDays, 7);
         //get id from intent
     
         id = getIntent().getLongExtra("id", 0);
-        makeToast(mContext, id + "");
+        //makeToast(mContext, id + "");
         showProgress(true, progressBar, mContext);
        //user live datat
         UserViewModel userViewModel = ViewModelProviders.of(this).get(
@@ -173,9 +173,9 @@ public class HomeActivity extends LifecycleLoggingActivity {
         //go to listActivity
         //TODO uncomment all below
         Intent listIntent = new Intent(this, ListActivity.class);
-        //listIntent.putExtra("user_id", mUser.getUserId());
+        listIntent.putExtra("user_id", id);
         //listIntent.putExtra("email", mUser.getEmail());
-        //listIntent.putExtra("loanType", selection);
+        listIntent.putExtra("loanType", selection);
         startActivity(listIntent);
     }
 

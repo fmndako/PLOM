@@ -12,7 +12,6 @@
         android:id="@+id/llTotal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/fl"
         android:layout_marginBottom="5dp"
         android:layout_weight="1"
         android:orientation="horizontal">
@@ -37,7 +36,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:padding="5dp"
-            android:text="N 2000"
+            android:text="N0"
             android:textColor="@color/button_signin"
             android:textSize="12sp" />
 

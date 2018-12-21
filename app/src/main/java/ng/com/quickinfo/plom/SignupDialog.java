@@ -180,9 +180,7 @@ public class SignupDialog extends DialogFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.signupsignup:
-                //TODO depends on action
-               // checkAvailability();
-                if(mAction!= "username"){attemptUpdate();}
+                 if(mAction!= "username"){attemptUpdate();}
                 else{attemptSignUp();}
 
                 break;
@@ -256,7 +254,7 @@ public class SignupDialog extends DialogFragment {
         boolean cancel = false;
         View focusView = null;
 
-
+//TODO moved availabilty down. else move it back up
         //check useremail availability
         if(!TextUtils.isEmpty(email) &&!isEmailAvailable(email)){
             log("SignUpDlg", "isemailAvailble");
@@ -324,7 +322,7 @@ public class SignupDialog extends DialogFragment {
         }
     }
 
-    private void setProfile(long id){
+    private void setProfile(long id) {
 
         //TODO set profile if action is edit profile
         //show old password linearlayout :visible
@@ -334,19 +332,19 @@ public class SignupDialog extends DialogFragment {
         //disable user and email address edit view
 
 
-         userViewModel.getUserById(id).observe(this, new android.arch.lifecycle.Observer <User>()  {
+        userViewModel.getUserById(id).observe(this, new android.arch.lifecycle.Observer<User>() {
             @Override
             public void onChanged(@Nullable final User user) {
-                if (user != null){
-                    if(user.getPassword().equals(signupoldpass.getText().toString())){
+                if (user != null) {
+                    if (user.getPassword().equals(signupoldpass.getText().toString())) {
                         mUser = user;
-                        if(user.getUserName().isEmpty()){
+                        if (user.getUserName().isEmpty()) {
                             //if gmail
                             signupconfirmpass.setVisibility(View.GONE);
                             signuppass.setVisibility(View.GONE);
 
 
-                        }else{
+                        } else {
                             //user name profile
                             llOldPassword.setVisibility(View.VISIBLE);
                             signuppass.setText("New password");
@@ -359,43 +357,27 @@ public class SignupDialog extends DialogFragment {
                         signupemail.setEnabled(false);
 
 
-
-
-                    }}}
+                    }
+                }
+            }
         });
-
-
-
-
-
-
-
-
     }
-    private void registerUser(String mUser, String password) {
 
-            User user = new User(mUser,signupnumber.getText().toString(),
+    private void registerUser(String mUser, String password) {
+        User user = new User(mUser,signupnumber.getText().toString(),
                     signupemail.getText().toString(), password);
             mListener.onSignUp(this, user);
-
-
     }
 
     private boolean isEmailAvailable(String email) {
-
         //true if first timer else false
         return sharedPref.getBoolean(email, true);
             }
 
-    public void checkAvailability(){
-        log("email", isEmailAvailable(signupemail.getText().toString())+"");
-        log("email user", isUserAvailable(signupuser.getText().toString())+"");
-
-    }
-
     private boolean isUserAvailable(String name) {
         return sharedPref.getBoolean(name, true);
     }
+
     private boolean isPasswordValid(String password) {
         return (password.length() > 3) && password.equals(
                 signupconfirmpass.getText().toString()) ;
@@ -405,15 +387,9 @@ public class SignupDialog extends DialogFragment {
         return (email.length() > 3) && email.contains("@") ;
     }
 
-    public boolean isPassWordMatch(String pass) {
-
-        return isPasswordValid(pass) && pass.equals(mUser.getPassword());
-    }
-
     //*********** interface *************
     public interface SignupDialogListener {
         public void onSignUp(DialogFragment dialog, User user);
-
 
     }
 }

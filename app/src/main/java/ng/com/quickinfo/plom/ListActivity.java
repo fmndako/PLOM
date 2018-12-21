@@ -35,6 +35,7 @@ import customfonts.MyTextView;
 import ng.com.quickinfo.plom.Model.Loan;
 import ng.com.quickinfo.plom.Model.LoanRepo;
 import ng.com.quickinfo.plom.Model.User;
+import ng.com.quickinfo.plom.Receivers.NotificationReceiver;
 import ng.com.quickinfo.plom.Utils.FilterUtils;
 import ng.com.quickinfo.plom.Utils.Utilities;
 import ng.com.quickinfo.plom.View.LoanListAdapter;
@@ -76,9 +77,6 @@ public class ListActivity extends LifecycleLoggingActivity implements
     //loan
     private List<Loan> mLoans;
 
-    public static String ACTION_USER_SIGN_IN = "ng.com.quickinfo.plom.ACTION_USER_SIGN_IN";
-    public static String ACTION_SIGN_OUT = "ng.com.quickinfo.loanmanager.ACTION_SIGN_OUT";
-    public static String ACTION_DELETE_ACCOUNT = "ng.com.quickinfo.loanmanager.ACTION_DELETE_ACCOUNT";
     @BindView(R.id.register_progress)
     ProgressBar mRegisterProgress;
 
@@ -91,7 +89,6 @@ public class ListActivity extends LifecycleLoggingActivity implements
     int loanType;
     //required for start new activity
     public static final int NEW_LOAN_ACTIVITY_REQUEST_CODE = 1;
-    public static final int NEW_USER_ACTIVITY_REQUEST_CODE = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +112,7 @@ public class ListActivity extends LifecycleLoggingActivity implements
         currency = sharedPref.getString(ActivitySettings.Pref_Currency,"N" );
         reminderDays = sharedPref.getInt(ActivitySettings.Pref_ReminderDays, 7);
         //intent
-        mUserId = getIntent().getLongExtra(ActivitySettings.Pref_User, 1);
+        mUserId = sharedPref.getLong(ActivitySettings.Pref_User, 1);
         loanType = getIntent().getIntExtra("loanType", 1);
 
 

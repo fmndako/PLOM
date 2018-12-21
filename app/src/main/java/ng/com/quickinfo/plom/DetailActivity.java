@@ -22,6 +22,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Switch;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,6 +35,7 @@ import customfonts.MyTextView;
 import ng.com.quickinfo.plom.Model.Loan;
 import ng.com.quickinfo.plom.Model.LoanRepo.LoanAsyncTask;
 import ng.com.quickinfo.plom.Model.Offset;
+import ng.com.quickinfo.plom.Receivers.NotificationReceiver;
 import ng.com.quickinfo.plom.Utils.Utilities;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
 import ng.com.quickinfo.plom.View.OffsetAdapter;
@@ -91,6 +93,8 @@ public class DetailActivity extends LifecycleLoggingActivity implements
     ProgressBar pbDetail;
     @BindView(R.id.llDetailMain)
     LinearLayout llDetailMain;
+    @BindView(R.id.sDetailNotify)
+    Switch sDetailNotify;
 
 
 
@@ -98,13 +102,11 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
     //Receivers
     DetailReceiver myReceiver;
+    NotificationReceiver notificationReceiver;
 
     IntentFilter offsetAddFilter;
 
     public static final String loanInsertAction = "package ng.com.quickinfo.plom.LOAN_INSERTED";
-    public static final String loanDetailGetAction = 
-            "package ng.com.quickinfo.plom.detail_activity_get_loan";
-
     public static final String loanClearedAction = "package ng.com.quickinfo.plom.LOAN_CLEARED";
     public static final String loanUpdateAction = "package ng.com.quickinfo.plom.LOAN_EDITED";
     public static final String loanDeleteAction = "package ng.com.quickinfo.plom.LOAN_DELETED";
@@ -155,6 +157,8 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         //create broadcast receivers
         myReceiver = new DetailReceiver();
         //add filters
+        notificationReceiver = new NotificationReceiver();
+
         offsetAddFilter = new IntentFilter(offsetAddAction);
         offsetAddFilter.addAction(offsetDeleteAction);
         offsetAddFilter.addAction(offsetUpdateAction);
@@ -163,7 +167,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         offsetAddFilter.addAction(loanClearedAction);
         //register
         LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver, offsetAddFilter);
-
+        LocalBroadcastManager.getInstance(this).registerReceiver(notificationReceiver, offsetAddFilter);
 
         //set loan view model
         mLoanViewModel = ViewModelProviders.of(this).get(LoanViewModel.class);
@@ -279,6 +283,12 @@ public class DetailActivity extends LifecycleLoggingActivity implements
                 tvDetailRepaymentOptionValue.setText(R.string.repayment_option_several);
             }
             tvDetailRemarksValue.setText(mLoan.getRemarks() + "");
+
+            //notify
+            if(mLoan.getNotify()==0){
+                sDetailNotify.setChecked(false);
+
+            }
 
             //offset
             loadRV(mLoan.getId());
@@ -424,12 +434,24 @@ public class DetailActivity extends LifecycleLoggingActivity implements
                 startCallIntent();
                 break;
             case R.id.ivDetailEmail:
-                startMailIntent();
+                //TODO toggglebelow
+                sendNotificationBroadCast();
+                //startMailIntent();
                 break;
             case R.id.ivDetailMessage:
                 startSmsIntent();
                 break;
         }
+    }
+
+    private void sendNotificationBroadCast() {
+        Intent intent = new Intent();
+        intent.setAction(offsetUpdateAction);
+        LocalBroadcastManager.getInstance(
+                this).sendBroadcast(intent);
+
+
+
     }
 
     private void startSmsIntent() {
@@ -579,6 +601,8 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         super.onDestroy();
         //unregistering using local broadcast manager
         LocalBroadcastManager.getInstance(this).unregisterReceiver(myReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(notificationReceiver);
+        notificationReceiver = null;
         //null the receivers to prevent ish
         myReceiver = null;
     }

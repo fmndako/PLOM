@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import com.google.android.gms.common.util.DataUtils;
 
 import ng.com.quickinfo.plom.ActivitySettings;
+import ng.com.quickinfo.plom.DetailActivity;
 import ng.com.quickinfo.plom.Service.MyIntentService;
 import ng.com.quickinfo.plom.Utils.Utilities;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
@@ -27,13 +28,14 @@ public class NotificationReceiver extends BroadcastReceiver {
 
 
         //starts activity
+        Utilities.makeToast(context, "On Receive Notification");
         if(intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)){
             context.startService(new Intent(context, MyIntentService.class));
             Utilities.makeToast(context, "boot completed");
 
-        }else if(intent.getAction().equals((ActivitySettings.Pref_Notification))){
+        }else if(intent.getAction().equals((DetailActivity.offsetUpdateAction))){
             context.startService(new Intent(context, MyIntentService.class));
-            Utilities.makeToast(context, "notification clicked");
+            Utilities.makeToast(context, "detail screen notification received");
 
         }
 

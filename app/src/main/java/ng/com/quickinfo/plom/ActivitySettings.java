@@ -204,7 +204,7 @@ public class ActivitySettings extends LifecycleLoggingActivity {
 
     }
 
-    private String getCurrency(String s) {
+    public static String getCurrency(String s) {
             Locale locale = new Locale("EN", s);
             Currency currency = Currency.getInstance(locale);
             String symbol = currency.getSymbol(locale);
@@ -223,8 +223,8 @@ public class ActivitySettings extends LifecycleLoggingActivity {
 
 
         }
-
-        spCurrency.setSelection(sharedPref.getInt(Pref_Currency_sp,0));
+        //TODO  set real value
+        spCurrency.setSelection(0);
 
     }
 

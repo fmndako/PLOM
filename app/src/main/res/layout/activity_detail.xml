@@ -51,21 +51,14 @@
             android:orientation="vertical">
 
 
-
-
-
-
-
-
-
             <ImageView
                 android:id="@+id/slider"
-                android:layout_width="match_parent"
-                android:layout_height="70dp"
-                app:srcCompat="@drawable/lending"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
 
                 android:background="@drawable/rectangle_main_logo"
-                />
+                app:srcCompat="@drawable/lending" />
 
 
             <LinearLayout
@@ -97,7 +90,7 @@
                         android:layout_gravity="center"
                         android:layout_weight="1"
                         android:gravity="right"
-                        android:paddingRight="10dp"
+                        android:paddingRight="20dp"
                         android:text="Name"
                         android:textColor="@color/colorTex"
                         android:textSize="21dp"
@@ -109,7 +102,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="left"
-                        android:paddingLeft="10dp"
+                        android:paddingLeft="20dp"
                         android:text="75990 $"
                         android:textColor="@color/colorTex"
                         android:textSize="21dp" />
@@ -121,33 +114,35 @@
 
                 <LinearLayout
                     android:id="@+id/llDetailOffsetBalance"
-                    android:padding="16dp"
-                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:layout_gravity="center"
-                    >
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="16dp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <customfonts.MyTextView
-                        android:layout_weight="1"
                         android:id="@+id/est"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="right"
+                        android:paddingRight="20dp"
                         android:text="Balance:"
-                        android:textSize="13dp"
                         android:textColor="@color/colorSub"
-                        />
+                        android:textSize="13dp" />
 
                     <customfonts.MyTextView
-                        android:layout_weight="0.8"
                         android:id="@+id/tvDetailAmountBalanceValue"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingLeft="20dp"
                         android:text="31"
-                        android:textSize="18dp"
                         android:textColor="@color/colorTex"
-                        />
+                        android:textSize="18dp" />
                 </LinearLayout>
 
 
@@ -764,8 +759,14 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:clickable="false"
+                        android:checked="true"
+                        android:splitTrack="false"
+                        android:background="@drawable/rectangle_main_logo"
                         android:gravity="left"
                         android:padding="16dp" />
+                    <!--TODO android:padding="16dp"
+
+                tools:checked="true"-->
                 </LinearLayout>
 
 

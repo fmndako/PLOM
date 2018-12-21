@@ -52,6 +52,8 @@ public class MyIntentService extends IntentService {
     protected void onHandleIntent(Intent intent) {
 
         if (intent != null) {
+
+            Utilities.makeToast(this, "intent service handleing");
             CHANNEL_ID = this.getPackageName();
             notificationManager = NotificationManagerCompat.from(this);
 
