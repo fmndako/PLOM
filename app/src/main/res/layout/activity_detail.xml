@@ -761,7 +761,6 @@
                         android:clickable="false"
                         android:checked="true"
                         android:splitTrack="false"
-                        android:background="@drawable/rectangle_main_logo"
                         android:gravity="left"
                         android:padding="16dp" />
                     <!--TODO android:padding="16dp"
@@ -799,7 +798,7 @@
                             android:layout_weight="1"
                             android:layout_width="50dp"
                             android:layout_height="50dp"
-                            android:src="@drawable/phone"
+                            android:src="@drawable/phone1"
                             android:layout_gravity="center"
                             android:gravity="bottom"/>
 
@@ -842,7 +841,7 @@
                             android:layout_weight="1"
                             android:layout_width="50dp"
                             android:layout_height="50dp"
-                            app:srcCompat="@drawable/email"
+                            app:srcCompat="@drawable/email1"
                             android:layout_gravity="center"
                             android:gravity="bottom"
 

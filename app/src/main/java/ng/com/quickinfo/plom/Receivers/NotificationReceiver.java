@@ -1,4 +1,6 @@
 package ng.com.quickinfo.plom.Receivers;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +13,8 @@ import ng.com.quickinfo.plom.DetailActivity;
 import ng.com.quickinfo.plom.Service.MyIntentService;
 import ng.com.quickinfo.plom.Utils.Utilities;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
+
+import static ng.com.quickinfo.plom.Utils.Utilities.log;
 
 public class NotificationReceiver extends BroadcastReceiver {
 
@@ -30,15 +34,37 @@ public class NotificationReceiver extends BroadcastReceiver {
         //starts activity
         Utilities.makeToast(context, "On Receive Notification");
         if(intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)){
-            context.startService(new Intent(context, MyIntentService.class));
-            Utilities.makeToast(context, "boot completed");
+            schedule(context);
 
         }else if(intent.getAction().equals((DetailActivity.offsetUpdateAction))){
-            context.startService(new Intent(context, MyIntentService.class));
-            Utilities.makeToast(context, "detail screen notification received");
+            //TODO remove in production
+            schedule(context);
+
+//            context.startService(new Intent(context, MyIntentService.class));
+//            Utilities.makeToast(context, "detail screen notification received");
 
         }
 
+
+
+
+
+    }
+
+    private void schedule(Context context) {
+        AlarmManager alarmManager = (AlarmManager)context.getSystemService(
+                Context.ALARM_SERVICE);
+        long startTime = System.currentTimeMillis();
+        long intervalTime = 60 *1000;
+        log("Receiver", "timer");
+        //create
+
+        Intent intent = new Intent(context, MyIntentService.class);
+        PendingIntent pendingIntent = PendingIntent.getService(context,
+                0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Utilities.makeToast(context, "detail screen notification received");
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
+                startTime, intervalTime,pendingIntent );
 
 
     }

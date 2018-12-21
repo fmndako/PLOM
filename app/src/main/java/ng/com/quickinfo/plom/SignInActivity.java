@@ -111,7 +111,8 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
         mContext = getApplicationContext();
         //load View Model
         mUserViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
-
+        mSignInView = findViewById(R.id.llLoginView);
+        mProgressView = findViewById(R.id.login_signin_progress);
         //create broadcast receivers
         myReceiver = new SignInReceiver();
         myFilter = new IntentFilter(userRegisteredAction);
@@ -125,12 +126,14 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
 
         if(sharedPref.getBoolean(ActivitySettings.Pref_Keeper, false)){
             //TODO uncomment after debugging
+            log(TAG, "keep me log in is True");
             long id = sharedPref.getLong(ActivitySettings.Pref_User, 0);
             if(id!=0){
                 goToHome(id);
+                log("TAG", "user is valid");
+
             }
             //true
-            makeToast(mContext, "keep in in");
         }
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
@@ -157,8 +160,7 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
                     }
                     }
         });
-        mSignInView = findViewById(R.id.llLoginView);
-        mProgressView = findViewById(R.id.login_signin_progress);
+
     }
 
     private void signIn() {
@@ -476,6 +478,7 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
 
     private void setPreferences(long id) {
         editor.putInt(ActivitySettings.Pref_ReminderDays, 7);
+        editor.putInt(ActivitySettings.Pref_Currency_sp, 0);
         editor.putLong(ActivitySettings.Pref_User, id);
         editor.putBoolean(ActivitySettings.Pref_Keeper, true);
         editor.putString(ActivitySettings.Pref_Currency, ActivitySettings.getCurrency("NG"));

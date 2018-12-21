@@ -156,6 +156,8 @@ public class ActivitySettings extends LifecycleLoggingActivity {
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
                 editor.putInt(Pref_ReminderDays, Integer.valueOf(s.toString()));
+                
+
                 editor.commit();
             }
         });
@@ -224,7 +226,7 @@ public class ActivitySettings extends LifecycleLoggingActivity {
 
         }
         //TODO  set real value
-        spCurrency.setSelection(0);
+        spCurrency.setSelection(sharedPref.getInt(Pref_Currency_sp, 0));
 
     }
 

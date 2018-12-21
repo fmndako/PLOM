@@ -2,6 +2,7 @@ package ng.com.quickinfo.plom.View;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,14 +12,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import java.util.List;
 
+import ng.com.quickinfo.plom.ActivitySettings;
 import ng.com.quickinfo.plom.Model.Offset;
 import ng.com.quickinfo.plom.R;
+import ng.com.quickinfo.plom.Utils.Utilities;
 
 import static ng.com.quickinfo.plom.Utils.Utilities.dateToString1;
 
 
 public class OffsetAdapter extends BaseAdapter {
 
+    private SharedPreferences myPref;
+    private SharedPreferences.Editor editor;
+    String currency;
     Context context;
 
     List<Offset> offset;
@@ -33,6 +39,11 @@ public class OffsetAdapter extends BaseAdapter {
 
         this.context = context;
         this.offset = offset;
+        myPref = Utilities.MyPref.getSharedPref(context);
+
+        editor = Utilities.MyPref.getEditor();
+        currency = myPref.getString(ActivitySettings.Pref_Currency, "N");
+
     }
 
 
@@ -122,7 +133,7 @@ public class OffsetAdapter extends BaseAdapter {
         Offset offset = (Offset)getItem(position);
 
         //viewHolder.image.setImageResource(offset.getImage());
-        viewHolder.title.setText(offset.getAmount()+"");
+        viewHolder.title.setText(currency + offset.getAmount()+"");
         viewHolder.discription.setText(offset.getRemarks());
         viewHolder.date.setText(dateToString1(
                 offset.getDateOffset()));

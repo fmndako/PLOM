@@ -128,7 +128,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
     private SharedPreferences myPref;
     private SharedPreferences.Editor editor;
-
+    String currency;
     //loan and current offset
     private Loan mLoan;
     private Offset mOffset;
@@ -177,8 +177,9 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         setSupportActionBar(myToolbar);
 
         myPref = Utilities.MyPref.getSharedPref(mContext);
+
         editor = Utilities.MyPref.getEditor();
-        userEmail = myPref.getString("email", "null");
+        currency = myPref.getString(ActivitySettings.Pref_Currency, "N");
 
         //        ********LISTVIEW***********
         listview = (ExpandableHeightListView)findViewById(R.id.listview);
@@ -217,11 +218,11 @@ public class DetailActivity extends LifecycleLoggingActivity implements
                 };
                 listview.setAdapter(baseAdapter);
 
-                tvDetailOffsetTotalValue.setText(baseAdapter.getTotal()+"");
+                tvDetailOffsetTotalValue.setText(currency + baseAdapter.getTotal()+"");
                 if(listview.getCount() != 0){
 
                 llDetailOffsetBalance.setVisibility(View.VISIBLE);
-                tvDetailAmountBalanceValue.setText((mLoan.getAmount()- baseAdapter.getTotal())+ "");}
+                tvDetailAmountBalanceValue.setText(currency + (mLoan.getAmount()- baseAdapter.getTotal())+ "");}
 
 
 
@@ -263,7 +264,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
         if (mLoan != null) {
             makeToast(mContext, "Loan name"+mLoan.getName() + mLoan.getId());
-            tvDetailAmountValue.setText(mLoan.getAmount() + "");
+            tvDetailAmountValue.setText(currency + mLoan.getAmount() + "");
             //dates
             tvDetailDateTakenValue.setText(dateToString1(mLoan.getDateTaken()));
             //loan type
@@ -292,11 +293,11 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
             //offset
             loadRV(mLoan.getId());
-                if (mLoan.getClearStatus() != 0) {
 
-                    updateClearedStatus();
-                        }
-
+            //clear
+            if (mLoan.getClearStatus() != 0) {
+                updateClearedStatus();
+                 }
             }
     }
     //TODO separate concern
@@ -305,7 +306,8 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         tvDetailClearedStatusValue.setText(R.string.cleared_status_cleared);
         //change to date
         tvDetailDateClearedValue.setText(dateToString1(mLoan.getDateCleared()));
-        removeClearedMenuItem();
+        if (mMenu!=null){
+        removeClearedMenuItem();}
 
     }
 
@@ -458,15 +460,15 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         Intent smsIntent = new Intent(Intent.ACTION_VIEW);
         smsIntent.setType("vnd.android-dir/mms-sms");
         smsIntent.putExtra("address", mLoan.getNumber());
-        smsIntent.putExtra("sms_body", "body");
+        smsIntent.putExtra("sms_body", getMessage());
         startActivity(smsIntent);
     }
 
     private void startMailIntent() {
         Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                "mailto", "abc@gmail.com", null));
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Subject");
-        emailIntent.putExtra(Intent.EXTRA_TEXT, "Body");
+                "mailto", mLoan.getEmail(), null));
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Loan");
+        emailIntent.putExtra(Intent.EXTRA_TEXT, getMessage());
         startActivity(Intent.createChooser(emailIntent, "Send email..."));
     }
 
@@ -484,7 +486,9 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
         mMenu = menu;
         log(TAG, "menu created");
-
+        if(mLoan.getClearStatus()!=0){
+            removeClearedMenuItem();
+        }
         //cleared status (if cleared)
 
 
@@ -493,14 +497,13 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         return super.onCreateOptionsMenu(menu);
     }
 
-    //TODO remove menu if cleared
     public void removeClearedMenuItem(){
-        if (mMenu != null) {
+
             //remove clear action button and update
             mMenu.findItem(R.id.action_clear).setVisible(false);
             mMenu.findItem(R.id.action_update).setVisible(false);
             mMenu.findItem(R.id.action_offset).setVisible(false);
-        }
+
 
     }
 
@@ -514,7 +517,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
                 return true;
 
             case R.id.action_share:
-                startShareIntent();
+                shareText("Loan", getMessage());
 
                 return true;
             case R.id.action_offset:
@@ -536,8 +539,8 @@ public class DetailActivity extends LifecycleLoggingActivity implements
                 showDialogs(R.string.action_clear);
                 return true;
             case R.id.action_home:
-
-                startActivity(HomeIntent(this, HomeActivity.class, userEmail));
+                Intent intent = new Intent(this, HomeActivity.class);
+                intent.putExtra("id", mLoan.getUser_id());
                 return true;
             default:
                 // If we got here, the user's action was not recognized.
@@ -554,14 +557,13 @@ public class DetailActivity extends LifecycleLoggingActivity implements
     }
 
     // *************** share **********************8
-    public void startShareIntent() {
-        String subj = "Personal Loan Manager";
-        String body = "Amount N: " + mLoan.getAmount() + ", Date taken: " +
-                dateToString1(mLoan.getDateTaken()) + ", Promised Return Date: " +
-                dateToString1(mLoan.getDateToRepay());
-        shareText(subj, body);
 
-
+    public String getMessage(){
+        //include Amount in messaging
+        return "Amount: " + currency+mLoan.getAmount() + "\n"
+                +  "Date Taken: " + dateToString(mLoan.getDateTaken()) + "\n"
+                + "Promised to repay before " + dateToString1(mLoan.getDateToRepay()) +"\n"
+                + "\n\n" + "via PLOM App";
     }
 
     public void shareText(String subject, String body) {

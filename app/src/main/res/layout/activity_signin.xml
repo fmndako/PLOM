@@ -14,7 +14,8 @@
         android:layout_height="match_parent"
         android:gravity="bottom"
         android:paddingLeft="60dp"
-        android:paddingRight="60dp">
+        android:paddingRight="60dp"
+        android:orientation="horizontal">
         <!--progress bar-->
 
             <ProgressBar
