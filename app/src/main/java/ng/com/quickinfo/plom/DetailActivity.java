@@ -1,6 +1,5 @@
 package ng.com.quickinfo.plom;
 
-import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.BroadcastReceiver;
@@ -9,12 +8,16 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.Toolbar;
+import android.transition.Explode;
+import android.transition.Slide;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,7 +43,6 @@ import ng.com.quickinfo.plom.Utils.Utilities;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
 import ng.com.quickinfo.plom.View.OffsetAdapter;
 
-import static ng.com.quickinfo.plom.Utils.Utilities.HomeIntent;
 import static ng.com.quickinfo.plom.Utils.Utilities.dateToString;
 import static ng.com.quickinfo.plom.Utils.Utilities.dateToString1;
 import static ng.com.quickinfo.plom.Utils.Utilities.intentToLoan;
@@ -79,6 +81,8 @@ public class DetailActivity extends LifecycleLoggingActivity implements
     MyTextView tvDetailDateClearedValue;
     @BindView(R.id.ivDetailCall)
     ImageView ivDetailCall;
+    @BindView(R.id.ivImage)
+    ImageView ivImage;
     @BindView(R.id.ivDetailEmail)
     ImageView ivDetailEmail;
     @BindView(R.id.ivDetailMessage)
@@ -102,10 +106,23 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
     //Receivers
     DetailReceiver myReceiver;
+    IntentFilter intentFilter;
+
+    //TODO remove Notification receiver in production
     NotificationReceiver notificationReceiver;
 
-    IntentFilter offsetAddFilter;
+    // Extra name for the ID parameter
+    public static final String EXTRA_PARAM_ID = "detail:_id";
 
+
+    // View name of the header image. Used for activity scene transitions
+    public static final String VIEW_NAME_HEADER_IMAGE = "detail:header:image";
+
+    // View name of the header title. Used for activity scene transitions
+    public static final String VIEW_NAME_AMOUNT = "detail:amount";
+
+
+    //titles for filters
     public static final String loanInsertAction = "package ng.com.quickinfo.plom.LOAN_INSERTED";
     public static final String loanClearedAction = "package ng.com.quickinfo.plom.LOAN_CLEARED";
     public static final String loanUpdateAction = "package ng.com.quickinfo.plom.LOAN_EDITED";
@@ -145,6 +162,10 @@ public class DetailActivity extends LifecycleLoggingActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (canTransition()) {
+            //getWindow().setEnterTransition(new Slide().setDuration(600));
+            getWindow().setExitTransition(new Explode());
+        }
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
 
@@ -159,15 +180,15 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         //add filters
         notificationReceiver = new NotificationReceiver();
 
-        offsetAddFilter = new IntentFilter(offsetAddAction);
-        offsetAddFilter.addAction(offsetDeleteAction);
-        offsetAddFilter.addAction(offsetUpdateAction);
-        offsetAddFilter.addAction(loanDeleteAction);
-        offsetAddFilter.addAction(loanUpdateAction);
-        offsetAddFilter.addAction(loanClearedAction);
+        intentFilter = new IntentFilter(offsetAddAction);
+        intentFilter.addAction(offsetDeleteAction);
+        intentFilter.addAction(offsetUpdateAction);
+        intentFilter.addAction(loanDeleteAction);
+        intentFilter.addAction(loanUpdateAction);
+        intentFilter.addAction(loanClearedAction);
         //register
-        LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver, offsetAddFilter);
-        LocalBroadcastManager.getInstance(this).registerReceiver(notificationReceiver, offsetAddFilter);
+        LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver, intentFilter);
+        LocalBroadcastManager.getInstance(this).registerReceiver(notificationReceiver, intentFilter);
 
         //set loan view model
         mLoanViewModel = ViewModelProviders.of(this).get(LoanViewModel.class);
@@ -186,8 +207,18 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         //setlistener
 
         //get loan id from intent
-        long mLoanId = getIntent().getLongExtra("loan_id", 16L);
+        long mLoanId = getIntent().getLongExtra(EXTRA_PARAM_ID, 0L);
         // loan data observer
+
+        // BEGIN_INCLUDE(detail_set_view_name)
+        /**
+         * Set the name of the view's which will be transition to, using the static values above.
+         * This could be done in the layout XML, but exposing it via static variables allows easy
+         * querying from other Activities
+         */
+        ViewCompat.setTransitionName(ivImage, VIEW_NAME_HEADER_IMAGE);
+        ViewCompat.setTransitionName(tvDetailAmountValue, VIEW_NAME_AMOUNT);
+        // END_INCLUDE(detail_set_view_name)
         mLoanViewModel.getLoan(mLoanId).observe(this,
                 new Observer<Loan>()
         {
@@ -204,6 +235,11 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         });
         //loadRV(mLoanId);
     }
+
+    public boolean canTransition(){
+        return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP);
+    }
+
 
     private void loadRV(long id) {
         //loads the RV
@@ -299,6 +335,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
                 updateClearedStatus();
                  }
             }
+
     }
     //TODO separate concern
     public void updateClearedStatus() {

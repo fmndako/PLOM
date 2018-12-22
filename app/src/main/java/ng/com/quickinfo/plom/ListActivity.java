@@ -14,11 +14,16 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.transition.Fade;
+import android.transition.Slide;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -93,6 +98,14 @@ public class ListActivity extends LifecycleLoggingActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (canTransition()) {
+            // Apply activity transition
+
+            //getWindow().setEnterTransition(new Fade());
+
+
+            //getWindow().setExitTransition(new Fade());
+        }
         setContentView(R.layout.activity_list);
         ButterKnife.bind(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -133,19 +146,30 @@ public class ListActivity extends LifecycleLoggingActivity implements
 
     }
 
-    public void onHandlerInteraction(long loan_id) {
-        //my own listener created in the loanadapter class
-        startDetailActivity(loan_id);
+    public boolean canTransition(){
+        return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP);
     }
 
-    private void startDetailActivity(long loan_id) {
+    public void onHandlerInteraction(long loan_id, View view) {
+        //my own listener created in the loanadapter class
+
+        startDetailActivity(loan_id, view);
+    }
+
+    private void startDetailActivity(long loan_id, View view) {
         //starts detail activity
         Intent detailIntent = new Intent(this, DetailActivity.class);
-        detailIntent.putExtra("loan_id", loan_id);
-        startActivity(detailIntent);
+        detailIntent.putExtra(DetailActivity.EXTRA_PARAM_ID, loan_id);
+        //TODO starts a shared transition from list screen to detail screen
+        if(canTransition()){
+        initiateTransitionToDetailScreen(detailIntent, view);}
+        else{
+            startActivity(detailIntent);
+        }
     }
 
     private void addNewLoan() {
+        //starts add loan activity for result
         Intent intent = new Intent(this, AddLoanActivity.class);
         intent.putExtra("loantype", loanType);
         startActivityForResult(intent, NEW_LOAN_ACTIVITY_REQUEST_CODE);
@@ -288,6 +312,8 @@ public class ListActivity extends LifecycleLoggingActivity implements
         LocalBroadcastManager.getInstance(this).unregisterReceiver(ListReceiver);
     }
 
+    //""" listener that receives broadcast from repo database action completed
+
     public class ListReceiver extends BroadcastReceiver {
 
         @Override
@@ -303,4 +329,28 @@ public class ListActivity extends LifecycleLoggingActivity implements
         }
     }
 
+
+    //shared transition between List screen and Detail screen
+    // BEGIN_INCLUDE(start_activity)
+    /**
+     * Now create an {@link android.app.ActivityOptions} instance using the
+
+     */
+    public void initiateTransitionToDetailScreen(Intent intent, View view){
+    ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(
+            this,
+
+            // Now we provide a list of Pair items which contain the view we can transitioning
+            // from, and the name of the view it is transitioning to, in the launched activity
+//            new Pair<View, String>(view.findViewById(R.id.imageview_item),
+//                    DetailActivity.VIEW_NAME_HEADER_IMAGE),
+            new Pair<View, String>(view.findViewById(R.id.ivLoanType),
+                    DetailActivity.VIEW_NAME_HEADER_IMAGE),
+            new Pair<View, String>(view.findViewById(R.id.tvLRVAmount),
+                    DetailActivity.VIEW_NAME_AMOUNT));
+
+    // Now we can start the Activity, providing the activity options as a bundle
+        ActivityCompat.startActivity(this, intent, activityOptions.toBundle());
+    // END_INCLUDE(start_activity)
+    }
 }

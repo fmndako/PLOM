@@ -55,9 +55,15 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
         currency = sharedPref.getString("currency","N" );
         reminderDays = sharedPref.getInt("reminderDays", 7);
 
-
+        //TODO in case id doesnt work, return to viewHolder
+        if (mContext instanceof OnHandlerInteractionListener) {
+            mListener = (OnHandlerInteractionListener) mContext;
+        } else {
+            throw new RuntimeException(mContext.toString()
+                    + " must implement OnHandlerInteractionListener");
+        }
         return new LoanViewHolder(itemView);
-        //TODO oncreate viewholder
+
 
 
     }
@@ -152,19 +158,12 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
             @Override
             public void onClick(View v){
                 Utilities.log(TAG, "onclick name");
-                startDetailActivity(mLoans.get(position).getId());
+                startDetailActivity(mLoans.get(position).getId(), v);
 
             }
                                                });
 
-        //instantiate OnHandlerInteraction(created by me): useless for now.
-        //as an example of a listener
-        if (mContext instanceof OnHandlerInteractionListener) {
-            mListener = (OnHandlerInteractionListener) mContext;
-        } else {
-            throw new RuntimeException(mContext.toString()
-                    + " must implement OnHandlerInteractionListener");
-        }
+
 
     }
 
@@ -178,6 +177,9 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
         //for active loans with cleared status false i.e 0
         mLoans = loans;
         notifyDataSetChanged();
+        //instantiate OnHandlerInteraction(created by me): useless for now.
+        //as an example of a listener
+
 
     }
 
@@ -194,12 +196,12 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
     }
 
     //startactivity
-    private void startDetailActivity(long loan_id){
+    private void startDetailActivity(long loan_id, View v){
 
 
         if (mListener != null) {
             //TODO include total lends, borrows and total.
-        mListener.onHandlerInteraction(loan_id);
+        mListener.onHandlerInteraction(loan_id, v);
         }
 
     }
@@ -233,6 +235,6 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
 
     public interface OnHandlerInteractionListener{
         //interface to handle interation with the activity
-        public void onHandlerInteraction(long loan_id);
+        public void onHandlerInteraction(long loan_id, View view);
     }
 }

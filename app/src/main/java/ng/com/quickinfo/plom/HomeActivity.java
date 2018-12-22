@@ -1,16 +1,24 @@
 package ng.com.quickinfo.plom;
 
+import android.app.ActivityOptions;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
+import android.transition.Explode;
+import android.transition.Fade;
+import android.transition.Slide;
+import android.transition.Transition;
+import android.transition.TransitionValues;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
@@ -117,6 +125,15 @@ public class HomeActivity extends LifecycleLoggingActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+        if (canTransition()) {
+            // Apply activity transition
+
+            getWindow().setEnterTransition(new Slide().setDuration(900));
+
+
+            getWindow().setExitTransition(new Slide().setDuration(600));
+        }
         setContentView(R.layout.activity_home_inprogress);
         ButterKnife.bind(this);
 
@@ -141,6 +158,10 @@ public class HomeActivity extends LifecycleLoggingActivity {
         id = getIntent().getLongExtra("id", 0);
         //makeToast(mContext, id + "");
         showProgress(true, progressBar, mContext);
+
+        // inside your activity (if you did not enable transitions in your theme)
+        // Check if we're running on Android 5.0 or higher
+
        //user live datat
         UserViewModel userViewModel = ViewModelProviders.of(this).get(
                 UserViewModel.class
@@ -176,9 +197,17 @@ public class HomeActivity extends LifecycleLoggingActivity {
         listIntent.putExtra("user_id", id);
         //listIntent.putExtra("email", mUser.getEmail());
         listIntent.putExtra("loanType", selection);
-        startActivity(listIntent);
+        if(canTransition()){
+        startActivity(listIntent,
+                ActivityOptions.makeSceneTransitionAnimation(this).toBundle());}
+        else{startActivity(listIntent);
+
+        }
     }
 
+    public boolean canTransition(){
+        return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP);
+    }
 
     private void getLoans() {
         //observer
