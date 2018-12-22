@@ -19,7 +19,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -427,6 +426,7 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
 
         intent.putExtra("id", id );
         editor.putLong(ActivitySettings.Pref_User, id);
+        editor.putBoolean(ActivitySettings.Pref_Keeper, true);
         editor.commit();
         makeToast(mContext, "email changed; editor edited");
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -478,7 +478,7 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
 
     private void setPreferences(long id) {
         editor.putInt(ActivitySettings.Pref_ReminderDays, 7);
-        editor.putInt(ActivitySettings.Pref_Currency_sp, 0);
+        editor.putInt(ActivitySettings.Pref_Currency_Value, 0);
         editor.putLong(ActivitySettings.Pref_User, id);
         editor.putBoolean(ActivitySettings.Pref_Keeper, true);
         editor.putString(ActivitySettings.Pref_Currency, ActivitySettings.getCurrency("NG"));

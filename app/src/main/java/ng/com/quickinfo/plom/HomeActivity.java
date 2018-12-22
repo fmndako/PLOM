@@ -8,21 +8,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomNavigationView;
-import android.transition.Explode;
-import android.transition.Fade;
 import android.transition.Slide;
-import android.transition.Transition;
-import android.transition.TransitionValues;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -38,13 +30,14 @@ import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
 import ng.com.quickinfo.plom.ViewModel.UserViewModel;
 
 import static ng.com.quickinfo.plom.Utils.FilterUtils.activeLoans;
-import static ng.com.quickinfo.plom.Utils.FilterUtils.dateFilterList;
 import static ng.com.quickinfo.plom.Utils.FilterUtils.dateIsDue;
 import static ng.com.quickinfo.plom.Utils.FilterUtils.dateIsDueSoon;
 import static ng.com.quickinfo.plom.Utils.FilterUtils.dateIsOverDue;
 import static ng.com.quickinfo.plom.Utils.FilterUtils.getItemCount;
 import static ng.com.quickinfo.plom.Utils.FilterUtils.getTotalSum;
+import static ng.com.quickinfo.plom.Utils.FilterUtils.isDueSoon;
 import static ng.com.quickinfo.plom.Utils.FilterUtils.isOverDue;
+import static ng.com.quickinfo.plom.Utils.FilterUtils.isToday;
 import static ng.com.quickinfo.plom.Utils.Utilities.log;
 import static ng.com.quickinfo.plom.Utils.Utilities.makeToast;
 import static ng.com.quickinfo.plom.Utils.Utilities.showProgress;
@@ -134,9 +127,9 @@ public class HomeActivity extends LifecycleLoggingActivity {
             getWindow().setEnterTransition(new Slide().setDuration(900));
 
 
-            //getWindow().setExitTransition(new Slide().setDuration(600));
+            getWindow().setExitTransition(new Slide());
         }
-        setContentView(R.layout.activity_home_inprogress);
+        setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
 
         //handle nav
@@ -194,10 +187,8 @@ public class HomeActivity extends LifecycleLoggingActivity {
 
     private void viewLoans(int selection) {
         //go to listActivity
-        //TODO uncomment all below
         Intent listIntent = new Intent(this, ListActivity.class);
         listIntent.putExtra("user_id", id);
-        //listIntent.putExtra("email", mUser.getEmail());
         listIntent.putExtra("loanType", selection);
         if(canTransition()){
         startActivity(listIntent,
@@ -246,8 +237,7 @@ public class HomeActivity extends LifecycleLoggingActivity {
                 int deficit = borrowTotal - lendTotal;
                 int loanSum = borrowTotal + lendTotal;
 
-                //TODO
-                //TODO
+
                 tvActiveCount.setText(activeCount+ " Active Loans");
                 //tvCountActive.setText(String.valueOf(allCount));
 
@@ -293,11 +283,7 @@ public class HomeActivity extends LifecycleLoggingActivity {
                     log(TAG, "Over Due:" + overDueCount + ":" + overDueTotal);
                 }
 
-                //TODO update other UI
-                Date date = Calendar.getInstance().getTime();
-                log(TAG, Utilities.dateToString(date));
-
-            }
+                }
         });
         //stop progress bar
         showProgress(false, progressBar, mContext);
@@ -319,9 +305,7 @@ public class HomeActivity extends LifecycleLoggingActivity {
                 viewLoans(2);
                 break;
             case R.id.navigation_settings:
-                //TODO testing out filters
-                testingDateFilters();
-                //startActivity(new Intent(HomeActivity.this, ActivitySettings.class));
+                startActivity(new Intent(HomeActivity.this, ActivitySettings.class));
 
                 break;
             case R.id.navigation_notifications:
@@ -348,18 +332,39 @@ public class HomeActivity extends LifecycleLoggingActivity {
 
     private void testingDateFilters() {
         //TODO remove
+        makeToast(mContext, "testing");
         String[] dates = { "01/01/2018", "11/11/2018", "21/12/2018",
                 "22/12/2018", "23/12/2018", "24/12/2018", "25/12/2018",
                 "28/12/2018","29/12/2018",
                 "30/12/2018", "31/12/2018", "01/01/2019"};
 
+        log(TAG, "isDueToday: date is today");
+        for(String dateS: dates){
+            Date date = stringToDate(dateS);
+
+            log(TAG, dateS + ": "+isToday(date) + "");
+
+
+        }
+
         log(TAG, "overdue: Today is after the date of repayment");
         for(String dateS: dates){
             Date date = stringToDate(dateS);
 
-            log(TAG, isOverDue(date) + "");
+            log(TAG, dateS + ": "+isOverDue(date) + "");
 
 
         }
+
+        log(TAG, "duesoon: Today before the date of repayment");
+        for(String dateS: dates){
+            Date date = stringToDate(dateS);
+
+            log(TAG, dateS + ": "+isDueSoon(date, 7) + "");
+
+
+        }
+
+
     }
 }

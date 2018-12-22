@@ -48,27 +48,24 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="10dp">
-
+                    <LinearLayout
+                        android:id="@+id/llloantype"
+                        android:layout_width="120px"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:background="@drawable/rectangle_gray"
+                        android:orientation="vertical"
+                        android:padding="0.2dp">
                     <ImageView
                         android:id="@+id/ivLoanType"
-                        android:layout_width="120px"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:background="@drawable/rectangle_giving"
                         android:gravity="center"
                         app:srcCompat="@drawable/giving" />
 
-
-                    <ImageView
-                        android:id="@+id/ivLoanTypeGone"
-                        android:layout_width="120px"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@drawable/rectangle_borrowing"
-                        android:gravity="center"
-                        android:visibility="gone"
-                        app:srcCompat="@drawable/borrowing" />
-
+                    </LinearLayout>
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -84,9 +81,9 @@
                             android:layout_height="match_parent"
                             android:maxLines="1"
                             android:text="Lemon peel Base ball"
-                            android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:textColor="@color/colorblue"
+                            android:textColor="@color/button_signin"
                             android:textSize="12sp"
+
 
                             android:textStyle="bold" />
 

@@ -51,15 +51,24 @@
             android:focusableInTouchMode="true"
             android:orientation="vertical">
 
-
-            <ImageView
-                android:id="@+id/ivImage"
+            <LinearLayout
+                android:id="@+id/llMainLogo"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_gravity="center"
+                android:background="@drawable/rectangle_gray"
+                android:orientation="vertical"
+                android:padding="0.2dp">
 
-                android:background="@drawable/rectangle_main_logo"
-                app:srcCompat="@drawable/lending" />
+                <ImageView
+                    android:id="@+id/ivImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+
+                    android:background="@drawable/rectangle_main_logo"
+                    app:srcCompat="@drawable/lending" />
+            </LinearLayout>
 
 
             <LinearLayout
@@ -516,9 +525,8 @@
 
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Repayment Details"
-                        android:textColor="@color/colorAccent"
-                                                />
+                        android:text="Repayment plan"
+                        android:textColor="@color/white" />
 
                 </LinearLayout>
 
@@ -649,7 +657,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Clear Status"
-                        android:textColor="@color/colorAccent"
+                        android:textColor="@color/white"
 
                         />
 
@@ -923,7 +931,7 @@
                         android:layout_height="wrap_content"
                         android:padding="16dp"
                         android:text="OFFSET DETAILS"
-                        android:textColor="@color/colorAccent"
+                        android:textColor="@color/white"
                         android:textSize="13dp" />
 
                     <!--*********Offser total**********-->
@@ -954,7 +962,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="0.5"
                             android:text="0 $"
-                            android:textColor="@color/colorTex"
+                            android:textColor="@color/white"
 
                             />
                     </LinearLayout>

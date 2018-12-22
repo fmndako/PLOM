@@ -103,11 +103,10 @@ public class OffsetAdapter extends BaseAdapter {
 
             viewHolder = new ViewHolder();
 
-            viewHolder.image = (ImageView)convertView.findViewById(R.id.image);
             viewHolder.title = (TextView)convertView.findViewById(R.id.tvOffsetAmount);
             viewHolder.discription = (TextView)convertView.findViewById(R.id.tvOffsetRemarks);
             viewHolder.date = (TextView)convertView.findViewById(R.id.tvOffsetDate);
-
+            //viewHolder.image = (ImageView)convertView.findViewById(R.id.image);
 
 
 
@@ -137,7 +136,7 @@ public class OffsetAdapter extends BaseAdapter {
         viewHolder.discription.setText(offset.getRemarks());
         viewHolder.date.setText(dateToString1(
                 offset.getDateOffset()));
-
+       // viewHolder.image.setImageResource(R.drawable.lending);
 
 
 
@@ -148,10 +147,10 @@ public class OffsetAdapter extends BaseAdapter {
     }
 
     private class ViewHolder{
-        ImageView image;
         TextView title;
         TextView discription;
         TextView date;
+        //ImageView image;
 
 
 

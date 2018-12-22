@@ -13,12 +13,10 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.Switch;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -28,9 +26,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-import java.util.ArrayList;
 import java.util.Currency;
-import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
@@ -87,7 +83,7 @@ public class ActivitySettings extends LifecycleLoggingActivity {
 
     public static String Pref_ReminderDays = "ng.com.quickinfo.PLOM.reminder_days";
     public static String Pref_Currency = "ng.com.quickinfo.PLOM.currency";
-    public static String Pref_Currency_sp = "ng.com.quickinfo.PLOM.currency";
+    public static String Pref_Currency_Value = "ng.com.quickinfo.PLOM.currency.value";
     public static String Pref_Notification = "ng.com.quickinfo.PLOM.notification";
     boolean keepMeIn;
     boolean notification;
@@ -155,8 +151,9 @@ public class ActivitySettings extends LifecycleLoggingActivity {
 
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
-                editor.putInt(Pref_ReminderDays, Integer.valueOf(s.toString()));
-                
+                if(!s.toString().isEmpty()) {
+                    editor.putInt(Pref_ReminderDays, Integer.valueOf(s.toString()));
+                }
 
                 editor.commit();
             }
@@ -189,7 +186,7 @@ public class ActivitySettings extends LifecycleLoggingActivity {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 //setCurrency(i);
                 editor.putString(Pref_Currency, getCurrency(array[i]));
-                editor.putInt(Pref_Currency_sp, i);
+                editor.putInt(Pref_Currency_Value, i);
                 editor.commit();
                 makeToast(mContext, getCurrency(array[i]));
 
@@ -226,7 +223,7 @@ public class ActivitySettings extends LifecycleLoggingActivity {
 
         }
         //TODO  set real value
-        spCurrency.setSelection(sharedPref.getInt(Pref_Currency_sp, 0));
+        spCurrency.setSelection(sharedPref.getInt(Pref_Currency_Value, 0));
 
     }
 
@@ -295,23 +292,17 @@ public class ActivitySettings extends LifecycleLoggingActivity {
         startActivity(new Intent(this, SignInActivity.class));
     }
     private void deleteAccount() {
-        if(!mUser.getUserName().isEmpty()){
-            deleteUser();
-            logOutUser();
+        DialogFragment deleteDialog = new DeleteDialog();
+        deleteDialog.show(getSupportFragmentManager(), "DeleteDialog");
 
-        }else{
-            //google delete account
-            revokeAccess();
-            deleteUser();
-            logOutUser();
 
-        }
 
     }
 
     private void deleteUser() {
         new UserRepo.UserAsyncTask(mUserViewModel,
                 HomeActivity.userDeleteAction).execute(mUser);
+
     }
 
     public void getUser() {
@@ -327,11 +318,32 @@ public class ActivitySettings extends LifecycleLoggingActivity {
 
     }
 
-//"""""""""listeners
-public void onSignUp(DialogFragment dialog, User user){
+//"""""""""listeners *********************8
+
+    public void onDialogPositiveClick(DialogFragment dialog, int action){
+
+        if(!mUser.getUserName().isEmpty()){
+            deleteUser();
+            logOutUser();
+
+        }else{
+            //google delete user
+            revokeAccess();
+            deleteUser();
+            logOutUser();
+
+        }
+    }
+    public void onDialogNegativeClick(DialogFragment dialog, int action){
+        dialog.dismiss();
+    }
+
+    public void onSignUp(DialogFragment dialog, User user){
 
         //nothing
 }
+
 }
+
 
 

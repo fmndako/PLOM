@@ -154,15 +154,23 @@
                         android:textSize="14dp" />
 
                 </LinearLayout>
-
-                <ImageView
+                <!--TODO remove tryying to add border line to image-->
+                <LinearLayout
+                    android:id="@+id/llMainLogo"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
+                    android:padding="0.2dp"
+                    android:background="@drawable/rectangle_gray"
+                    android:orientation="vertical">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+
                     android:background="@drawable/rectangle_main_logo"
 
                     android:gravity="bottom"
                     app:srcCompat="@drawable/lending" />
-
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/llLends"

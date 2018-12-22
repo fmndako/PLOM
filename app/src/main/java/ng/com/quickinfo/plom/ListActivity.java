@@ -3,6 +3,7 @@ package ng.com.quickinfo.plom;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.BroadcastReceiver;
@@ -87,6 +88,8 @@ public class ListActivity extends LifecycleLoggingActivity implements
 
     //context
     private Context mContext;
+    //TODO remive
+    Activity activity;
     //initiate viewmodel
     LoanViewModel mLoanViewModel;
     private long mUserId;
@@ -121,6 +124,7 @@ public class ListActivity extends LifecycleLoggingActivity implements
         mUserId = sharedPref.getLong(ActivitySettings.Pref_User, 1);
         loanType = getIntent().getIntExtra("loanType", 1);
 
+        activity = this;
 
 
         //register receiver

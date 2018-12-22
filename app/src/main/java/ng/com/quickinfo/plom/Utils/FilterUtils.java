@@ -11,6 +11,7 @@ import ng.com.quickinfo.plom.Model.Loan;
 import static android.service.autofill.Validators.or;
 import static ng.com.quickinfo.plom.Utils.Utilities.dateToString;
 import static ng.com.quickinfo.plom.Utils.Utilities.log;
+import static ng.com.quickinfo.plom.Utils.Utilities.stringToDate;
 
 public class FilterUtils {
 
@@ -158,26 +159,23 @@ public class FilterUtils {
     //time filter helper functions
 
     public static boolean isDueSoon(Date date,  int reminderDays){
-        //returns true if date is before today and after reminder number of days
+        //returns true if date is after today and and before date + reminder number of days
         Date today = Calendar.getInstance().getTime();
-        Date daysAgo = new Date(today.getTime() - (reminderDays*24*60*60*1000));
+        Date daysAgo = new Date(today.getTime() + (reminderDays*24*60*60*1000));
 
 
         Calendar calToday = Calendar.getInstance();
         Calendar calRepay = Calendar.getInstance();
         calToday.setTime(today);
         calRepay.setTime(date);
-
-
-        return (date.before(today) && date.after(daysAgo));
-
-
-    }
+        //log("HomeActivity:", dateToString(daysAgo));
+        return (today.before(date) && date.before(daysAgo) );
+           }
     public static boolean isOverDue(Date date){
-        //returns true if date of repayment is after today
-        //TODO current testing
+        //returns true is loan is over due i.e date of repayment has passed
+        //- today is ahead of date of repayment
         log("Date", dateToString(date) +" : " + Calendar.getInstance().getTime());
-        return (Calendar.getInstance().getTime().after(date));
+        return (Calendar.getInstance().getTime().after(date)) && !isToday(date);
     }
 
 

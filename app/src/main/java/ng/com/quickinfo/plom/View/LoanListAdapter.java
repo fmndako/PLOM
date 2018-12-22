@@ -15,6 +15,7 @@ import android.widget.TextView;
 import java.util.Date;
 import java.util.List;
 
+import ng.com.quickinfo.plom.ActivitySettings;
 import ng.com.quickinfo.plom.Model.Loan;
 import ng.com.quickinfo.plom.R;
 import ng.com.quickinfo.plom.Utils.FilterUtils;
@@ -58,8 +59,8 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
         //shared pref
         sharedPref = Utilities.MyPref.getSharedPref(mContext);
         editor = sharedPref.edit();
-        currency = sharedPref.getString("currency","N" );
-        reminderDays = sharedPref.getInt("reminderDays", 7);
+        currency = sharedPref.getString(ActivitySettings.Pref_Currency,"N" );
+        reminderDays = sharedPref.getInt(ActivitySettings.Pref_ReminderDays, 7);
 
         //TODO in case id doesnt work, return to viewHolder
         if (mContext instanceof OnHandlerInteractionListener) {
@@ -90,7 +91,8 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
                 holder.remarksView.setText(loan.getRemarks());
             }
             //offset balance
-            if(loan.getOffset()!=0){
+            if(loan.getOffset()==10){
+
                 //get)ffsetTotal - AmountgetoffsetTotal -ge
                 int offsets = getOffsetTotal(loan.getId());
                 holder.balanceView.setText(
@@ -101,11 +103,10 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
 
             //loantype
             if(loan.getLoanType()!=0){
-                holder.borrowView.setVisibility(View.VISIBLE);
-                holder.lendView.setVisibility(View.GONE);
+                holder.lendView.setImageResource(R.drawable.borrowing);
             }else{
-                holder.borrowView.setVisibility(View.GONE);
-                holder.lendView.setVisibility(View.VISIBLE);
+                holder.lendView.setImageResource(R.drawable.giving);
+                //Picasso.with(mContext).load(person.getUri()).placeholder(R.mipmap.ic_launcher).into(holder.personImageImgV);
 
             }
 
@@ -230,7 +231,7 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
 
     class LoanViewHolder extends RecyclerView.ViewHolder {
         private TextView nameView, amountView,  dateTakenView, commentView, remarksView, balanceView;
-        private ImageView borrowView, lendView, notifyOn, notifyOff;
+        private ImageView  lendView, notifyOn, notifyOff;
         private LinearLayout llClear, llNotify;
 
         private LoanViewHolder(View itemView) {
@@ -243,7 +244,6 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
             remarksView = itemView.findViewById(R.id.tvLRVRemarks);
 
 
-            borrowView = itemView.findViewById(R.id.ivLoanTypeGone);
             lendView = itemView.findViewById(R.id.ivLoanType);
             notifyOn= itemView.findViewById(R.id.ivLRVNotifyOn);
             notifyOff = itemView.findViewById(R.id.ivLRVNotifyOff);

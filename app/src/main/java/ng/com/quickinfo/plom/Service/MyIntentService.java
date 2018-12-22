@@ -18,6 +18,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 
+import java.util.Date;
 import java.util.List;
 
 import ng.com.quickinfo.plom.ActivitySettings;
@@ -30,6 +31,9 @@ import ng.com.quickinfo.plom.Utils.FilterUtils;
 import ng.com.quickinfo.plom.Utils.Utilities;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
 
+import static ng.com.quickinfo.plom.Utils.FilterUtils.isDueSoon;
+import static ng.com.quickinfo.plom.Utils.FilterUtils.isOverDue;
+import static ng.com.quickinfo.plom.Utils.FilterUtils.isToday;
 import static ng.com.quickinfo.plom.Utils.Utilities.log;
 
 /**
@@ -52,7 +56,7 @@ public class MyIntentService extends IntentService {
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
     long mUserId;
-    LoanViewModel loanViewModel;
+    List<Loan> dueLoans;
     NotificationManagerCompat notificationManager;
 
     @Override
@@ -71,35 +75,67 @@ public class MyIntentService extends IntentService {
 
 
 
+            Boolean notify = true;
+            //if user is not logout and notification is on then notify else stop service
             if(mUserId!=0 && sharedPref.getBoolean(ActivitySettings.Pref_Notification, true)) {
                 LoanRepo repo = new LoanRepo(this.getApplication());
 
-                List<Loan> dueLoans = FilterUtils.Notifications(
+                dueLoans = FilterUtils.Notifications(
                         repo.getLoans(mUserId));
+
                 if (dueLoans.size() > 0) {
                     count = dueLoans.size();
-                }
-            }
-            else{stopSelf();}
 
+                }else{notify = false;}
+            }
+            else{notify = false;}
+
+            if(!notify){stopSelf();}
 
 
             //then start notification
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = getResources().getString(R.string.channel_name);
-            String description = getResources().getString(R.string.channel_description);
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription(description);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);}
-        startNotification(notificationManager);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                CharSequence name = getResources().getString(R.string.channel_name);
+                String description = getResources().getString(R.string.channel_description);
+                int importance = NotificationManager.IMPORTANCE_DEFAULT;
+                NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+                channel.setDescription(description);
+                // Register the channel with the system; you can't change the importance
+                // or other notification behaviors after this
+                NotificationManager notificationManager = getSystemService(NotificationManager.class);
+                notificationManager.createNotificationChannel(channel);
+                }
+            //startNotification(notificationManager);
+
+            //get currency and also reminder days from pref
+            String currency = sharedPref.getString(ActivitySettings.Pref_Currency, "N");
+            int reminderDays = sharedPref.getInt(ActivitySettings.Pref_ReminderDays, 7);
+            for (Loan loan: dueLoans){
+                if (loan.getNotify()!=0){
+                    String comment= "";
+                    Date date = loan.getDateToRepay();
+                    if(isToday(date)){
+                        comment = "Due Today: ";
+
+                    }
+                    else if (isDueSoon(date, reminderDays)){
+                        comment = "Due very soon: ";
+                    }
+                    else if (isOverDue(date)){
+                        comment = "Over due: ";
+
+                    }
+                    // notificationId is a unique int for each notification that you must define
+                    NotificationCompat.Builder mBuilder = sendNotification(this, loan.getName(), comment + currency + loan.getAmount());
+                    notificationManager.notify(Integer.valueOf(loan.getId()+""), mBuilder.build());
+
+                }
+
+            }
 
 
-
-    }}
+        }
+    }
 
 
     private void startNotification(NotificationManagerCompat notificationManager ) {

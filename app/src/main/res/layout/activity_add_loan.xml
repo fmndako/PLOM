@@ -49,6 +49,28 @@
             >
 
             <!--*********contact discription**********-->
+            <LinearLayout
+
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@color/detail_gray"
+                >
+
+                <customfonts.MyTextView
+                    android:id="@+id/tvContact"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Contacts"
+                    android:textColor="@color/white"
+
+                    />
+
+            </LinearLayout>
 
 
             <!--name-->
@@ -209,8 +231,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Loan Details"
-                    android:textColor="@color/colorAccent"
-                    />
+                    android:textColor="@color/white" />
 
             </LinearLayout>
 
@@ -361,8 +382,8 @@
 
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Repayment Details"
-                        android:textColor="@color/colorAccent"
+                        android:text="Repayment plan"
+                        android:textColor="@color/white"
 
                         />
 
@@ -487,27 +508,23 @@
         </LinearLayout>
 
             <LinearLayout
-
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
                 android:layout_marginTop="16dp"
-                android:orientation="horizontal">
+                android:orientation="vertical">
+
+
 
                 <customfonts.MyTextView
                     android:id="@+id/signUpBtn"
                     style="@style/AppTheme.Buttons"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:padding="16dp"
-                    android:text="@string/submit"
-                    android:textColor="#fff"
-                    android:textSize="16dp" />
-            </LinearLayout>
-        </LinearLayout>
+                    android:layout_weight="1"
+                    android:text="ADD" />
+
+
+            </LinearLayout>        </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
 

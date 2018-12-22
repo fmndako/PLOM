@@ -305,9 +305,12 @@ public class DetailActivity extends LifecycleLoggingActivity implements
             tvDetailDateTakenValue.setText(dateToString1(mLoan.getDateTaken()));
             //loan type
             if (mLoan.getLoanType() != 0) {
+                ivImage.setImageResource(R.drawable.borrowing);
                 tvDetailLoanTypeValue.setText(R.string.loan_type_borrow);
                 tvDetailLoanTypeValue.setBackground(
                         ContextCompat.getDrawable(mContext, R.drawable.rectangle_red));
+            }else{
+                ivImage.setImageResource(R.drawable.giving);
             }
             //personal details
             tvDetailNameValue.setText(mLoan.getName());
@@ -325,7 +328,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
             if(mLoan.getNotify()==0){
                 sDetailNotify.setChecked(false);
 
-            }
+            }else{sDetailNotify.setChecked(true);}
 
             //offset
             loadRV(mLoan.getId());
