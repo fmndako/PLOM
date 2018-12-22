@@ -6,6 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -41,6 +43,10 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
 
     //interface to handle interaction with activity
     OnHandlerInteractionListener mListener;
+
+    //transition
+    // Allows to remember the last item shown on screen
+    private int lastPosition = -1;
 
     public LoanListAdapter(Context context) {
         mContext = context;
@@ -143,7 +149,7 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
                     holder.notifyOn.setVisibility(View.GONE);
 
             }
-
+            setAnimation(holder.itemView, position);
 
         } else {
             // Covers the case of data not being ready yet.
@@ -166,7 +172,16 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
 
 
     }
-
+    private void setAnimation(View viewToAnimate, int position)
+    {
+        // If the bound view wasn't previously displayed on screen, it's animated
+        if (position > lastPosition)
+        {
+            Animation animation = AnimationUtils.loadAnimation(mContext, android.R.anim.slide_in_left);
+            viewToAnimate.startAnimation(animation);
+            lastPosition = position;
+        }
+    }
     private int getOffsetTotal(long id) {
         return 1;
     }
@@ -205,6 +220,13 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
         }
 
     }
+
+    public void onViewDetachedFromWindow(LoanViewHolder holder)
+    {
+        ((LoanViewHolder)holder).itemView.clearAnimation();
+    }
+
+
 
     class LoanViewHolder extends RecyclerView.ViewHolder {
         private TextView nameView, amountView,  dateTakenView, commentView, remarksView, balanceView;

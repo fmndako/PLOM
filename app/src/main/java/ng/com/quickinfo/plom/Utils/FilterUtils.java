@@ -13,6 +13,8 @@ import static ng.com.quickinfo.plom.Utils.Utilities.dateToString;
 import static ng.com.quickinfo.plom.Utils.Utilities.log;
 
 public class FilterUtils {
+
+
     //search
     public static List<Loan> searchLoans(List<Loan> loans, String query){
         List<Loan> filterLoans = new ArrayList<>();
@@ -173,7 +175,7 @@ public class FilterUtils {
     }
     public static boolean isOverDue(Date date){
         //returns true if date of repayment is after today
-        //TODO logic wrong
+        //TODO current testing
         log("Date", dateToString(date) +" : " + Calendar.getInstance().getTime());
         return (Calendar.getInstance().getTime().after(date));
     }

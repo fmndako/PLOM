@@ -98,14 +98,7 @@ public class ListActivity extends LifecycleLoggingActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (canTransition()) {
-            // Apply activity transition
 
-            //getWindow().setEnterTransition(new Fade());
-
-
-            //getWindow().setExitTransition(new Fade());
-        }
         setContentView(R.layout.activity_list);
         ButterKnife.bind(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

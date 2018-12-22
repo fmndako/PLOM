@@ -44,9 +44,11 @@ import static ng.com.quickinfo.plom.Utils.FilterUtils.dateIsDueSoon;
 import static ng.com.quickinfo.plom.Utils.FilterUtils.dateIsOverDue;
 import static ng.com.quickinfo.plom.Utils.FilterUtils.getItemCount;
 import static ng.com.quickinfo.plom.Utils.FilterUtils.getTotalSum;
+import static ng.com.quickinfo.plom.Utils.FilterUtils.isOverDue;
 import static ng.com.quickinfo.plom.Utils.Utilities.log;
 import static ng.com.quickinfo.plom.Utils.Utilities.makeToast;
 import static ng.com.quickinfo.plom.Utils.Utilities.showProgress;
+import static ng.com.quickinfo.plom.Utils.Utilities.stringToDate;
 
 public class HomeActivity extends LifecycleLoggingActivity {
     @BindView(R.id.progressBar)
@@ -132,7 +134,7 @@ public class HomeActivity extends LifecycleLoggingActivity {
             getWindow().setEnterTransition(new Slide().setDuration(900));
 
 
-            getWindow().setExitTransition(new Slide().setDuration(600));
+            //getWindow().setExitTransition(new Slide().setDuration(600));
         }
         setContentView(R.layout.activity_home_inprogress);
         ButterKnife.bind(this);
@@ -317,7 +319,9 @@ public class HomeActivity extends LifecycleLoggingActivity {
                 viewLoans(2);
                 break;
             case R.id.navigation_settings:
-                startActivity(new Intent(HomeActivity.this, ActivitySettings.class));
+                //TODO testing out filters
+                testingDateFilters();
+                //startActivity(new Intent(HomeActivity.this, ActivitySettings.class));
 
                 break;
             case R.id.navigation_notifications:
@@ -339,6 +343,23 @@ public class HomeActivity extends LifecycleLoggingActivity {
             case R.id.llOverDue:
                 viewLoans(6);
                 break;
+        }
+    }
+
+    private void testingDateFilters() {
+        //TODO remove
+        String[] dates = { "01/01/2018", "11/11/2018", "21/12/2018",
+                "22/12/2018", "23/12/2018", "24/12/2018", "25/12/2018",
+                "28/12/2018","29/12/2018",
+                "30/12/2018", "31/12/2018", "01/01/2019"};
+
+        log(TAG, "overdue: Today is after the date of repayment");
+        for(String dateS: dates){
+            Date date = stringToDate(dateS);
+
+            log(TAG, isOverDue(date) + "");
+
+
         }
     }
 }
