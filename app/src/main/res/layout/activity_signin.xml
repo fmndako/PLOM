@@ -18,13 +18,14 @@
         android:orientation="horizontal">
         <!--progress bar-->
 
-            <ProgressBar
-                android:id="@+id/login_signin_progress"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_centerHorizontal="true"
-                android:layout_centerInParent="true"
-                android:visibility="gone" />
+        <ProgressBar
+            android:id="@+id/login_signin_progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="300dp"
+            android:visibility="gone" />
 
         <!--login form-->
         <LinearLayout
@@ -170,15 +171,18 @@
                     android:text="Sign in with google"
                     android:layout_gravity="left"
                      />
+
                 <TextView
                     android:id="@+id/signup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
 
+                    android:letterSpacing="0.1"
+                    android:paddingBottom="16dp"
+                    android:paddingTop="16dp"
                     android:text="Create Account ? Signup"
-                    android:textColor="#d9e5f3"
-                    android:letterSpacing="0.1"/>
+                    android:textColor="#d9e5f3" />
 
 
             </LinearLayout>

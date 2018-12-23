@@ -31,6 +31,9 @@ import ng.com.quickinfo.plom.Utils.FilterUtils;
 import ng.com.quickinfo.plom.Utils.Utilities;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
 
+import static ng.com.quickinfo.plom.Utils.FilterUtils.dateFilterList;
+import static ng.com.quickinfo.plom.Utils.FilterUtils.getItemCount;
+import static ng.com.quickinfo.plom.Utils.FilterUtils.getTotalSum;
 import static ng.com.quickinfo.plom.Utils.FilterUtils.isDueSoon;
 import static ng.com.quickinfo.plom.Utils.FilterUtils.isOverDue;
 import static ng.com.quickinfo.plom.Utils.FilterUtils.isToday;
@@ -105,61 +108,50 @@ public class MyIntentService extends IntentService {
                 NotificationManager notificationManager = getSystemService(NotificationManager.class);
                 notificationManager.createNotificationChannel(channel);
                 }
-            //startNotification(notificationManager);
+
 
             //get currency and also reminder days from pref
             String currency = sharedPref.getString(ActivitySettings.Pref_Currency, "N");
             int reminderDays = sharedPref.getInt(ActivitySettings.Pref_ReminderDays, 7);
-            for (Loan loan: dueLoans){
-                if (loan.getNotify()!=0){
-                    String comment= "";
-                    Date date = loan.getDateToRepay();
-                    if(isToday(date)){
-                        comment = "Due Today: ";
 
-                    }
-                    else if (isDueSoon(date, reminderDays)){
-                        comment = "Due very soon: ";
-                    }
-                    else if (isOverDue(date)){
-                        comment = "Over due: ";
+            List<List<Loan>> loans = dateFilterList(dueLoans, reminderDays);
+            String message = "";
 
-                    }
-                    // notificationId is a unique int for each notification that you must define
-                    NotificationCompat.Builder mBuilder = sendNotification(this, loan.getName(), comment + currency + loan.getAmount());
-                    notificationManager.notify(Integer.valueOf(loan.getId()+""), mBuilder.build());
+            for (int pos=0; pos<loans.size(); pos++) {
+                List <Loan> mLoans = loans.get(pos);
+                if (mLoans.size() != 0) {
+                   int size = getItemCount(mLoans);
+                   int amount = getTotalSum(mLoans);
+                   String type = "";
+                   String loanPlural = loanPlural(size);
+                   if(pos == 0){type = "Due soon: ";}
+                   else if (pos == 1){type = "Due today: ";}
+                   else{type = "Over due: ";}
+                   message = message + type + String.valueOf(size)
+                           + currency + String.valueOf(amount) + "\n";
+
 
                 }
-
             }
+
+            //startNotification(notificationManager);
+            NotificationCompat.Builder mBuilder = sendNotification(
+                    this, "PLOM", message );
+            // notificationId is a unique int for each notification that you must define
+            notificationManager.notify(ID, mBuilder.build());
+
 
 
         }
     }
 
 
-    private void startNotification(NotificationManagerCompat notificationManager ) {
-
-        String loanString = "";
-
-        // notificationId is a unique int for each notification that you must define
-        NotificationCompat.Builder mBuilder = sendNotification(this, "PLOM", "OverDue");
-        notificationManager.notify(ID, mBuilder.build());
-
-        //Second time
-        if (count == 1){
-            loanString = " loan needs";
-        } else
-        {loanString = " loans need";}
-        mBuilder.setContentText(count + loanString + " your attention");
-
-        notificationManager.notify(ID, mBuilder.build());
 
 
+    public static String loanPlural(int size){
+        //if true, returns the first arg else return the second
+        return size == 1 ? " Loan ": " Loans ";
     }
-
-
-
     public NotificationCompat.Builder sendNotification(Context context, String title, String message ){
 
         // Create an explicit intent for an Activity in your app

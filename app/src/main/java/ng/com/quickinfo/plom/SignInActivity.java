@@ -3,6 +3,7 @@ package ng.com.quickinfo.plom;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.ActivityOptions;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.BroadcastReceiver;
@@ -129,7 +130,7 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
             long id = sharedPref.getLong(ActivitySettings.Pref_User, 0);
             if(id!=0){
                 goToHome(id);
-                log("TAG", "user is valid");
+                log("TAG", "keepmesignin:oncreateview");
 
             }
             //true
@@ -184,6 +185,8 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         Log.d(TAG, "handle sign in");
         try {
+            showProgress(true);
+
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
 
             // Signed in successfully, show authenticated UI.
@@ -191,7 +194,7 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
-            Log.w(TAG, "signInResult:failed code=" + getStatusCodeString(e.getStatusCode()));
+            log(TAG, "signInResult:failed code=" + getStatusCodeString(e.getStatusCode()));
             showProgress(false);
             makeToast(mContext, "Network Error");
 
@@ -276,7 +279,7 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
                 attemptLogin();
                 break;
             case R.id.signup:
-                openSignUpDialog("username");
+                openSignUpDialog(HomeActivity.userAddAction);
                 break;
         }
     }
@@ -323,7 +326,13 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
+            showProgress(true);
+            log(TAG, "threading" );
+            try{ Thread.sleep(2000);}catch (InterruptedException e){
+
+            }
             checkCredentials(user, password);
+
 
                         //showProgress(true);
 
@@ -342,7 +351,7 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
                     HomeActivity.userAddAction).execute(newUser);
             editor.putBoolean(email, false);
             editor.commit();
-            log(TAG, "first timer email");
+            log(TAG, "checkcredentialsgoogle: first timer email");
 
         } else {
             //not first timer
@@ -350,7 +359,7 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
                 @Override
                 public void onChanged(@Nullable final User user) {
                     if (user != null){
-                        log(TAG,  "Email exist");
+                        log(TAG,  "checkcredentialsgoogle: Email exist");
                         goToHome(user.getUserId());
 
 
@@ -379,7 +388,7 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
         if(sharedPref.getBoolean(name, true)) {
             //first timer
             makeToast(mContext, "Please register!");
-            log(TAG, "first timer user");
+            log(TAG, "checkcredential: first timer user");
 
 
 
@@ -420,7 +429,7 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
     }
 
     private void goToHome(long id) {
-        showProgress(false);
+
         /*pass email and Id to mainActivity*/
         Intent intent = new Intent(this, HomeActivity.class);
 
@@ -428,20 +437,25 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
         editor.putLong(ActivitySettings.Pref_User, id);
         editor.putBoolean(ActivitySettings.Pref_Keeper, true);
         editor.commit();
-        makeToast(mContext, "email changed; editor edited");
+        log(TAG, "gotohome");
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-        startActivity(intent);
-        //finish();
+        if(canTransition()){
+            startActivity(intent,
+                    ActivityOptions.makeSceneTransitionAnimation(this).toBundle());}
+        else{startActivity(intent);
 
-        //showProgress(false);
+        }
+    }
+
+    public boolean canTransition(){
+        return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP);
     }
     //****************** sign up dialog listener **********
 
     public void onSignUp(DialogFragment dialog, User user){
         dialog.dismiss();
-        showProgress(true);
-        try{Thread.sleep(2000);}catch (Exception e){}
+        //try{Thread.sleep(2000);}catch (Exception e){}
         editor.putBoolean(user.getEmail(), false);
         if (!user.getUserName().isEmpty()){
             editor.putBoolean(user.getUserName(), false);
@@ -464,6 +478,7 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
             switch (intent.getAction()){
                 case HomeActivity.userAddAction:
                      //get id from intent and go to home screen
+                    log(TAG, "onreceive: user added");
                     makeToast(context, "user added");
                     long id = intent.getLongExtra("id", 0);
 
@@ -477,6 +492,7 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
     }
 
     private void setPreferences(long id) {
+        //set preferences for signups
         editor.putInt(ActivitySettings.Pref_ReminderDays, 7);
         editor.putInt(ActivitySettings.Pref_Currency_Value, 0);
         editor.putLong(ActivitySettings.Pref_User, id);

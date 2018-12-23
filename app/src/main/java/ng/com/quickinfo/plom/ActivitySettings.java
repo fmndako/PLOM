@@ -1,13 +1,16 @@
 package ng.com.quickinfo.plom;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -35,13 +38,15 @@ import butterknife.OnClick;
 import customfonts.MyTextView;
 import ng.com.quickinfo.plom.Model.User;
 import ng.com.quickinfo.plom.Model.UserRepo;
+import ng.com.quickinfo.plom.Receivers.NotificationReceiver;
 import ng.com.quickinfo.plom.Utils.Utilities;
 import ng.com.quickinfo.plom.ViewModel.UserViewModel;
 
+import static ng.com.quickinfo.plom.Utils.Utilities.log;
 import static ng.com.quickinfo.plom.Utils.Utilities.makeToast;
 
 
-public class ActivitySettings extends LifecycleLoggingActivity {
+public class ActivitySettings extends LifecycleLoggingActivity implements SignupDialog.SignupDialogListener, DeleteDialog.DeleteDialogListener{
 
 
     @BindView(R.id.tvProfile)
@@ -75,6 +80,8 @@ public class ActivitySettings extends LifecycleLoggingActivity {
     public GoogleSignInClient mGoogleSignInClient;
     private static final int RC_SIGN_IN = 9;
 
+    DialogFragment mDialog;
+
     //shared pref
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
@@ -85,13 +92,16 @@ public class ActivitySettings extends LifecycleLoggingActivity {
     public static String Pref_Currency = "ng.com.quickinfo.PLOM.currency";
     public static String Pref_Currency_Value = "ng.com.quickinfo.PLOM.currency.value";
     public static String Pref_Notification = "ng.com.quickinfo.PLOM.notification";
+    public static String EXTRA_PARAM_user_delete = "settings:user:delete";
     boolean keepMeIn;
     boolean notification;
     String currency;
     int days;
     long mUserId;
     User mUser;
-
+    //receiver
+    SettingsReceiver myReceiver;
+    IntentFilter intentFilter;
 
     @Override
     protected void onStart() {
@@ -119,6 +129,11 @@ public class ActivitySettings extends LifecycleLoggingActivity {
         mContext = getApplicationContext();
         //load View Model
         mUserViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+        //create broadcast receivers
+        myReceiver = new SettingsReceiver();
+        intentFilter = new IntentFilter(HomeActivity.userDeleteAction);
+        intentFilter.addAction(HomeActivity.userUpdateAction);
+        LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver, intentFilter);
 
         //shared pref
         sharedPref = Utilities.MyPref.getSharedPref(mContext);
@@ -264,6 +279,7 @@ public class ActivitySettings extends LifecycleLoggingActivity {
                 SignupDialog profile = new SignupDialog();
                 Bundle bundle = new Bundle();
                 bundle.putLong(Pref_User, mUserId );
+                bundle.putString("action", HomeActivity.userUpdateAction);
                 profile.setArguments(bundle);
                 profile.show(getSupportFragmentManager(), "Sign Up Fragment");
 
@@ -273,6 +289,7 @@ public class ActivitySettings extends LifecycleLoggingActivity {
                 break;
             case R.id.tvDeleteAccount:
                 deleteAccount();
+                break;
         }
     }
 
@@ -287,14 +304,19 @@ public class ActivitySettings extends LifecycleLoggingActivity {
         }
     }
     private void logOutUser(){
+        //edit pref to reflect user state
         editor.putBoolean(Pref_Keeper, false);
+        editor.putLong(Pref_User, 0);
         editor.commit();
         startActivity(new Intent(this, SignInActivity.class));
+        if(mDialog!= null){mDialog.dismiss();}
     }
     private void deleteAccount() {
-        DialogFragment deleteDialog = new DeleteDialog();
-        deleteDialog.show(getSupportFragmentManager(), "DeleteDialog");
-
+        DeleteDialog deleteDialog = new DeleteDialog();
+        Bundle deletebundle = new Bundle();
+        deletebundle.putString("action", HomeActivity.userDeleteAction);
+        deleteDialog.setArguments(deletebundle);
+        deleteDialog.show(getSupportFragmentManager(), "DELETE DIALOG");
 
 
     }
@@ -321,27 +343,66 @@ public class ActivitySettings extends LifecycleLoggingActivity {
 //"""""""""listeners *********************8
 
     public void onDialogPositiveClick(DialogFragment dialog, int action){
+        mDialog = dialog;
+        if(action == R.id.tvDeleteAccount) {
+            if (!mUser.getUserName().isEmpty()) {
+                deleteUser();
+                logOutUser();
 
-        if(!mUser.getUserName().isEmpty()){
-            deleteUser();
-            logOutUser();
+            } else {
+                //google delete user
+                revokeAccess();
+                deleteUser();
+                logOutUser();
 
-        }else{
-            //google delete user
-            revokeAccess();
-            deleteUser();
-            logOutUser();
-
+            }
         }
     }
     public void onDialogNegativeClick(DialogFragment dialog, int action){
+
+
         dialog.dismiss();
     }
 
     public void onSignUp(DialogFragment dialog, User user){
 
+        new UserRepo.UserAsyncTask(mUserViewModel, HomeActivity.userUpdateAction).execute(user);
         //nothing
 }
+
+
+// receiver for receiving user updated and user logout abd deleted complete
+
+    //******************** SignInReceiver ********************
+    public class SettingsReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            makeToast(mContext, "intent received" + intent.getAction());
+            String action = "";
+            switch (intent.getAction()){
+                case HomeActivity.userUpdateAction:
+                    action = "Account updated";
+
+                    break;
+                case HomeActivity.userDeleteAction:
+                    action = "User deleted";
+                    break;
+
+            }
+
+            makeToast(mContext, action);
+            log(TAG, action);
+
+            //
+        }
+    }
+    protected void onDestroy() {
+        super.onDestroy();
+        //unregistering using local broadcast manager
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(myReceiver);
+        //null the receivers to prevent ish
+        myReceiver = null;
+    }
 
 }
 

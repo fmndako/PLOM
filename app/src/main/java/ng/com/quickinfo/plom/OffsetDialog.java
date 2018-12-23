@@ -8,7 +8,9 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,15 +35,19 @@ public class OffsetDialog extends DialogFragment {
     EditText etOffsetDate;
     @BindView(R.id.etOffsetRemarks)
     EditText etOffsetRemarks;
-    Unbinder unbinder;
+
 
     String mAction;
+    @BindView(R.id.dlgoffset)
+    TextView dlgoffset;
+    @BindView(R.id.dlgcancel)
+    TextView dlgcancel;
+    Unbinder unbinder1;
 
     //Override on create
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Build the dialog and set up the button click handlers
-
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -50,42 +56,30 @@ public class OffsetDialog extends DialogFragment {
         View view = inflater.inflate(R.layout.dialog_offset, null);
 
         //butterknife
-        unbinder = ButterKnife.bind(this, view);
+        ButterKnife.bind(this, view);
 
         new DateInputMask(etOffsetDate);
         //get from args
         Bundle bundle = getArguments();
         mAction = bundle.getString("action");
+        this.setCancelable(false);
+        //this.setFinishOnTouchOutside(false);
 
-        if(mAction.equals(DetailActivity.offsetUpdateAction)){
+        if (mAction.equals(DetailActivity.offsetUpdateAction)) {
             //setUI
             etOffsetAmount.setText(bundle.getString("amount", ""));
             etOffsetRemarks.setText(bundle.getString("remarks", ""));
             etOffsetDate.setText(bundle.getString("date", ""));
         }
-       // Inflate and set the layout for the dialog
+        // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
-        builder.setView(view)
-                .setPositiveButton(R.string.action_offset, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // Send the positive button event back to the host activity
-                        //add offset
-                        Offset offset = getValues();
-                        mListener.onDialogPositiveClick(OffsetDialog.this, offset, mAction);
+        builder.setView(view);
 
-                    }
-                })
-                .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // Send the negative button event back to the host activity
-                        mListener.onDialogNegativeClick(OffsetDialog.this, R.string.action_offset);
-                    }
-                });
         return builder.create();
     }
 
-    private Offset getValues(){
-        return new Offset(Integer.valueOf((etOffsetAmount.getText()).toString()), stringToDate(etOffsetDate.getText().toString()),etOffsetRemarks.getText().toString(), 0);
+    private Offset getValues() {
+        return new Offset(Integer.valueOf((etOffsetAmount.getText()).toString()), stringToDate(etOffsetDate.getText().toString()), etOffsetRemarks.getText().toString(), 0);
     }
 
     // Override the Fragment.onAttach() method to instantiate the OffsetDialogListener
@@ -115,6 +109,26 @@ public class OffsetDialog extends DialogFragment {
     @OnClick(R.id.etOffsetDate)
     public void onViewClicked() {
 
+    }
+
+
+
+
+
+    @OnClick({R.id.dlgoffset, R.id.dlgcancel})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.dlgoffset:
+               //Send the positive button event back to the host activity
+                    //add offset
+                    Offset offset = getValues();
+                    mListener.onDialogPositiveClick(OffsetDialog.this, offset, mAction);
+
+               break;
+            case R.id.dlgcancel:
+                dismiss();
+                break;
+        }
     }
 
 

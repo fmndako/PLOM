@@ -90,16 +90,12 @@ public class SignupDialog extends DialogFragment {
         //get from args
         Bundle bundle = getArguments();
         mAction = bundle.getString("action");
-        if (mAction != "username") {
-            //TODO
+        this.setCancelable(false);
 
-            setProfile(bundle.getLong(ActivitySettings.Pref_User, 0));
-
-
-        }
         View view = inflater.inflate(R.layout.dialog_profile, null);
         //butterknife
         builder.setView(view);
+
         userViewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
 
         //shared pref
@@ -107,7 +103,13 @@ public class SignupDialog extends DialogFragment {
         editor = sharedPref.edit();
 
         ButterKnife.bind(this, view);
+        if (mAction == HomeActivity.userUpdateAction) {
+            //action from settings-- update user
+            log(this.getTag(), "oncreateview: to update user");
+            setProfile(bundle.getLong(ActivitySettings.Pref_User, 0));
 
+
+        }
         setTextListener();
 
         return builder.create();
@@ -180,7 +182,7 @@ public class SignupDialog extends DialogFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.signupsignup:
-                 if(mAction!= "username"){attemptUpdate();}
+                 if(mAction!= HomeActivity.userAddAction){attemptUpdate();}
                 else{attemptSignUp();}
 
                 break;
@@ -191,17 +193,20 @@ public class SignupDialog extends DialogFragment {
     }
 
     private void attemptUpdate() {
-        //TODO
+        //check credentials
+        //get the number, doesnt require any checking or validation
         mUser.setNumber(signupnumber.getText().toString());
 
+        //if user name is empty, then the user userd google login option
+
         if (mUser.getUserName().isEmpty()){
-            //gmail update
-            //mListener.onSignUp(this, mUser);
+
+            //add user to database
             updateUser(mUser);
 
         }
         else{
-            //user update
+            //the user has passwords and other fields and needs to be validated
             boolean cancel = false;
 
             String pass = signuppass.getText().toString();
@@ -220,7 +225,9 @@ public class SignupDialog extends DialogFragment {
             }
 
             if(!cancel){
+
                 mUser.setPassword(pass);
+
                 updateUser(mUser);
             }
 
@@ -229,6 +236,7 @@ public class SignupDialog extends DialogFragment {
         }
 
     private void updateUser(User user) {
+        //add user to database after credentials have been checked
         UserRepo.UserAsyncTask task = new UserRepo.UserAsyncTask(
                 userViewModel, HomeActivity.userUpdateAction
         );
@@ -241,7 +249,7 @@ public class SignupDialog extends DialogFragment {
 
 
     private void attemptSignUp() {
-
+        //check if credentials are ok
         // Reset errors.
         signupuser.setError(null);
         signuppass.setError(null);
@@ -323,47 +331,41 @@ public class SignupDialog extends DialogFragment {
     }
 
     private void setProfile(long id) {
-
-        //TODO set profile if action is edit profile
-        //show old password linearlayout :visible
-        //change hint of password to new password
-        //change button text to Update
-        //do not show the alreadylogin account text
-        //disable user and email address edit view
-
-
+            //**  @{ActivitySettings}
+        //set profile for user profile edit
         userViewModel.getUserById(id).observe(this, new android.arch.lifecycle.Observer<User>() {
             @Override
             public void onChanged(@Nullable final User user) {
+                log(SignupDialog.this.getTag(), "edituser: setprofile");
                 if (user != null) {
-                    if (user.getPassword().equals(signupoldpass.getText().toString())) {
-                        mUser = user;
-                        if (user.getUserName().isEmpty()) {
-                            //if gmail
-                            signupconfirmpass.setVisibility(View.GONE);
-                            signuppass.setVisibility(View.GONE);
+                //if user is not null, then the user has to be set
+                    mUser = user;
+                    //check if the user is through google or normal registration
+                    if (user.getUserName().isEmpty()) {
+                        //then the user is through google
+                        signupconfirmpass.setVisibility(View.GONE);
+                        signuppass.setVisibility(View.GONE);
+                        signupuser.setVisibility(View.GONE);
 
-
-                        } else {
-                            //user name profile
-                            llOldPassword.setVisibility(View.VISIBLE);
-                            signuppass.setText("New password");
-                            signupconfirmpass.setText("Confirm new password");
-                            signupuser.setEnabled(false);
-
-                        }
-                        signuplogin.setVisibility(View.GONE);
-                        signupsignup.setText(R.string.action_update);
-                        signupemail.setEnabled(false);
-
+                    } else {
+                        //user is normal so we need the password fields
+                        llOldPassword.setVisibility(View.VISIBLE);
+                        signuppass.setText("New password");
+                        signupconfirmpass.setText("Confirm new password");
+                        signupuser.setEnabled(false);
 
                     }
+                    signuplogin.setVisibility(View.GONE);
+                    signupsignup.setText(R.string.action_update);
+                    signupemail.setEnabled(false);
+
                 }
             }
         });
     }
 
     private void registerUser(String mUser, String password) {
+        //register user after attempt signup
         User user = new User(mUser,signupnumber.getText().toString(),
                     signupemail.getText().toString(), password);
             mListener.onSignUp(this, user);

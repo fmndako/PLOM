@@ -17,7 +17,18 @@
             style="?android:attr/progressBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabHome"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="right|center_vertical"
+            android:clickable="true"
+            app:elevation="5dp"
+            app:fabSize="normal"
+            app:srcCompat="@drawable/borrowing" />
     </FrameLayout>
 
     <FrameLayout
@@ -154,7 +165,6 @@
                         android:textSize="14dp" />
 
                 </LinearLayout>
-                <!--TODO remove tryying to add border line to image-->
                 <LinearLayout
                     android:id="@+id/llMainLogo"
                     android:layout_width="100dp"
@@ -187,8 +197,6 @@
                         android:layout_weight="1"
                         android:background="@color/white"
                         android:gravity="bottom"
-
-                        android:src="@drawable/giving"
                         app:srcCompat="@drawable/giving" />
 
 
@@ -319,90 +327,105 @@
             android:layout_height="1dp"
             android:background="#dad8d8"/>
 
-        <!--deficit-->
+        <!---->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            >
+            android:orientation="horizontal">
 
-
-            <customfonts.MyTextView
-                android:id="@+id/hpassword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="#0000"
-                android:gravity="right"
-                android:maxLength="12"
-                android:padding="16dp"
-                android:text="Deficit:"
-                android:textColor="#a2a1b8"
-                android:textSize="16dp" />
+                android:orientation="vertical">
 
-            <customfonts.MyTextView
-                android:id="@+id/tvDeficit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="#0000"
-                android:gravity="left"
-                android:hint="N0000"
-                android:maxLength="12"
-                android:padding="16dp"
-                android:textColor="#181737"
-                android:textColorHint="#1b193b"
-                android:textSize="16dp" />
-        </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#dad8d8"/>
+                    <customfonts.MyTextView
+                        android:id="@+id/hpassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="#0000"
+                        android:gravity="right"
+                        android:maxLength="12"
+                        android:padding="16dp"
+                        android:text="Deficit:"
+                        android:textColor="#a2a1b8"
+                        android:textSize="16dp" />
 
-        <!--total sum-->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            >
+                    <customfonts.MyTextView
+                        android:id="@+id/tvDeficit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="#0000"
+                        android:gravity="left"
+                        android:hint="N0000"
+                        android:maxLength="12"
+                        android:padding="16dp"
+                        android:textAppearance="@android:style/TextAppearance.Medium"
+                        android:textColorHint="#1b193b" />
+                </LinearLayout>
 
-            <customfonts.MyTextView
-                android:id="@+id/tvSumAllText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="#0000"
-                android:gravity="right"
-                android:maxLength="12"
-                android:padding="16dp"
-                android:text="Loan Sum:"
-                android:textColor="#a2a1b8"
-                android:textSize="16dp" />
 
-            <customfonts.MyTextView
-                android:id="@+id/tvSumAll"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="#0000"
-                android:gravity="left"
-                android:maxLength="12"
-                android:padding="16dp"
-                android:text="Loan Sum:"
-                android:textColor="#a2a1b8"
-                android:textSize="16dp" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#dad8d8" />
 
-            <!--<ToggleButton-->
-            <!--android:id="@+id/hToggleButton1"-->
-            <!--android:layout_width="120dp"-->
-            <!--android:layout_height="32dp"-->
-            <!--android:paddingLeft="20dp"-->
-            <!--android:layout_weight="1"-->
-            <!--android:background="@drawable/toogle_switch"-->
+                <!--total sum-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-            <!--/>-->
+                    <customfonts.MyTextView
+                        android:id="@+id/tvSumAllText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="#0000"
+                        android:gravity="right"
+                        android:maxLength="12"
+                        android:padding="16dp"
+                        android:text="Loan Sum:"
+                        android:textColor="#a2a1b8"
+                        android:textSize="16dp" />
+
+                    <customfonts.MyTextView
+                        android:id="@+id/tvSumAll"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="#0000"
+                        android:gravity="left"
+                        android:maxLength="12"
+                        android:padding="16dp"
+                        android:text="Loan Sum:"
+                        android:textAppearance="@android:style/TextAppearance.Medium" />
+
+                    <!--<ToggleButton-->
+                    <!--android:id="@+id/hToggleButton1"-->
+                    <!--android:layout_width="120dp"-->
+                    <!--android:layout_height="32dp"-->
+                    <!--android:paddingLeft="20dp"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:background="@drawable/toogle_switch"-->
+
+                    <!--/>-->
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+
+
         </LinearLayout>
 
 
@@ -426,140 +449,170 @@
                 android:id="@+id/llDueSoon"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="10dp"
                 android:layout_weight="1"
+                android:background="@color/date_duesoon"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:padding="0.3dp"
+                android:visibility="visible">
 
-                <ImageView
+                <LinearLayout
+                    android:id="@+id/llDueSoon1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:gravity="bottom"
-                    app:srcCompat="@drawable/error" />
+                    android:background="@color/white"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="bottom"
+                        app:srcCompat="@drawable/error" />
 
 
-                <customfonts.MyTextView
-                    android:id="@+id/tvCountDueSoon"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="0 Lent"
-                    android:textColor="@color/date_color"
-                    android:textStyle="bold"
-                    android:textSize="12dp" />
+                    <customfonts.MyTextView
+                        android:id="@+id/tvCountDueSoon"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="0 Lent"
+                        android:textColor="@color/date_color"
+                        android:textSize="12dp"
+                        android:textStyle="bold" />
 
-                <customfonts.MyTextView
-                    android:id="@+id/tvSumDueSoon"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="N 2000"
-                    android:textColor="@color/date_color"
-                    android:textStyle="bold"
-                    android:textSize="12dp" />
+                    <customfonts.MyTextView
+                        android:id="@+id/tvSumDueSoon"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="N 2000"
+                        android:textColor="@color/date_color"
+                        android:textSize="12dp"
+                        android:textStyle="bold" />
 
 
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/llDue"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="10dp"
-                android:layout_marginBottom="20dp"
                 android:layout_weight="1"
+                android:background="@color/date_due"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:padding="0.2dp"
+                android:visibility="visible">
 
-                <ImageView
+                <LinearLayout
+                    android:id="@+id/llDue1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:gravity="bottom"
-                    app:srcCompat="@drawable/error" />
+                    android:background="@color/white"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="bottom"
+                        app:srcCompat="@drawable/error" />
 
 
-                <customfonts.MyTextView
-                    android:id="@+id/tvCountDue"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="0 Lent"
-                    android:textColor="@color/date_color"
-                    android:textStyle="bold"
-                    android:textSize="12dp" />
+                    <customfonts.MyTextView
+                        android:id="@+id/tvCountDue"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="0 Lent"
+                        android:textColor="@color/date_color"
+                        android:textSize="12dp"
+                        android:textStyle="bold" />
 
-                <customfonts.MyTextView
-                    android:id="@+id/tvSumDue"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="N 2000"
-                    android:textColor="@color/date_color"
-                    android:textStyle="bold"
-                    android:textSize="12dp" />
+                    <customfonts.MyTextView
+                        android:id="@+id/tvSumDue"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="N 2000"
+                        android:textColor="@color/date_color"
+                        android:textSize="12dp"
+                        android:textStyle="bold" />
 
 
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/llOverDue"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="10dp"
                 android:layout_weight="1"
+                android:background="@color/date_overdue"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:padding="0.2dp"
+                android:visibility="visible">
 
-                <ImageView
+                <LinearLayout
+                    android:id="@+id/llOverDue1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:gravity="bottom"
-
-                    app:srcCompat="@drawable/error" />
-
-
-                <customfonts.MyTextView
-                    android:id="@+id/tvCountOverdue"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="0 Lent"
-                    android:textColor="@color/date_color"
-                    android:textStyle="bold"
-                    android:textSize="12dp" />
-
-                <customfonts.MyTextView
-                    android:id="@+id/tvSumOverdue"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="N 2000"
-                    android:textColor="@color/date_color"
-                    android:textStyle="bold"
-                    android:textSize="12dp" />
+                    android:background="@color/white"
+                    android:orientation="vertical">
 
 
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="bottom"
+
+                        app:srcCompat="@drawable/error" />
+
+
+                    <customfonts.MyTextView
+                        android:id="@+id/tvCountOverdue"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="0 Lent"
+                        android:textColor="@color/date_color"
+                        android:textSize="12dp"
+                        android:textStyle="bold" />
+
+                    <customfonts.MyTextView
+                        android:id="@+id/tvSumOverdue"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="N 2000"
+                        android:textColor="@color/date_color"
+                        android:textSize="12dp"
+                        android:textStyle="bold" />
+
+
+                </LinearLayout>
+                <!--end of date-->
             </LinearLayout>
-            <!--end of date-->
-        </LinearLayout>
+    </LinearLayout>
 
         <View
             android:layout_width="match_parent"

@@ -202,8 +202,11 @@ public class AddLoanActivity extends AppCompatActivity {
                 // Get the URI that points to the selected contact
                 Uri contactUri = data.getData();
                 // We only need the NUMBER column, because there will be only one row in the result
-                String[] projection = {ContactsContract.CommonDataKinds.Phone.NUMBER};
-                String[] proj2 = {ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME};
+                String[] projection = {ContactsContract.CommonDataKinds.Phone.NUMBER,
+                        ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+                        ContactsContract.CommonDataKinds.Email.ADDRESS,
+                };
+
 
                 // Perform the query on the contact to get the NUMBER column
                 // We don't need a selection or sort order (there's only one result for the given URI)
@@ -212,21 +215,24 @@ public class AddLoanActivity extends AppCompatActivity {
                 // Consider using CursorLoader to perform the query.
                 Cursor cursor = this.getContentResolver()
                         .query(contactUri, projection, null, null, null);
-                cursor.moveToFirst();
-                Cursor cursor1 = this.getContentResolver()
-                        .query(contactUri, proj2, null, null, null);
-                cursor.moveToFirst();
 
                 // Retrieve the phone number from the NUMBER column
-                int column = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
-                int columnName = cursor1.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
-                String number = cursor.getString(column);
-                String name = cursor.getString(columnName);
+                //int column = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+
+                String number = "";
+                String name = "";
+                String email = "";
 
 
+                if (cursor.moveToFirst()) {
+                    name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                    number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                    email = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS));
+                }
                 // Do something with the phone number
                 actvNumber.setText(number);
                 actvName.setText(name);
+                actvEmail.setText(email);
 
             }
         }

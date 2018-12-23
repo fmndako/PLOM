@@ -2,44 +2,83 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="wrap_content"
+    android:padding="16dp"
+    android:background="@drawable/gradiant"
     android:layout_height="wrap_content">
-    <ImageView
-        app:srcCompat="@drawable/cash"
-        android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:scaleType="center"
-        android:background="#FFFFBB33"
-        android:contentDescription="@string/app_name" />
+
+
     <EditText
         android:id="@+id/etOffsetAmount"
         android:inputType="numberDecimal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginBottom="4dp"
+        android:fontFamily="sans-serif"
+        android:textColor="@color/white"
+
         android:hint="@string/loan_amount" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#4a5a71"></LinearLayout>
     <EditText
         android:id="@+id/etOffsetDate"
         android:inputType="date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginBottom="16dp"
         android:fontFamily="sans-serif"
+        android:textColor="@color/white"
         android:hint="@string/offset_date"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#4a5a71"></LinearLayout>
     <EditText
         android:id="@+id/etOffsetRemarks"
         android:inputType="text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginBottom="16dp"
         android:fontFamily="sans-serif"
+        android:textColor="@color/white"
         android:hint="@string/loan_remarks"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#4a5a71"></LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/dlgoffset"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom"
+            android:layout_margin="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:background="#009a9a"
+            android:gravity="center"
+            android:letterSpacing="0.2"
+            android:padding="16dp"
+            android:text="OFFSET"
+            android:textColor="#d9e5f3"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/dlgcancel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom"
+            android:layout_margin="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:background="#009a9a"
+            android:gravity="center"
+            android:letterSpacing="0.2"
+            android:padding="16dp"
+            android:text="CANCEL"
+            android:textColor="#d9e5f3"
+            android:textStyle="bold" />
+    </LinearLayout>
 </LinearLayout>

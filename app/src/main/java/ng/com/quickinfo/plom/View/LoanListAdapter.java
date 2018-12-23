@@ -85,11 +85,7 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
             holder.nameView.setText(loan.getName());
             holder.dateTakenView.setText(dateToString1(loan.getDateTaken()));
             holder.amountView.setText(currency + amount + "");
-            //remarks
-            if(!loan.getRemarks().isEmpty()){
-                holder.remarksView.setVisibility(View.VISIBLE);
-                holder.remarksView.setText(loan.getRemarks());
-            }
+
             //offset balance
             if(loan.getOffset()==10){
 
@@ -230,7 +226,7 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
 
 
     class LoanViewHolder extends RecyclerView.ViewHolder {
-        private TextView nameView, amountView,  dateTakenView, commentView, remarksView, balanceView;
+        private TextView nameView, amountView,  dateTakenView,commentView, balanceView;
         private ImageView  lendView, notifyOn, notifyOff;
         private LinearLayout llClear, llNotify;
 
@@ -241,7 +237,6 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
             dateTakenView = itemView.findViewById(R.id.tvLRVDate);
             commentView = itemView.findViewById(R.id.tvLRVtime);
             balanceView = itemView.findViewById(R.id.tvBalanceGone);
-            remarksView = itemView.findViewById(R.id.tvLRVRemarks);
 
 
             lendView = itemView.findViewById(R.id.ivLoanType);

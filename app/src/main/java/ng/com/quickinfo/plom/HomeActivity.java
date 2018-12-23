@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.transition.Slide;
 import android.view.View;
 import android.view.Window;
@@ -48,6 +49,8 @@ public class HomeActivity extends LifecycleLoggingActivity {
     ProgressBar progressBar;
     @BindView(R.id.tvUserGone)
     MyTextView tvUserGone;
+    @BindView(R.id.fabHome)
+    FloatingActionButton fabHome;
     @BindView(R.id.tvEmail)
     MyTextView tvEmail;
     @BindView(R.id.tvCountBorrows)
@@ -291,7 +294,7 @@ public class HomeActivity extends LifecycleLoggingActivity {
     }
 
     @OnClick({R.id.llBorrows,
-            R.id.tvSumLends,R.id.navigation_notifications, R.id.navigation_settings,
+            R.id.tvSumLends, R.id.fabHome, R.id.navigation_notifications, R.id.navigation_settings,
             R.id.llLends, R.id.tvOverallCount, R.id.tvSumAll, R.id.llDueSoon, R.id.llDue, R.id.llOverDue})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -299,6 +302,9 @@ public class HomeActivity extends LifecycleLoggingActivity {
                 log(TAG, "borrow");
                 viewLoans(3);
 
+                break;
+            case R.id.fabHome:
+                viewLoans(0);
                 break;
             case R.id.llLends:
 
