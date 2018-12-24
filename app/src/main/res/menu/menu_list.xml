@@ -13,6 +13,11 @@
 
         />
     <item
+        android:id="@+id/action_list_home"
+        android:icon="@drawable/home_outline"
+        android:title="@string/action_home"
+        app:showAsAction="ifRoom"/>
+    <item
         android:id="@+id/action_settings"
         android:icon="@drawable/settings_outline"
         android:title="@string/action_settings"

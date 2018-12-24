@@ -358,6 +358,9 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         switch (action) {
             case R.string.action_delete:
                 DialogFragment deleteDialog = new DeleteDialog();
+                Bundle delBundle = new Bundle();
+                delBundle.putString("action", DetailActivity.loanDeleteAction);
+                deleteDialog.setArguments(delBundle);
                 deleteDialog.show(getSupportFragmentManager(), "DeleteDialog");
                 return;
             case R.string.action_offset:
@@ -386,6 +389,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
     @Override
     public void onDialogPositiveClick(DialogFragment dialog, Date date) {
         // User touched cleared dialog's positive button
+        dialog.dismiss();
         makeToast(mContext, "clear positive offset");
         mLoan.setClearedStatus(date);
         new LoanAsyncTask(mLoanViewModel, loanClearedAction).execute(mLoan);
@@ -421,12 +425,13 @@ public class DetailActivity extends LifecycleLoggingActivity implements
                 mLoanViewModel, loanDeleteAction
         );
         task.execute(mLoan);
+        dialog.dismiss();
     }
 
     @Override
     public void onDialogNegativeClick(DialogFragment dialog, int action) {
         // User touched the dialog's negative button
-
+        dialog.dismiss();
         switch (action) {
             case R.string.action_offset:
                 makeToast(mContext, "negative offset");
@@ -579,8 +584,10 @@ public class DetailActivity extends LifecycleLoggingActivity implements
                 showDialogs(R.string.action_clear);
                 return true;
             case R.id.action_home:
+                makeToast(mContext, "home clicked");
                 Intent intent = new Intent(this, HomeActivity.class);
                 intent.putExtra("id", mLoan.getUser_id());
+                startActivity(intent);
                 return true;
             default:
                 // If we got here, the user's action was not recognized.

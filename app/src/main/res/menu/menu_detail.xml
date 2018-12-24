@@ -1,13 +1,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+
     tools:context="ng.com.quickinfo.plom.DetailActivity">
 
 
             <!-- "Mark Favorite", should appear as action button if possible -->
     <item
         android:id="@+id/action_share"
-        android:icon="@android:drawable/ic_menu_share"
+        android:icon="@drawable/share_variant"
         android:title="@string/action_share"
         app:showAsAction="ifRoom"/>
     <item

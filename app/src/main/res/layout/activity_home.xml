@@ -8,6 +8,7 @@
 
 
     <FrameLayout
+        android:id="@+id/flprogress"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/fl">
@@ -20,15 +21,7 @@
             android:layout_gravity="center"
             android:visibility="gone" />
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fabHome"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="right|center_vertical"
-            android:clickable="true"
-            app:elevation="5dp"
-            app:fabSize="normal"
-            app:srcCompat="@drawable/borrowing" />
+
     </FrameLayout>
 
     <FrameLayout
@@ -623,10 +616,22 @@
     </LinearLayout>
 
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/fl">
 
 
-
-
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabHome"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="right|center_vertical"
+            android:clickable="true"
+            app:elevation="5dp"
+            app:fabSize="normal"
+            app:srcCompat="@drawable/borrowing" />
+    </FrameLayout>
 
 
 

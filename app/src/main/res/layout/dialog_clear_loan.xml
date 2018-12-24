@@ -3,7 +3,7 @@ xmlns:app="http://schemas.android.com/apk/res-auto"
 android:orientation="vertical"
 android:layout_width="wrap_content"
 android:padding="16dp"
-android:background="@drawable/gradiant"
+android:background="@color/white"
 android:layout_height="wrap_content">
     <TextView
         android:id="@+id/tvClearText"
@@ -11,14 +11,9 @@ android:layout_height="wrap_content">
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        android:textColor="@color/white"
+        android:textColor="@color/button_signin"
         android:fontFamily="sans-serif"
-        android:hint="@string/dialog_clear"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-
-        android:background="#4a5a71"></LinearLayout>
+        android:text="@string/dialog_clear"/>
 
     <EditText
         android:id="@+id/etClearDate"
@@ -26,14 +21,10 @@ android:layout_height="wrap_content">
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif"
-        android:textColor="@color/white"
-        android:hint="@string/offset_date"/>
+        android:textColor="@color/button_signin"
+        android:hint="DD/MM/YYYY"/>
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#4a5a71"></LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

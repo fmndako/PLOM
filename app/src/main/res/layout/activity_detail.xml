@@ -58,7 +58,7 @@
                 android:layout_gravity="center"
                 android:background="@drawable/rectangle_gray"
                 android:orientation="vertical"
-                android:padding="0.2dp">
+                android:padding="0.4dp">
 
                 <ImageView
                     android:id="@+id/ivImage"
@@ -952,7 +952,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Total"
-                            android:textColor="@color/colorSub"
+                            android:textColor="@color/white"
 
                             />
 
@@ -961,7 +961,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.5"
-                            android:text="0 $"
+                            android:text="0"
                             android:textColor="@color/white"
 
                             />

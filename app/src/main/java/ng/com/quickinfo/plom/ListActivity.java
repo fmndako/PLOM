@@ -1,8 +1,5 @@
 package ng.com.quickinfo.plom;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
@@ -23,8 +20,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.transition.Fade;
-import android.transition.Slide;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,17 +35,12 @@ import butterknife.ButterKnife;
 import customfonts.MyTextView;
 import ng.com.quickinfo.plom.Model.Loan;
 import ng.com.quickinfo.plom.Model.LoanRepo;
-import ng.com.quickinfo.plom.Model.User;
-import ng.com.quickinfo.plom.Receivers.NotificationReceiver;
 import ng.com.quickinfo.plom.Utils.FilterUtils;
 import ng.com.quickinfo.plom.Utils.Utilities;
 import ng.com.quickinfo.plom.View.LoanListAdapter;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
-import ng.com.quickinfo.plom.ViewModel.UserViewModel;
 
 import static ng.com.quickinfo.plom.DetailActivity.startSettings;
-import static ng.com.quickinfo.plom.Utils.FilterUtils.getItemCount;
-import static ng.com.quickinfo.plom.Utils.FilterUtils.getTotalSum;
 import static ng.com.quickinfo.plom.Utils.Utilities.intentToLoan;
 import static ng.com.quickinfo.plom.Utils.Utilities.log;
 import static ng.com.quickinfo.plom.Utils.Utilities.makeToast;
@@ -230,7 +220,7 @@ public class ListActivity extends LifecycleLoggingActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_list, menu);
 
         //search view
         MenuItem searchViewItem = menu.findItem(R.id.searchView);
@@ -275,6 +265,13 @@ public class ListActivity extends LifecycleLoggingActivity implements
             //start settings activity with userId
             startActivity(startSettings(mContext, mUserId));
             return true;
+        } else if (id == R.id.action_list_home){
+            log(TAG, "onoptionsitemselected: home click");
+            makeToast(mContext, "home clicked");
+            Intent intent = new Intent(this, HomeActivity.class);
+            intent.putExtra("id", mUserId);
+            startActivity(intent);
+
         }
 
 

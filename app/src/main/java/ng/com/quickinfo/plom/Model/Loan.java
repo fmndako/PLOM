@@ -130,6 +130,7 @@ public class Loan {
     public void setClearedStatus(Date date){
         this.dateCleared = date;
         this.clearStatus = 1;
+        this.notify = 0;
     }
 
     public void setId(long id){

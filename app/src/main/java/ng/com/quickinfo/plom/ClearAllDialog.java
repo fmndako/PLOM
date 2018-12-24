@@ -9,6 +9,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.util.Date;
 
@@ -31,6 +32,11 @@ public class ClearAllDialog extends DialogFragment {
 
     @BindView(R.id.etClearDate)
     EditText etClearDate;
+
+    @BindView(R.id.dlgpositive)
+    TextView dlgpositive;
+    @BindView(R.id.dlgcancel)
+    TextView dlgcancel;
     Unbinder unbinder;
 
     //Override on create
@@ -47,22 +53,8 @@ public class ClearAllDialog extends DialogFragment {
         new DateInputMask(etClearDate);
        // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
-        builder.setView(view)
-                .setPositiveButton(R.string.action_clear, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // Send the positive button event back to the host activity
-                        //add offset
-                        Date date = getValues();
-                        mListener.onDialogPositiveClick(ClearAllDialog.this, date);
+        builder.setView(view);
 
-                    }
-                })
-                .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // Send the negative button event back to the host activity
-                        mListener.onDialogNegativeClick(ClearAllDialog.this, R.string.action_offset);
-                    }
-                });
         return builder.create();
     }
 
@@ -97,6 +89,22 @@ public class ClearAllDialog extends DialogFragment {
     @OnClick(R.id.etClearDate)
     public void onViewClicked() {
 
+    }
+
+    @OnClick({R.id.dlgpositive, R.id.dlgcancel})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.dlgpositive:
+                //Send the positive button event back to the host activity
+                //add offset
+                Date date = getValues();
+                mListener.onDialogPositiveClick(ClearAllDialog.this, date);
+
+                break;
+            case R.id.dlgcancel:
+                dismiss();
+                break;
+        }
     }
 
 

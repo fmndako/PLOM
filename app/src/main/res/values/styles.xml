@@ -5,8 +5,12 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:actionOverflowButtonStyle">@style/MyActionButtonOverflow</item>
     </style>
 
+    <style name="MyActionButtonOverflow" parent="android:style/Widget.Holo.ActionButton.Overflow">
+        <item name="android:src">@drawable/dots_vertical</item>
+    </style>
     <!--for sign in button or all red buttons-->
     <style name="AppTheme.Buttons" parent="Widget.AppCompat.Button">
         <item name="android:textColor">#d9e5f3</item>

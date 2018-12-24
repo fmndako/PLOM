@@ -36,13 +36,13 @@ public class OffsetDialog extends DialogFragment {
     @BindView(R.id.etOffsetRemarks)
     EditText etOffsetRemarks;
 
+    Unbinder unbinder;
 
     String mAction;
     @BindView(R.id.dlgoffset)
     TextView dlgoffset;
     @BindView(R.id.dlgcancel)
     TextView dlgcancel;
-    Unbinder unbinder1;
 
     //Override on create
     @Override
@@ -56,7 +56,7 @@ public class OffsetDialog extends DialogFragment {
         View view = inflater.inflate(R.layout.dialog_offset, null);
 
         //butterknife
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
 
         new DateInputMask(etOffsetDate);
         //get from args
