@@ -30,4 +30,18 @@
 
 
     </array>
+
+    <array name="loan_filter">
+        <item>All Loans</item>
+        <item>Active Loans</item>
+        <item>Borrows</item>
+        <item>Lends</item>
+        <item>Due Soon</item>
+        <item>Due Today</item>
+        <item>Due Soon</item>
+        <item>Due Loans</item>
+        <item>Cleared Loans</item>
+
+
+    </array>
 </resources>

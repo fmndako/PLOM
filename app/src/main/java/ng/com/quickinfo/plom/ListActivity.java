@@ -24,7 +24,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -57,6 +59,8 @@ public class ListActivity extends LifecycleLoggingActivity implements
     MyTextView tvSize;
     @BindView(R.id.tvTotalLends)
     MyTextView tvTotal;
+    @BindView(R.id.spFilter)
+    Spinner spFilter;
 
 
 
@@ -112,17 +116,25 @@ public class ListActivity extends LifecycleLoggingActivity implements
         reminderDays = sharedPref.getInt(ActivitySettings.Pref_ReminderDays, 7);
         //intent
         mUserId = sharedPref.getLong(ActivitySettings.Pref_User, 1);
-        loanType = getIntent().getIntExtra("loanType", 1);
+        loanType = getIntent().getIntExtra("loanType", 0);
 
         activity = this;
 
 
         //register receiver
         registerMyReceivers();
-        ////unregister receivers
-        //        unRegisterMyReceivers();
+
+        //set recyclerview
+        recyclerView = findViewById(R.id.recyclerview);
+        adapter = new LoanListAdapter(this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         loadRV(loanType);
 
+
+        //setspinner filter
+        spFilter.setSelection(loanType);
+        setSpinnerListener();
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,6 +145,26 @@ public class ListActivity extends LifecycleLoggingActivity implements
 
     }
 
+
+    public void setSpinnerListener() {
+
+        spFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                //makeToast(mContext, "item selected spinner" + i + l);
+                loadRV(i);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+//
+//
+
+    }
     public boolean canTransition(){
         return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP);
     }
@@ -163,11 +195,8 @@ public class ListActivity extends LifecycleLoggingActivity implements
     }
 
     private void loadRV(final int loanType) {
+
         //loads the RV
-        recyclerView = findViewById(R.id.recyclerview);
-        adapter = new LoanListAdapter(this);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         //observer
         mLoanViewModel.getLoansByUserId(mUserId).observe(this, new Observer<List<Loan>>() {
@@ -175,32 +204,37 @@ public class ListActivity extends LifecycleLoggingActivity implements
             public void onChanged(@Nullable final List<Loan> loans) {
                 // Update the cached copy of the loans in the adapter.
                 log(TAG, loans.size() + "size");
+                List<Loan> activeLoans = FilterUtils.activeLoans(loans);
                 switch (loanType) {
                     case 0:
                         mLoans = loans;
+                        break;
                     case 1:
-                        mLoans = FilterUtils.activeLoans(loans);
+                        mLoans = activeLoans;
                         break;
                     case 2:
-                        mLoans = FilterUtils.loanType(loans).get(0);
+                        mLoans = FilterUtils.loanType(activeLoans).get(0);
                         break;
                     case 3:
-                        mLoans = FilterUtils.loanType(loans).get(1);
+                        mLoans = FilterUtils.loanType(activeLoans).get(1);
 
                         break;
                     case 4:
-                        mLoans = FilterUtils.dateIsDueSoon(loans, reminderDays);
+                        mLoans = FilterUtils.dateIsDueSoon(activeLoans, reminderDays);
 
                         break;
                     case 5:
-                        mLoans = FilterUtils.dateIsDue(loans);
+                        mLoans = FilterUtils.dateIsDue(activeLoans);
                         break;
                     case 6:
-                        mLoans = FilterUtils.dateIsOverDue(loans);
+                        mLoans = FilterUtils.dateIsOverDue(activeLoans);
 
                         break;
                     case 7:
-                        mLoans =FilterUtils.Notifications(loans);
+                        mLoans =FilterUtils.Notifications(activeLoans);
+                        break;
+                    case 8:
+                        mLoans = FilterUtils.clearedLoans(loans);
                         break;
 
                 }

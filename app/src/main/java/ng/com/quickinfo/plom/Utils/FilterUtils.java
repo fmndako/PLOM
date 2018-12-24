@@ -57,6 +57,17 @@ public class FilterUtils {
         }
         return activeLoans;
     }
+    public static List<Loan> clearedLoans (List<Loan> loans){
+        //returns all active loans
+        List<Loan> Loans = new ArrayList<>();
+        for (Loan loan: loans){
+            if (loan.getClearStatus()!=0){
+                Loans.add(loan);
+            }
+        }
+        return Loans;
+    }
+
 
     //loan Type filter filters
     public static List<List<Loan>> loanType (List<Loan> loans){

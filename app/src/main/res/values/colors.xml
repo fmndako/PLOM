@@ -16,8 +16,8 @@
     <color name="button_signin">#009a9a</color>
     <color name="main_logo">#A7FFFC</color>
     <color name="date_color">@color/gradient</color>
-    <color name="date_due">#F48E30</color>
-    <color name="date_duesoon">#FFFC73</color>
+    <color name="date_due">#FFFC73</color>
+    <color name="date_duesoon">@color/green</color>
     <color name="date_overdue">#FF0010</color>
     <color name="gradient">#27384c</color>
 

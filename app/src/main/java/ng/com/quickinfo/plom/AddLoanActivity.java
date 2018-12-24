@@ -193,6 +193,17 @@ public class AddLoanActivity extends AppCompatActivity {
         startActivityForResult(pickContactIntent, PICK_CONTACT_REQUEST);
     }
 
+    //edit text listener for done action
+//    edittext.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+//        @Override
+//        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+//            if (actionId == EditorInfo.IME_ACTION_DONE) {
+//                Toast.makeText(HelloFormStuff.this, edittext.getText(), Toast.LENGTH_SHORT).show();
+//                return true;
+//            }
+//            return false;
+//        }
+//    });
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Check which request it is that we're responding to
@@ -204,7 +215,7 @@ public class AddLoanActivity extends AppCompatActivity {
                 // We only need the NUMBER column, because there will be only one row in the result
                 String[] projection = {ContactsContract.CommonDataKinds.Phone.NUMBER,
                         ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
-                        ContactsContract.CommonDataKinds.Email.ADDRESS,
+                        ContactsContract.CommonDataKinds.Email.DATA
                 };
 
 
@@ -214,7 +225,9 @@ public class AddLoanActivity extends AppCompatActivity {
                 // your app's UI thread. (For simplicity of the sample, this code doesn't do that.)
                 // Consider using CursorLoader to perform the query.
                 Cursor cursor = this.getContentResolver()
-                        .query(contactUri, projection, null, null, null);
+                        .query(contactUri, projection,null, null, null);
+
+                // .query(contactUri, projection, null, null, null);
 
                 // Retrieve the phone number from the NUMBER column
                 //int column = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);

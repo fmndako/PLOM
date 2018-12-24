@@ -100,8 +100,10 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
             //loantype
             if(loan.getLoanType()!=0){
                 holder.lendView.setImageResource(R.drawable.borrowing);
+                holder.lendView.setBackground(mContext.getDrawable(R.drawable.rectangle_borrowing));
             }else{
                 holder.lendView.setImageResource(R.drawable.giving);
+                holder.lendView.setBackground(mContext.getDrawable(R.drawable.rectangle_giving));
                 //Picasso.with(mContext).load(person.getUri()).placeholder(R.mipmap.ic_launcher).into(holder.personImageImgV);
 
             }
@@ -139,11 +141,9 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
             holder.commentView.setText(comment  + " " +
             dateToString1(loan.getDateToRepay()));
             if(loan.getNotify()!=0){
-                    holder.notifyOff.setVisibility(View.GONE);
-                    holder.notifyOn.setVisibility(View.VISIBLE);
+                    holder.notifyOn.setImageResource(R.drawable.bell_ring);
                 }else{
-                    holder.notifyOff.setVisibility(View.VISIBLE);
-                    holder.notifyOn.setVisibility(View.GONE);
+                    holder.notifyOn.setImageResource(R.drawable.bell_off);
 
             }
             setAnimation(holder.itemView, position);
@@ -227,7 +227,7 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
 
     class LoanViewHolder extends RecyclerView.ViewHolder {
         private TextView nameView, amountView,  dateTakenView,commentView, balanceView;
-        private ImageView  lendView, notifyOn, notifyOff;
+        private ImageView  lendView, notifyOn;
         private LinearLayout llClear, llNotify;
 
         private LoanViewHolder(View itemView) {
@@ -241,7 +241,6 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
 
             lendView = itemView.findViewById(R.id.ivLoanType);
             notifyOn= itemView.findViewById(R.id.ivLRVNotifyOn);
-            notifyOff = itemView.findViewById(R.id.ivLRVNotifyOff);
 
             llClear = itemView.findViewById(R.id.llClearGone);
             llNotify = itemView.findViewById(R.id.llNotifyGone);

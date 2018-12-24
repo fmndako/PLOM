@@ -15,7 +15,8 @@
         android:layout_marginBottom="5dp"
         android:layout_marginTop="?attr/actionBarSize"
         android:layout_weight="1"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingTop="10dp">
 
         <customfonts.MyTextView
             android:id="@+id/tvSizeLends"
@@ -40,6 +41,14 @@
             android:text="N0"
             android:textColor="@color/button_signin"
             android:textSize="12sp" />
+
+        <Spinner
+            android:id="@+id/spFilter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorTex"
+            android:entries="@array/loan_filter"
+            android:layout_weight="1" />
 
 
     </LinearLayout>

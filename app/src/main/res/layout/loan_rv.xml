@@ -42,30 +42,35 @@
                 android:id="@+id/llholder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:orientation="horizontal">
                 <!--LRV list-->
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
                     android:padding="10dp">
+
                     <LinearLayout
                         android:id="@+id/llloantype"
-                        android:layout_width="120px"
-                        android:layout_height="match_parent"
+                        android:layout_width="60dp"
+                        android:layout_height="40dp"
                         android:layout_gravity="center"
                         android:background="@drawable/rectangle_gray"
                         android:orientation="vertical"
                         android:padding="0.2dp">
-                    <ImageView
-                        android:id="@+id/ivLoanType"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@drawable/rectangle_giving"
-                        android:gravity="center"
-                        app:srcCompat="@drawable/giving" />
+
+                        <ImageView
+                            android:id="@+id/ivLoanType"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@drawable/rectangle_giving"
+                            android:gravity="center"
+                            app:srcCompat="@drawable/giving" />
 
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -77,12 +82,12 @@
                         <TextView
 
                             android:id="@+id/tvLRVName"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:maxLines="1"
                             android:text="Lemon peel Base ball"
                             android:textColor="@color/button_signin"
-                            android:textSize="12sp"
+                            android:textSize="14sp"
 
 
                             android:textStyle="bold" />
@@ -108,7 +113,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="20dp"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:orientation="vertical">
 
                     <TextView
@@ -120,7 +125,7 @@
                         android:gravity="center"
                         android:text="Balance:"
                         android:textColor="@color/colorSub"
-                        android:textSize="12dp"
+                        android:textSize="12sp"
                         android:visibility="gone" />
 
                     <TextView
@@ -144,10 +149,8 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="01.5dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
-                android:background="#E3E3E3"></LinearLayout>
+                android:layout_height="1.5dp"
+                android:background="@color/button_signin"></LinearLayout>
 
             <LinearLayout
                 android:id="@+id/llNotifyGone"
@@ -158,35 +161,26 @@
 
                 <TextView
                     android:id="@+id/tvLRVtime"
-                    style="@style/heading_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:layout_marginLeft="10dp"
                     android:layout_weight="1"
-                    android:paddingLeft="5dp"
-                    android:textStyle="bold"
-
+                    android:paddingLeft="10dp"
+                    android:paddingTop="2dp"
                     android:text="Due Soon"
-                    android:textAppearance="@android:style/TextAppearance.Small"
-                    android:textColor="#000" />
+                    android:textSize="14dp"
+                    android:textColor="#837A74"
+                    android:textStyle="bold" />
 
                 <ImageView
                     android:id="@+id/ivLRVNotifyOn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginRight="10dp"
+                    android:layout_weight="4"
                     android:visibility="visible"
                     app:srcCompat="@drawable/bell_ring" />
-
-                <ImageView
-                    android:id="@+id/ivLRVNotifyOff"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:visibility="gone"
-                    app:srcCompat="@drawable/bell_off" />
 
 
             </LinearLayout>
