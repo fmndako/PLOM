@@ -122,9 +122,6 @@ public class MyIntentService extends IntentService {
 //                }
 
 
-                //get currency and also reminder days from pref
-                String currency = sharedPref.getString(ActivitySettings.Pref_Currency, "N");
-                int reminderDays = sharedPref.getInt(ActivitySettings.Pref_ReminderDays, 7);
 
                 List<List<Loan>> loans = dateFilterList(dueLoans, reminderDays);
                 String message = "";
@@ -145,12 +142,6 @@ public class MyIntentService extends IntentService {
 
                     }
                 }
-
-                //startNotification(notificationManager);
-                NotificationCompat.Builder mBuilder = sendNotification(
-                        this, "PLOM", message );
-                // notificationId is a unique int for each notification that you must define
-                notificationManager.notify(ID, mBuilder.build());
 
 
             }
