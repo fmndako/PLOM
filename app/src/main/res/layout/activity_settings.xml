@@ -10,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="visible">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -35,9 +36,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textStyle="italic"
+                android:text="Edit"
                 android:textColor="@color/colorblue"
-                android:text="Edit" />
+                android:textStyle="italic" />
 
 
         </LinearLayout>
@@ -127,6 +128,7 @@
 
             <!--/>-->
         </LinearLayout>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -190,7 +192,6 @@
             android:orientation="vertical">
 
 
-
             <customfonts.MyTextView
                 android:id="@+id/tvSignOut"
                 style="@style/AppTheme.Buttons"
@@ -213,7 +214,6 @@
             android:orientation="vertical">
 
 
-
             <customfonts.MyTextView
                 android:id="@+id/tvDeleteAccount"
                 style="@style/AppTheme.Buttons"
@@ -228,12 +228,18 @@
 
     </LinearLayout>
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-
-
-
-
-
+        <ProgressBar
+            android:id="@+id/pbSettings"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"
+            tools:visibility="visible" />
+    </FrameLayout>
 
 
 </RelativeLayout>

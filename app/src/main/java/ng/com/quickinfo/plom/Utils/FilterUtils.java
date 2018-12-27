@@ -152,14 +152,15 @@ public class FilterUtils {
     }
 
     public static List<Loan> Notifications (List<Loan> loans, int days) {
+        //loans taht are due and have notification on
         List<Loan> Loans = new ArrayList<>();
         for (Loan loan : loans) {
             Date date = loan.getDateToRepay();
-            if (loan.getNotify()!=0 && (
-                    isOverDue(date) ||
+            if ((loan.getNotify()!=0) && (isOverDue(date) ||
                             isDueSoon(date, days) ||
                             isToday(date))
-                    ){
+            )
+            {
                          Loans.add(loan);   }
         }
 

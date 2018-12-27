@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import butterknife.BindView;
@@ -20,6 +21,7 @@ import butterknife.Unbinder;
 import ng.com.quickinfo.plom.Utils.DateInputMask;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
 
+import static ng.com.quickinfo.plom.Utils.Utilities.dateToString;
 import static ng.com.quickinfo.plom.Utils.Utilities.stringToDate;
 
 
@@ -50,8 +52,11 @@ public class ClearAllDialog extends DialogFragment {
 
         //butterknife
         unbinder = ButterKnife.bind(this, view);
+
         new DateInputMask(etClearDate);
-       // Inflate and set the layout for the dialog
+        etClearDate.setText(dateToString(Calendar.getInstance().getTime()));
+
+        // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
         builder.setView(view);
 

@@ -12,6 +12,9 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -20,6 +23,7 @@ import ng.com.quickinfo.plom.Model.Offset;
 import ng.com.quickinfo.plom.Utils.DateInputMask;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
 
+import static ng.com.quickinfo.plom.Utils.Utilities.dateToString;
 import static ng.com.quickinfo.plom.Utils.Utilities.stringToDate;
 
 
@@ -59,6 +63,7 @@ public class OffsetDialog extends DialogFragment {
         unbinder = ButterKnife.bind(this, view);
 
         new DateInputMask(etOffsetDate);
+        etOffsetDate.setText(dateToString(Calendar.getInstance().getTime()));
         //get from args
         Bundle bundle = getArguments();
         mAction = bundle.getString("action");

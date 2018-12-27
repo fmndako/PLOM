@@ -34,11 +34,12 @@
     <array name="loan_filter">
         <item>All Loans</item>
         <item>Active Loans</item>
-        <item>Borrows</item>
         <item>Lends</item>
+        <item>Borrows</item>
+
         <item>Due Soon</item>
         <item>Due Today</item>
-        <item>Due Soon</item>
+        <item>Over Due</item>
         <item>Due Loans</item>
         <item>Cleared Loans</item>
 

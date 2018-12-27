@@ -81,6 +81,9 @@ public class AddLoanActivity extends AppCompatActivity {
         //set Date Input Mask
         new DateInputMask(actvDatePromised);
         new DateInputMask(actvDateTaken);
+        actvDateTaken.setText(dateToString(Calendar.getInstance().getTime()));
+        actvDatePromised.setText(dateToString(Calendar.getInstance().getTime()));
+
 
         //action type check either add or update
         loan_id = getIntent().getLongExtra("loan_id", -1);
@@ -264,9 +267,12 @@ public class AddLoanActivity extends AppCompatActivity {
                 actvAmount.setError("Most not be empty");
                 actvAmount.hasFocus();
             }
-            else{
+            else if (TextUtils.isEmpty(actvDateTaken.getText())){
                 actvDateTaken.setError("Most not be empty");
                 actvDateTaken.hasFocus();
+            } else if (TextUtils.isEmpty(actvDatePromised.getText())){
+                actvDatePromised.setError("Most not be empty");
+                actvDatePromised.hasFocus();
             }
 
 

@@ -47,7 +47,7 @@ import static ng.com.quickinfo.plom.Utils.Utilities.log;
  * helper methods.
  */
 public class MyIntentService extends IntentService {
-
+    String TAG = getClass().getSimpleName();
     String CHANNEL_ID;
     int ID = 2323;
     int count;
@@ -81,9 +81,7 @@ public class MyIntentService extends IntentService {
 
 
 
-            Boolean notify = true;
-
-
+            log(TAG, "intent not null");
             //then start notification
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 CharSequence name = getResources().getString(R.string.channel_name);
@@ -97,15 +95,19 @@ public class MyIntentService extends IntentService {
                 notificationManager.createNotificationChannel(channel);
                 }
 
-
+            log(TAG, mUserId + "" + sharedPref.getBoolean(ActivitySettings.Pref_Notification, true));
             //if user is not logout and notification is on then notify else stop service
             if(mUserId!=0 && sharedPref.getBoolean(ActivitySettings.Pref_Notification, true)) {
                 LoanRepo repo = new LoanRepo(this.getApplication());
-
-                dueLoans = FilterUtils.Notifications(
-                        repo.getLoans(mUserId), reminderDays);
-
+                log(TAG, "Should notify");
+                //TODO
+                //get loans that are due
+//                dueLoans = FilterUtils.Notifications(
+//                        repo.getLoans(mUserId), reminderDays);
+                dueLoans = repo.getLoans(mUserId);
+                log(TAG, getTotalSum(dueLoans) + ":" + reminderDays );
                 if (dueLoans.size() > 0) {
+                   log(TAG, "count is less than 1");
                     count = dueLoans.size();
                     int amount = getTotalSum(dueLoans);
                     String message = String.valueOf(count) +
@@ -118,11 +120,8 @@ public class MyIntentService extends IntentService {
                     // notificationId is a unique int for each notification that you must define
                     notificationManager.notify(ID, mBuilder.build());
 
-                }else{notify = false;}
+                }
             }
-            else{notify = false;}
-
-            if(!notify){stopSelf();}
 
 
 

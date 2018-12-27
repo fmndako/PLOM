@@ -90,7 +90,6 @@ public class SignupDialog extends DialogFragment {
         //get from args
         Bundle bundle = getArguments();
         mAction = bundle.getString("action");
-        this.setCancelable(false);
 
         View view = inflater.inflate(R.layout.dialog_profile, null);
         //butterknife
@@ -103,11 +102,14 @@ public class SignupDialog extends DialogFragment {
         editor = sharedPref.edit();
 
         ButterKnife.bind(this, view);
-        if (mAction == HomeActivity.userUpdateAction) {
+        if (mAction.equals(HomeActivity.userUpdateAction)) {
             //action from settings-- update user
             log(this.getTag(), "oncreateview: to update user");
             setProfile(bundle.getLong(ActivitySettings.Pref_User, 0));
 
+
+        } else {
+            this.setCancelable(false);
 
         }
         setTextListener();

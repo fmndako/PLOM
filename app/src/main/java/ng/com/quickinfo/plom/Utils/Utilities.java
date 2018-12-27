@@ -9,7 +9,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.provider.ContactsContract;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.Layout;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -159,5 +161,12 @@ public class Utilities {
             loan.setClearedStatus(stringToDate(date_cleared));
         }
         return loan;
+    }
+
+    public static void showProgressToggler(Context c, boolean show,
+                                           ProgressBar pb, View l)
+    {
+        showProgress(show, pb, c);
+        l.setVisibility(show? View.GONE: View.VISIBLE);
     }
 }

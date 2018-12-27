@@ -99,15 +99,15 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
 
             //loantype
             if(loan.getLoanType()!=0){
-                holder.lendView.setImageResource(R.drawable.borrowing4);
+//                holder.lendView.setImageResource(R.drawable.borrowing4);
 
-                //holder.lendView.setImageResource(R.drawable.borrowing);
-                //holder.lendView.setBackground(mContext.getDrawable(R.drawable.rectangle_borrowing));
+                holder.lendView.setImageResource(R.drawable.borrowing);
+                holder.lendView.setBackground(mContext.getDrawable(R.drawable.rectangle_borrowing));
             }else{
-                holder.lendView.setImageResource(R.drawable.giving4);
+//                holder.lendView.setImageResource(R.drawable.giving4);
 
-                //holder.lendView.setImageResource(R.drawable.giving);
-                //holder.lendView.setBackground(mContext.getDrawable(R.drawable.rectangle_giving));
+                holder.lendView.setImageResource(R.drawable.giving);
+                holder.lendView.setBackground(mContext.getDrawable(R.drawable.rectangle_giving));
                 //Picasso.with(mContext).load(person.getUri()).placeholder(R.mipmap.ic_launcher).into(holder.personImageImgV);
 
             }
@@ -116,7 +116,7 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
             if(loan.getClearStatus()!=0){
                 holder.llClear.setVisibility(View.VISIBLE);
 
-            }
+            } else {holder.llClear.setVisibility(View.GONE);}
             Date date = loan.getDateToRepay();
             //duesoon
             Boolean isOn = false;

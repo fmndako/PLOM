@@ -307,12 +307,17 @@ public class DetailActivity extends LifecycleLoggingActivity implements
             if (mLoan.getLoanType() != 0) {
                 ivImage.setImageResource(R.drawable.borrowing);
                 tvDetailLoanTypeValue.setText(R.string.loan_type_borrow);
-                tvDetailLoanTypeValue.setBackground(
-                        ContextCompat.getDrawable(mContext, R.drawable.rectangle_red));
+                ivImage.setBackground(
+                        ContextCompat.getDrawable(mContext, R.drawable.rectangle_borrowing));
+
             }else{
                 ivImage.setImageResource(R.drawable.giving);
+                ivImage.setBackground(
+                        ContextCompat.getDrawable(mContext, R.drawable.rectangle_giving));
+
             }
             //personal details
+
             tvDetailNameValue.setText(mLoan.getName());
             tvDetailNumberValue.setText(mLoan.getNumber());
             tvDetailEmailValue.setText(mLoan.getEmail());

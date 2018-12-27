@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -19,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Switch;
 
@@ -44,6 +46,8 @@ import ng.com.quickinfo.plom.ViewModel.UserViewModel;
 
 import static ng.com.quickinfo.plom.Utils.Utilities.log;
 import static ng.com.quickinfo.plom.Utils.Utilities.makeToast;
+import static ng.com.quickinfo.plom.Utils.Utilities.showProgress;
+import static ng.com.quickinfo.plom.Utils.Utilities.showProgressToggler;
 
 
 public class ActivitySettings extends LifecycleLoggingActivity implements SignupDialog.SignupDialogListener, DeleteDialog.DeleteDialogListener{
@@ -73,6 +77,8 @@ public class ActivitySettings extends LifecycleLoggingActivity implements Signup
     LinearLayout linear;
     @BindView(R.id.tvDeleteAccount)
     MyTextView tvDeleteAccount;
+    @BindView(R.id.pbSettings)
+    ProgressBar pbSettings;
 
     private Context mContext;
     //ViewModel
@@ -140,6 +146,7 @@ public class ActivitySettings extends LifecycleLoggingActivity implements Signup
         editor = sharedPref.edit();
 
         mUserId = sharedPref.getLong(Pref_User, 0) ;
+        showProgressToggler(mContext, false, pbSettings, linear);
         updateUI();
         setListener();
 
@@ -285,6 +292,14 @@ public class ActivitySettings extends LifecycleLoggingActivity implements Signup
 
                 break;
             case R.id.tvSignOut:
+                //TODO
+                //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                showProgressToggler(mContext, true, pbSettings, linear);
+                try{
+                    Thread.sleep(3000);
+                }catch(InterruptedException e){
+                    log(TAG, "thread interupted");
+                }
                 logOut();
                 break;
             case R.id.tvDeleteAccount:
@@ -308,15 +323,22 @@ public class ActivitySettings extends LifecycleLoggingActivity implements Signup
         editor.putBoolean(Pref_Keeper, false);
         editor.putLong(Pref_User, 0);
         editor.commit();
-        startActivity(new Intent(this, SignInActivity.class));
+        Intent logoutIntent = new Intent(this, SignInActivity.class);
+        logoutIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+        startActivity(logoutIntent);
         if(mDialog!= null){mDialog.dismiss();}
     }
     private void deleteAccount() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle("Delete Account").setMessage(
+                "All your data will be deleted from the database" ).setPositiveButton(R.id.action_delete, );
+        )
         DeleteDialog deleteDialog = new DeleteDialog();
         Bundle deletebundle = new Bundle();
         deletebundle.putString("action", HomeActivity.userDeleteAction);
         deleteDialog.setArguments(deletebundle);
-        deleteDialog.show(getSupportFragmentManager(), "DELETE DIALOG");
+        deleteDialog.show(getSupportFragmentManager(), "DELETEDIALOG");
 
 
     }

@@ -304,7 +304,7 @@ public class HomeActivity extends LifecycleLoggingActivity {
 
                 break;
             case R.id.fabHome:
-                viewLoans(0);
+                viewLoans(1);
                 break;
             case R.id.llLends:
 
