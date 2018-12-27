@@ -68,7 +68,7 @@ public class MyIntentService extends IntentService {
         if (intent != null) {
             notificationManager = NotificationManagerCompat.from(this);
 
-            log("Service", "service at work");
+            log(TAG, "service at work");
             //start notification
             CHANNEL_ID = this.getPackageName();
             //get userid from shared pref
@@ -79,10 +79,8 @@ public class MyIntentService extends IntentService {
             String currency = sharedPref.getString(ActivitySettings.Pref_Currency, "N");
             int reminderDays = sharedPref.getInt(ActivitySettings.Pref_ReminderDays, 7);
 
-
-
             log(TAG, "intent not null");
-            //then start notification
+            //for higher versions
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 CharSequence name = getResources().getString(R.string.channel_name);
                 String description = getResources().getString(R.string.channel_description);
@@ -104,23 +102,57 @@ public class MyIntentService extends IntentService {
                 //get loans that are due
 //                dueLoans = FilterUtils.Notifications(
 //                        repo.getLoans(mUserId), reminderDays);
-                dueLoans = repo.getLoans(mUserId);
-                log(TAG, getTotalSum(dueLoans) + ":" + reminderDays );
-                if (dueLoans.size() > 0) {
-                   log(TAG, "count is less than 1");
-                    count = dueLoans.size();
-                    int amount = getTotalSum(dueLoans);
-                    String message = String.valueOf(count) +
-                            " " + loanPlural(count) + currency
-                            + String.valueOf(amount) + " needs your attention";
+//                dueLoans = repo.getLoans(mUserId);
+//                log(TAG, getTotalSum(dueLoans) + ":" + reminderDays );
+//                if (dueLoans.size() > 0) {
+//                   log(TAG, "count is less than 1");
+//                    count = dueLoans.size();
+//                    int amount = getTotalSum(dueLoans);
+//                    String message = String.valueOf(count) +
+//                             loanPlural(count) +":"+ currency
+//                            + String.valueOf(amount) + " needs your attention";
+//
+//                    //startNotification(notificationManager);
+//                    NotificationCompat.Builder mBuilder = sendNotification(
+//                            this, "PLOM", message );
+//                    // notificationId is a unique int for each notification that you must define
+//                    notificationManager.notify(ID, mBuilder.build());
+//
 
-                    //startNotification(notificationManager);
-                    NotificationCompat.Builder mBuilder = sendNotification(
-                            this, "PLOM", message );
-                    // notificationId is a unique int for each notification that you must define
-                    notificationManager.notify(ID, mBuilder.build());
+//                }
 
+
+                //get currency and also reminder days from pref
+                String currency = sharedPref.getString(ActivitySettings.Pref_Currency, "N");
+                int reminderDays = sharedPref.getInt(ActivitySettings.Pref_ReminderDays, 7);
+
+                List<List<Loan>> loans = dateFilterList(dueLoans, reminderDays);
+                String message = "";
+
+                for (int pos=0; pos<loans.size(); pos++) {
+                    List <Loan> mLoans = loans.get(pos);
+                    if (mLoans.size() != 0) {
+                        int size = getItemCount(mLoans);
+                        int amount = getTotalSum(mLoans);
+                        String type = "";
+                        String loanPlural = loanPlural(size);
+                        if(pos == 0){type = "Due soon: ";}
+                        else if (pos == 1){type = "Due today: ";}
+                        else{type = "Over due: ";}
+                        message = message + type + String.valueOf(size)
+                                + currency + String.valueOf(amount) + "\n";
+
+
+                    }
                 }
+
+                //startNotification(notificationManager);
+                NotificationCompat.Builder mBuilder = sendNotification(
+                        this, "PLOM", message );
+                // notificationId is a unique int for each notification that you must define
+                notificationManager.notify(ID, mBuilder.build());
+
+
             }
 
 
@@ -164,7 +196,7 @@ public class MyIntentService extends IntentService {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
         Uri alarmsound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.drawable.app_icon3)
+                .setSmallIcon(R.drawable.lending)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setSound(alarmsound)
@@ -174,7 +206,7 @@ public class MyIntentService extends IntentService {
                 .setContentIntent(pendingIntent)
                 .setCategory(NotificationCompat.CATEGORY_REMINDER)
                 .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
-                .setAutoCancel(false);
+                .setAutoCancel(true);
         return mBuilder;
     }
 
