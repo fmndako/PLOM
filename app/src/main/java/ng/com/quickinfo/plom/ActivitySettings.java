@@ -3,6 +3,7 @@ package ng.com.quickinfo.plom;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -50,7 +51,7 @@ import static ng.com.quickinfo.plom.Utils.Utilities.showProgress;
 import static ng.com.quickinfo.plom.Utils.Utilities.showProgressToggler;
 
 
-public class ActivitySettings extends LifecycleLoggingActivity implements SignupDialog.SignupDialogListener, DeleteDialog.DeleteDialogListener{
+public class ActivitySettings extends LifecycleLoggingActivity implements SignupDialog.SignupDialogListener{
 
 
     @BindView(R.id.tvProfile)
@@ -279,7 +280,7 @@ public class ActivitySettings extends LifecycleLoggingActivity implements Signup
 
 
 
-    @OnClick({R.id.tvViewProfile, R.id.tvSignOut})
+    @OnClick({R.id.tvViewProfile, R.id.tvSignOut,R.id.tvDeleteAccount })
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tvViewProfile:
@@ -295,6 +296,7 @@ public class ActivitySettings extends LifecycleLoggingActivity implements Signup
                 //TODO
                 //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 showProgressToggler(mContext, true, pbSettings, linear);
+                showProgress(true, pbSettings, mContext);
                 try{
                     Thread.sleep(3000);
                 }catch(InterruptedException e){
@@ -330,15 +332,23 @@ public class ActivitySettings extends LifecycleLoggingActivity implements Signup
         if(mDialog!= null){mDialog.dismiss();}
     }
     private void deleteAccount() {
+        makeToast(mContext, "deleting act");
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle("Delete Account").setMessage(
-                "All your data will be deleted from the database" ).setPositiveButton(R.id.action_delete, );
-        )
-        DeleteDialog deleteDialog = new DeleteDialog();
-        Bundle deletebundle = new Bundle();
-        deletebundle.putString("action", HomeActivity.userDeleteAction);
-        deleteDialog.setArguments(deletebundle);
-        deleteDialog.show(getSupportFragmentManager(), "DELETEDIALOG");
+                "All your data will be deleted from the database" )
+                .setPositiveButton(R.string.action_delete, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Send the positive button event back to the host activity
+                        onDialogPositiveClick();
+                    }
+                })
+                .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Send the negative button event back to the host activity
+                        dialog.dismiss();
+                    }
+                });
+        builder.show();
 
 
     }
@@ -364,10 +374,8 @@ public class ActivitySettings extends LifecycleLoggingActivity implements Signup
 
 //"""""""""listeners *********************8
 
-    public void onDialogPositiveClick(DialogFragment dialog, int action){
-        mDialog = dialog;
-        if(action == R.id.tvDeleteAccount) {
-            if (!mUser.getUserName().isEmpty()) {
+    public void onDialogPositiveClick(){
+           if (!mUser.getUserName().isEmpty()) {
                 deleteUser();
                 logOutUser();
 
@@ -378,7 +386,6 @@ public class ActivitySettings extends LifecycleLoggingActivity implements Signup
                 logOutUser();
 
             }
-        }
     }
     public void onDialogNegativeClick(DialogFragment dialog, int action){
 

@@ -408,8 +408,10 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
 
                         }else{
                             //TODO change
-                            etPassword.setError("Invalid Password");
+                            etPassword.setText("");
                             etPassword.requestFocus();
+                            showProgress(false);
+                            makeToast(mContext, "invalid username or password");
                         }
                     }
 
