@@ -51,7 +51,8 @@ import static ng.com.quickinfo.plom.Utils.Utilities.showProgress;
 import static ng.com.quickinfo.plom.Utils.Utilities.showProgressToggler;
 
 
-public class ActivitySettings extends LifecycleLoggingActivity implements SignupDialog.SignupDialogListener{
+public class ActivitySettings extends LifecycleLoggingActivity implements
+        SignupDialog.SignupDialogListener, DeleteDialog.DeleteDialogListener{
 
 
     @BindView(R.id.tvProfile)
@@ -333,22 +334,27 @@ public class ActivitySettings extends LifecycleLoggingActivity implements Signup
     }
     private void deleteAccount() {
         makeToast(mContext, "deleting act");
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setTitle("Delete Account").setMessage(
-                "All your data will be deleted from the database" )
-                .setPositiveButton(R.string.action_delete, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // Send the positive button event back to the host activity
-                        onDialogPositiveClick();
-                    }
-                })
-                .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // Send the negative button event back to the host activity
-                        dialog.dismiss();
-                    }
-                });
-        builder.show();
+//        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+//        builder.setTitle("Delete Account").setMessage(
+//                "All your data will be deleted from the database" )
+//                .setPositiveButton(R.string.action_delete, new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int id) {
+//                        // Send the positive button event back to the host activity
+//                        onDialogPositiveClick();
+//                    }
+//                })
+//                .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int id) {
+//                        // Send the negative button event back to the host activity
+//                        dialog.dismiss();
+//                    }
+//                });
+//        builder.show();
+        DeleteDialog deleteDialog = new DeleteDialog();
+        Bundle deletebundle = new Bundle();
+        deletebundle.putString("action", HomeActivity.userDeleteAction);
+        deleteDialog.setArguments(deletebundle);
+        deleteDialog.show(getSupportFragmentManager(), "DELETE DIALOG");
 
 
     }
@@ -374,7 +380,7 @@ public class ActivitySettings extends LifecycleLoggingActivity implements Signup
 
 //"""""""""listeners *********************8
 
-    public void onDialogPositiveClick(){
+    public void onDialogPositiveClick(DialogFragment d, int i){
            if (!mUser.getUserName().isEmpty()) {
                 deleteUser();
                 logOutUser();
