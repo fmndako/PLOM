@@ -311,7 +311,7 @@ public class ListActivity extends LifecycleLoggingActivity implements
             return true;
         } else if (id == R.id.action_list_home){
             log(TAG, "onoptionsitemselected: home click");
-            makeToast(mContext, "home clicked");
+            //makeToast(mContext, "home clicked");
             Intent intent = new Intent(this, HomeActivity.class);
             intent.putExtra("id", mUserId);
             startActivity(intent);

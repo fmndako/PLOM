@@ -83,7 +83,7 @@ public class MyIntentService extends IntentService {
             int reminderDays = sharedPref.getInt(ActivitySettings.Pref_ReminderDays, 7);
 
             log(TAG, "intent not null");
-            makeToast(this, "PLOM service");
+            //makeToast(this, "PLOM service");
             //for higher versions
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 CharSequence name = getResources().getString(R.string.channel_name);
@@ -145,7 +145,7 @@ public class MyIntentService extends IntentService {
 
                     message = message + name+ " " + currency + amount;
                     NotificationCompat.Builder mBuilder = sendNotification(
-                            this, getString(R.string.notification_title), message);
+                            this, getString(R.string.notification_title), message, loan.getId() );
                     // notificationId is a unique int for each notification that you must define
                     notificationManager.notify(Integer.valueOf(loan.getId() + ""), mBuilder.build());
 
@@ -186,12 +186,12 @@ public class MyIntentService extends IntentService {
 
 
 
-    public NotificationCompat.Builder sendNotification(Context context, String title, String message ){
+    public NotificationCompat.Builder sendNotification(Context context, String title, String message , long id){
 
         // Create an explicit intent for an Activity in your app
-        Intent intent = new Intent(context, ListActivity.class);
+        Intent intent = new Intent(context, DetailActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        intent.putExtra("loanType", 7);
+        intent.putExtra(DetailActivity.EXTRA_PARAM_ID, id);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
         Uri alarmsound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
