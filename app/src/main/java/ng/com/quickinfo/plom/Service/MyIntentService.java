@@ -75,25 +75,13 @@ public class MyIntentService extends IntentService {
             sharedPref = Utilities.MyPref.getSharedPref(this);
             mUserId = sharedPref.getLong(ActivitySettings.Pref_User, 0) ;
 
+            //get currency and also reminder days from pref
+            String currency = sharedPref.getString(ActivitySettings.Pref_Currency, "N");
+            int reminderDays = sharedPref.getInt(ActivitySettings.Pref_ReminderDays, 7);
 
 
 
             Boolean notify = true;
-            //if user is not logout and notification is on then notify else stop service
-            if(mUserId!=0 && sharedPref.getBoolean(ActivitySettings.Pref_Notification, true)) {
-                LoanRepo repo = new LoanRepo(this.getApplication());
-
-                dueLoans = FilterUtils.Notifications(
-                        repo.getLoans(mUserId));
-
-                if (dueLoans.size() > 0) {
-                    count = dueLoans.size();
-
-                }else{notify = false;}
-            }
-            else{notify = false;}
-
-            if(!notify){stopSelf();}
 
 
             //then start notification
@@ -110,35 +98,51 @@ public class MyIntentService extends IntentService {
                 }
 
 
-            //get currency and also reminder days from pref
-            String currency = sharedPref.getString(ActivitySettings.Pref_Currency, "N");
-            int reminderDays = sharedPref.getInt(ActivitySettings.Pref_ReminderDays, 7);
+            //if user is not logout and notification is on then notify else stop service
+            if(mUserId!=0 && sharedPref.getBoolean(ActivitySettings.Pref_Notification, true)) {
+                LoanRepo repo = new LoanRepo(this.getApplication());
 
-            List<List<Loan>> loans = dateFilterList(dueLoans, reminderDays);
-            String message = "";
+                dueLoans = FilterUtils.Notifications(
+                        repo.getLoans(mUserId), reminderDays);
 
-            for (int pos=0; pos<loans.size(); pos++) {
-                List <Loan> mLoans = loans.get(pos);
-                if (mLoans.size() != 0) {
-                   int size = getItemCount(mLoans);
-                   int amount = getTotalSum(mLoans);
-                   String type = "";
-                   String loanPlural = loanPlural(size);
-                   if(pos == 0){type = "Due soon: ";}
-                   else if (pos == 1){type = "Due today: ";}
-                   else{type = "Over due: ";}
-                   message = message + type + String.valueOf(size)
-                           + currency + String.valueOf(amount) + "\n";
+                if (dueLoans.size() > 0) {
+                    count = dueLoans.size();
+                    int amount = getTotalSum(dueLoans);
+                    String message = String.valueOf(count) +
+                            " " + loanPlural(count) + currency
+                            + String.valueOf(amount) + " needs your attention";
 
+                    //startNotification(notificationManager);
+                    NotificationCompat.Builder mBuilder = sendNotification(
+                            this, "PLOM", message );
+                    // notificationId is a unique int for each notification that you must define
+                    notificationManager.notify(ID, mBuilder.build());
 
-                }
+                }else{notify = false;}
             }
+            else{notify = false;}
 
-            //startNotification(notificationManager);
-            NotificationCompat.Builder mBuilder = sendNotification(
-                    this, "PLOM", message );
-            // notificationId is a unique int for each notification that you must define
-            notificationManager.notify(ID, mBuilder.build());
+            if(!notify){stopSelf();}
+
+
+
+//            for (int pos=0; pos<loans.size(); pos++) {
+//                List <Loan> mLoans = loans.get(pos);
+//                if (mLoans.size() != 0) {
+//                   int size = getItemCount(mLoans);
+//                   int amount = getTotalSum(mLoans);
+//                   String type = "";
+//                   String loanPlural = loanPlural(size);
+//                   if(pos == 0){type = "Due soon: ";}
+//                   else if (pos == 1){type = "Due today: ";}
+//                   else{type = "Over due: ";}
+//                   message = message + type + String.valueOf(size)
+//                           + currency + String.valueOf(amount) + "\n";
+//
+//
+//                }
+//            }
+
 
 
 
@@ -161,7 +165,7 @@ public class MyIntentService extends IntentService {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
         Uri alarmsound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.drawable.app_icon)
+                .setSmallIcon(R.drawable.app_icon3)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setSound(alarmsound)

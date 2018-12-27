@@ -151,15 +151,18 @@ public class FilterUtils {
         return Loans;
     }
 
-    public static List<Loan> Notifications (List<Loan> loans) {
+    public static List<Loan> Notifications (List<Loan> loans, int days) {
         List<Loan> Loans = new ArrayList<>();
-
         for (Loan loan : loans) {
-
-            if (loan.getNotify()!=0) {
-                Loans.add(loan);
-            }
+            Date date = loan.getDateToRepay();
+            if (loan.getNotify()!=0 && (
+                    isOverDue(date) ||
+                            isDueSoon(date, days) ||
+                            isToday(date))
+                    ){
+                         Loans.add(loan);   }
         }
+
         return Loans;
     }
     //filter helper functions (loan type)

@@ -231,7 +231,7 @@ public class ListActivity extends LifecycleLoggingActivity implements
 
                         break;
                     case 7:
-                        mLoans =FilterUtils.Notifications(activeLoans);
+                        mLoans =FilterUtils.Notifications(activeLoans, reminderDays);
                         break;
                     case 8:
                         mLoans = FilterUtils.clearedLoans(loans);
