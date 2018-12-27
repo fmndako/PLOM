@@ -389,6 +389,7 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
             //first timer
             makeToast(mContext, "Please register!");
             log(TAG, "checkcredential: first timer user");
+            showProgress(false);
 
 
 

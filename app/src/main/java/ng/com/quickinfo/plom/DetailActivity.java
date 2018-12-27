@@ -255,10 +255,14 @@ public class DetailActivity extends LifecycleLoggingActivity implements
                 listview.setAdapter(baseAdapter);
 
                 tvDetailOffsetTotalValue.setText(currency + baseAdapter.getTotal()+"");
+                //set balance view
                 if(listview.getCount() != 0){
 
                 llDetailOffsetBalance.setVisibility(View.VISIBLE);
                 tvDetailAmountBalanceValue.setText(currency + (mLoan.getAmount()- baseAdapter.getTotal())+ "");}
+                else{
+                    llDetailOffsetBalance.setVisibility(View.GONE);
+                }
 
 
 
@@ -299,7 +303,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
 
         if (mLoan != null) {
-            makeToast(mContext, "Loan name"+mLoan.getName() + mLoan.getId());
+            //makeToast(mContext, "Loan name"+mLoan.getName() + mLoan.getId());
             tvDetailAmountValue.setText(currency + mLoan.getAmount() + "");
             //dates
             tvDetailDateTakenValue.setText(dateToString1(mLoan.getDateTaken()));
@@ -395,7 +399,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
     public void onDialogPositiveClick(DialogFragment dialog, Date date) {
         // User touched cleared dialog's positive button
         dialog.dismiss();
-        makeToast(mContext, "clear positive offset");
+        //makeToast(mContext, "clear positive offset");
         mLoan.setClearedStatus(date);
         new LoanAsyncTask(mLoanViewModel, loanClearedAction).execute(mLoan);
 
@@ -437,15 +441,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
     public void onDialogNegativeClick(DialogFragment dialog, int action) {
         // User touched the dialog's negative button
         dialog.dismiss();
-        switch (action) {
-            case R.string.action_offset:
-                makeToast(mContext, "negative offset");
-                return;
-            case R.string.action_delete:
-                return;
-            case R.string.action_clear:
-                return;
-        }
+
 
     }
 // ********************* offset item selected **********************8
@@ -453,7 +449,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
     @Override
     public void onItemSelected(DialogFragment dialog, int title, int item){
         dialog.dismiss();
-        makeToast(mContext, item + "");
+        //makeToast(mContext, item + "");
         if (item == 0){
            deleteOffset();
         }else{
@@ -486,9 +482,9 @@ public class DetailActivity extends LifecycleLoggingActivity implements
                 startCallIntent();
                 break;
             case R.id.ivDetailEmail:
-                //TODO toggglebelow
-                sendNotificationBroadCast();
-                //startMailIntent();
+                //TODO remove afterwards, used for debugging
+                //sendNotificationBroadCast();
+                startMailIntent();
                 break;
             case R.id.ivDetailMessage:
                 startSmsIntent();
@@ -589,7 +585,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
                 showDialogs(R.string.action_clear);
                 return true;
             case R.id.action_home:
-                makeToast(mContext, "home clicked");
+               // makeToast(mContext, "home clicked");
                 Intent intent = new Intent(this, HomeActivity.class);
                 intent.putExtra("id", mLoan.getUser_id());
                 startActivity(intent);
@@ -671,7 +667,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
     public class DetailReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            makeToast(mContext, "intent received" + intent.getAction());
+            //makeToast(mContext, "intent received" + intent.getAction());
             String action = "";
             switch (intent.getAction()){
                 case offsetAddAction:

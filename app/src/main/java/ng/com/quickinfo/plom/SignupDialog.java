@@ -352,14 +352,16 @@ public class SignupDialog extends DialogFragment {
                     } else {
                         //user is normal so we need the password fields
                         llOldPassword.setVisibility(View.VISIBLE);
-                        signuppass.setText("New password");
-                        signupconfirmpass.setText("Confirm new password");
+                        signuppass.setHint("New password");
+                        signupconfirmpass.setHint("Confirm new password");
                         signupuser.setEnabled(false);
+                        signupuser.setText(user.getUserName());
 
                     }
                     signuplogin.setVisibility(View.GONE);
                     signupsignup.setText(R.string.action_update);
                     signupemail.setEnabled(false);
+                    signupemail.setText(user.getEmail());
 
                 }
             }

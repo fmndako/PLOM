@@ -31,6 +31,8 @@ import ng.com.quickinfo.plom.Utils.FilterUtils;
 import ng.com.quickinfo.plom.Utils.Utilities;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
 
+import static ng.com.quickinfo.plom.Utils.FilterUtils.Notifications;
+import static ng.com.quickinfo.plom.Utils.FilterUtils.activeLoans;
 import static ng.com.quickinfo.plom.Utils.FilterUtils.dateFilterList;
 import static ng.com.quickinfo.plom.Utils.FilterUtils.getItemCount;
 import static ng.com.quickinfo.plom.Utils.FilterUtils.getTotalSum;
@@ -38,6 +40,7 @@ import static ng.com.quickinfo.plom.Utils.FilterUtils.isDueSoon;
 import static ng.com.quickinfo.plom.Utils.FilterUtils.isOverDue;
 import static ng.com.quickinfo.plom.Utils.FilterUtils.isToday;
 import static ng.com.quickinfo.plom.Utils.Utilities.log;
+import static ng.com.quickinfo.plom.Utils.Utilities.makeToast;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -80,6 +83,7 @@ public class MyIntentService extends IntentService {
             int reminderDays = sharedPref.getInt(ActivitySettings.Pref_ReminderDays, 7);
 
             log(TAG, "intent not null");
+            makeToast(this, "PLOM service");
             //for higher versions
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 CharSequence name = getResources().getString(R.string.channel_name);
@@ -98,7 +102,7 @@ public class MyIntentService extends IntentService {
             if(mUserId!=0 && sharedPref.getBoolean(ActivitySettings.Pref_Notification, true)) {
                 LoanRepo repo = new LoanRepo(this.getApplication());
                 log(TAG, "Should notify");
-                //TODO
+                //TODO this works
                 //get loans that are due
 //                dueLoans = FilterUtils.Notifications(
 //                        repo.getLoans(mUserId), reminderDays);
@@ -108,8 +112,9 @@ public class MyIntentService extends IntentService {
 //                   log(TAG, "count is less than 1");
 //                    count = dueLoans.size();
 //                    int amount = getTotalSum(dueLoans);
-//                    String message = String.valueOf(count) +
-//                             loanPlural(count) +":"+ currency
+////                    String message = String.valueOf(count) +
+//                             getResources().getQuantityString(
+//                                     R.plurals.numberOfLoansAvailable, count) +":"+ currency
 //                            + String.valueOf(amount) + " needs your attention";
 //
 //                    //startNotification(notificationManager);
@@ -123,21 +128,27 @@ public class MyIntentService extends IntentService {
 
 
 
-                List<List<Loan>> loans = dateFilterList(dueLoans, reminderDays);
-                String message = "";
+                List<Loan> loans = Notifications(activeLoans(repo.getLoans(mUserId)), reminderDays);
 
-                for (int pos=0; pos<loans.size(); pos++) {
-                    List <Loan> mLoans = loans.get(pos);
-                    if (mLoans.size() != 0) {
-                        int size = getItemCount(mLoans);
-                        int amount = getTotalSum(mLoans);
-                        String type = "";
-                        String loanPlural = loanPlural(size);
-                        if(pos == 0){type = "Due soon: ";}
-                        else if (pos == 1){type = "Due today: ";}
-                        else{type = "Over due: ";}
-                        message = message + type + String.valueOf(size)
-                                + currency + String.valueOf(amount) + "\n";
+                for (Loan loan : loans) {
+                    Date date = loan.getDateToRepay();
+                    String name = loan.getName();
+                    String amount = String.valueOf(loan.getAmount());
+                    String message = "";
+                    if (isToday(date)){
+                        message = "Due Today: ";
+                    } else if (isDueSoon(date, reminderDays)){
+                        message = "Due Soon: ";
+                    }else{
+                        message = "Over Due: ";
+                    }
+
+                    message = message + name+ " " + currency + amount;
+                    NotificationCompat.Builder mBuilder = sendNotification(
+                            this, getString(R.string.notification_title), message);
+                    // notificationId is a unique int for each notification that you must define
+                    notificationManager.notify(Integer.valueOf(loan.getId() + ""), mBuilder.build());
+
 
 
                     }
@@ -169,15 +180,12 @@ public class MyIntentService extends IntentService {
 
 
         }
-    }
 
 
 
 
-    public static String loanPlural(int size){
-        //if true, returns the first arg else return the second
-        return size == 1 ? " Loan ": " Loans ";
-    }
+
+
     public NotificationCompat.Builder sendNotification(Context context, String title, String message ){
 
         // Create an explicit intent for an Activity in your app

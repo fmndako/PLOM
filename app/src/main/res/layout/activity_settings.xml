@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
 
     <LinearLayout
-        android:id="@+id/linear"
+        android:id="@+id/llSettings"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="visible">
 
@@ -194,11 +194,14 @@
 
             <customfonts.MyTextView
                 android:id="@+id/tvSignOut"
-                style="@style/AppTheme.Buttons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Sign Out" />
+                android:background="@color/button_signin"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="Sign Out"
+                android:textColor="@color/white" />
 
 
         </LinearLayout>
@@ -216,11 +219,15 @@
 
             <customfonts.MyTextView
                 android:id="@+id/tvDeleteAccount"
-                style="@style/AppTheme.Buttons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Delete Account" />
+                android:background="@color/button_signin"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="Delete Account"
+
+                android:textColor="@color/white" />
 
 
         </LinearLayout>
@@ -228,18 +235,20 @@
 
     </LinearLayout>
 
-    <FrameLayout
+    <LinearLayout
+        android:id="@+id/llProgress"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:visibility="visible">
 
         <ProgressBar
             android:id="@+id/pbSettings"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_gravity="center_vertical|center_horizontal"
-            tools:visibility="visible" />
-    </FrameLayout>
+            android:visibility="visible" />
+
+    </LinearLayout>
 
 
-</RelativeLayout>
+</LinearLayout>

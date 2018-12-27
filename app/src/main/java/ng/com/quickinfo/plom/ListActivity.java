@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -87,6 +88,9 @@ public class ListActivity extends LifecycleLoggingActivity implements
     //initiate viewmodel
     LoanViewModel mLoanViewModel;
     private long mUserId;
+    //resources
+    Resources resources;
+
 
     int loanType;
     //required for start new activity
@@ -105,6 +109,8 @@ public class ListActivity extends LifecycleLoggingActivity implements
         //load View Model
         mLoanViewModel = ViewModelProviders.of(this).get(LoanViewModel.class);
 
+        //resources
+        resources = getResources();
         //context
         mContext = getApplicationContext();
         Utilities.showProgress(true, mRegisterProgress, mContext);
@@ -240,8 +246,12 @@ public class ListActivity extends LifecycleLoggingActivity implements
                 }
                 adapter.setLoans(mLoans);
 
+                int count = adapter.getItemCount();
 
-                tvSize.setText("" + adapter.getItemCount() + " Loans");
+                //resourcesadb
+                tvSize.setText(count + " " + resources.getQuantityText(
+                        R.plurals.numberOfLoans,
+                        count));
                 tvTotal.setText(currency + adapter.getItemSum());
                 //TODO update other UI
                 Date date = Calendar.getInstance().getTime();

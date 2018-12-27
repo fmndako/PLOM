@@ -347,7 +347,7 @@
                         android:gravity="right"
                         android:maxLength="12"
                         android:padding="16dp"
-                        android:text="Deficit:"
+                        android:text="Balance:"
                         android:textColor="#a2a1b8"
                         android:textSize="16dp" />
 
@@ -446,7 +446,7 @@
                 android:background="@color/date_duesoon"
                 android:orientation="vertical"
                 android:padding="0.3dp"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <LinearLayout
                     android:id="@+id/llDueSoon1"
@@ -501,7 +501,7 @@
                 android:background="@color/date_due"
                 android:orientation="vertical"
                 android:padding="0.2dp"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <LinearLayout
                     android:id="@+id/llDue1"
@@ -556,7 +556,7 @@
                 android:background="@color/date_overdue"
                 android:orientation="vertical"
                 android:padding="0.2dp"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <LinearLayout
                     android:id="@+id/llOverDue1"

@@ -237,15 +237,19 @@ public class HomeActivity extends LifecycleLoggingActivity {
 
                 //active count and sum
                 int activeCount = borrowCount + lendCount;
-                int deficit = borrowTotal - lendTotal;
+                int deficit = lendTotal - borrowTotal;
                 int loanSum = borrowTotal + lendTotal;
 
 
-                tvActiveCount.setText(activeCount+ " Active Loans");
+                tvActiveCount.setText(activeCount+ " Active " + getResources().getQuantityString(
+                        R.plurals.numberOfLoans, activeCount
+                ));
                 //tvCountActive.setText(String.valueOf(allCount));
-
+                int clearedLoans = countAllLoans - activeCount;
                 //cleared
-                tvClearedCount.setText((countAllLoans - activeCount) + " Cleared Loans");
+                tvClearedCount.setText(clearedLoans + " Cleared " + getResources().getQuantityString(
+                        R.plurals.numberOfLoans, clearedLoans
+                ));
                 //deficit
                 tvDeficit.setText(currency + deficit+"");
                 //total loans

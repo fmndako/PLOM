@@ -243,12 +243,12 @@ public class AddLoanActivity extends AppCompatActivity {
                 if (cursor.moveToFirst()) {
                     name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
                     number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                    email = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS));
+                    email = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA));
                 }
                 // Do something with the phone number
                 actvNumber.setText(number);
                 actvName.setText(name);
-                actvEmail.setText(email);
+                //actvEmail.setText(email);
 
             }
         }

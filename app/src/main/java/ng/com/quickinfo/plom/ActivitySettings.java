@@ -75,8 +75,10 @@ public class ActivitySettings extends LifecycleLoggingActivity implements
     LinearLayout llReminderDays;
     @BindView(R.id.tvSignOut)
     MyTextView tvSignOut;
-    @BindView(R.id.linear)
-    LinearLayout linear;
+    @BindView(R.id.llSettings)
+    LinearLayout llSettings;
+    @BindView(R.id.llProgress)
+    LinearLayout llProgress;
     @BindView(R.id.tvDeleteAccount)
     MyTextView tvDeleteAccount;
     @BindView(R.id.pbSettings)
@@ -148,7 +150,9 @@ public class ActivitySettings extends LifecycleLoggingActivity implements
         editor = sharedPref.edit();
 
         mUserId = sharedPref.getLong(Pref_User, 0) ;
-        showProgressToggler(mContext, false, pbSettings, linear);
+        //hise progress linear layout
+        //llProgress.setVisibility(View.GONE);
+        showProgress(false, pbSettings,mContext);
         updateUI();
         setListener();
 
@@ -257,10 +261,8 @@ public class ActivitySettings extends LifecycleLoggingActivity implements
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        // ...
-                        //TODO go back to home menu
-                        startActivity(new Intent(ActivitySettings.this, SignInActivity.class));
-                        finish();
+                        // ...log out user after google signout
+                        logOutUser();
                     }
                 });
     }
@@ -272,9 +274,7 @@ public class ActivitySettings extends LifecycleLoggingActivity implements
                     public void onComplete(@NonNull Task<Void> task) {
                         // ...
                         //prompt delete of databas
-                        //new UserRepo.UserAsyncTask(mUserViewModel, HomeActivity.userDeleteAction).execute();
-                        //then delete database
-                        //exit app
+                        deleteUser();
                     }
                 });
     }
@@ -295,14 +295,14 @@ public class ActivitySettings extends LifecycleLoggingActivity implements
                 break;
             case R.id.tvSignOut:
                 //TODO
-                //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                showProgressToggler(mContext, true, pbSettings, linear);
+                //toggle layouts
+                llSettings.setVisibility(View.GONE);
                 showProgress(true, pbSettings, mContext);
-                try{
-                    Thread.sleep(3000);
-                }catch(InterruptedException e){
-                    log(TAG, "thread interupted");
+                log(TAG, "threading" );
+                try{ Thread.sleep(2000);}catch (InterruptedException e){
+
                 }
+
                 logOut();
                 break;
             case R.id.tvDeleteAccount:
@@ -312,6 +312,11 @@ public class ActivitySettings extends LifecycleLoggingActivity implements
     }
 
     private void logOut() {
+//        try{
+//            Thread.currentThread().wait(2000);
+//        }catch(InterruptedException e){
+//            log(TAG, "thread interupted");
+//        }
         if(!mUser.getUserName().isEmpty()){
             logOutUser();
         }else{
@@ -325,6 +330,7 @@ public class ActivitySettings extends LifecycleLoggingActivity implements
         //edit pref to reflect user state
         editor.putBoolean(Pref_Keeper, false);
         editor.putLong(Pref_User, 0);
+
         editor.commit();
         Intent logoutIntent = new Intent(this, SignInActivity.class);
         logoutIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -360,6 +366,11 @@ public class ActivitySettings extends LifecycleLoggingActivity implements
     }
 
     private void deleteUser() {
+        if(!mUser.getUserName().isEmpty()){
+            editor.putBoolean(mUser.getUserName(), true);}
+        editor.putBoolean(mUser.getEmail(), true);
+        editor.commit();
+
         new UserRepo.UserAsyncTask(mUserViewModel,
                 HomeActivity.userDeleteAction).execute(mUser);
 
@@ -381,17 +392,14 @@ public class ActivitySettings extends LifecycleLoggingActivity implements
 //"""""""""listeners *********************8
 
     public void onDialogPositiveClick(DialogFragment d, int i){
-           if (!mUser.getUserName().isEmpty()) {
-                deleteUser();
-                logOutUser();
+           if (mUser.getUserName().isEmpty()) {
 
-            } else {
                 //google delete user
                 revokeAccess();
-                deleteUser();
-                logOutUser();
 
-            }
+
+            }else{
+        deleteUser();}
     }
     public void onDialogNegativeClick(DialogFragment dialog, int action){
 
@@ -421,6 +429,8 @@ public class ActivitySettings extends LifecycleLoggingActivity implements
                     break;
                 case HomeActivity.userDeleteAction:
                     action = "User deleted";
+                    logOutUser();
+
                     break;
 
             }

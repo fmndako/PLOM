@@ -5,6 +5,28 @@
 
     <string name="channel_name">ng.com.quickinfo.plom</string>
     <string name="channel_description">Loan Notification</string>
+    <string name="notification_title"><b>PLOM</b></string>
+    <plurals name="numberOfLoansAvailable">
+        <!--
+             As a developer, you should always supply "one" and "other"
+             strings. Your translators will know which strings are actually
+             needed for their language. Always include %d in "one" because
+             translators will need to use %d for languages where "one"
+             doesn't mean 1 (as explained above).
+          -->
+        <item quantity="one">%d Loan</item>
+        <item quantity="other">%d Loans</item>
+    </plurals>
+    <plurals name="numberOfLoans">
+              <item quantity="one"> Loan</item>
+        <item quantity="other"> Loans</item>
+    </plurals>
+
+    <string name="notification_messages">Hello, %1$s! You have %2$d new messages.</string>
+
+    <!--home-->
+    <string name="home_active_loans"></string>
+
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (optional)</string>
