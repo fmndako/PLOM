@@ -35,6 +35,7 @@ public class LoanRepo {
         return mLoanDao.getItembyUserId(user_id);
     }
 
+
     public void insert (Loan Loan) {
         mLoanDao.insert(Loan);
     }

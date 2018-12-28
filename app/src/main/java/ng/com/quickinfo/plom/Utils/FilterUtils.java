@@ -10,6 +10,7 @@ import ng.com.quickinfo.plom.Model.Loan;
 
 import static android.service.autofill.Validators.or;
 import static ng.com.quickinfo.plom.Utils.Utilities.dateToString;
+import static ng.com.quickinfo.plom.Utils.Utilities.dateToString1;
 import static ng.com.quickinfo.plom.Utils.Utilities.log;
 import static ng.com.quickinfo.plom.Utils.Utilities.stringToDate;
 
@@ -20,7 +21,16 @@ public class FilterUtils {
     public static List<Loan> searchLoans(List<Loan> loans, String query){
         List<Loan> filterLoans = new ArrayList<>();
         for (Loan loan: loans){
-            if (loan.getName().contains(query) || (loan.getAmount().toString().contains(query)))
+            String name = loan.getName().toLowerCase();
+            String amount = loan.getAmount().toString();
+//            String email = loan.getEmail();
+//            String number = loan.getNumber();
+            String datetaken = dateToString1(loan.getDateTaken()).toLowerCase();
+            String dateToRepay = dateToString1(loan.getDateToRepay()).toLowerCase();
+
+
+            if (name.contains(query) || amount.contains(query) || datetaken.contains(query)
+                    || dateToRepay.contains(query))
             {
                 filterLoans.add(loan);
             }

@@ -16,6 +16,8 @@ import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
@@ -168,6 +170,7 @@ public class ActivitySettings extends LifecycleLoggingActivity implements
 
     }
     private void setListener() {
+        //set listeners for all pref values
         //reminder days
         tvReminderDays.addTextChangedListener(new TextWatcher() {
 
@@ -181,9 +184,10 @@ public class ActivitySettings extends LifecycleLoggingActivity implements
                                       int before, int count) {
                 if(!s.toString().isEmpty()) {
                     editor.putInt(Pref_ReminderDays, Integer.valueOf(s.toString()));
+                    editor.commit();
                 }
 
-                editor.commit();
+
             }
         });
     //switch notification
@@ -216,7 +220,7 @@ public class ActivitySettings extends LifecycleLoggingActivity implements
                 editor.putString(Pref_Currency, getCurrency(array[i]));
                 editor.putInt(Pref_Currency_Value, i);
                 editor.commit();
-                makeToast(mContext, getCurrency(array[i]));
+               // makeToast(mContext, getCurrency(array[i]));
 
 
 
@@ -420,7 +424,7 @@ public class ActivitySettings extends LifecycleLoggingActivity implements
     public class SettingsReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            makeToast(mContext, "intent received" + intent.getAction());
+            //makeToast(mContext, "intent received" + intent.getAction());
             String action = "";
             switch (intent.getAction()){
                 case HomeActivity.userUpdateAction:
@@ -448,6 +452,35 @@ public class ActivitySettings extends LifecycleLoggingActivity implements
         //null the receivers to prevent ish
         myReceiver = null;
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_settings, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        if (id == R.id.action_list_home){
+            log(TAG, "onoptionsitemselected: home click");
+            //makeToast(mContext, "home clicked");
+            Intent intent = new Intent(this, HomeActivity.class);
+            intent.putExtra("id", mUserId);
+            startActivity(intent);
+
+        }
+
+
+        return super.onOptionsItemSelected(item);
+    }
+
 
 }
 

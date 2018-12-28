@@ -199,7 +199,7 @@ public class SignupDialog extends DialogFragment {
         //get the number, doesnt require any checking or validation
         mUser.setNumber(signupnumber.getText().toString());
 
-        //if user name is empty, then the user userd google login option
+        //if user name is empty, then the user used google login option
 
         if (mUser.getUserName().isEmpty()){
 
@@ -208,17 +208,18 @@ public class SignupDialog extends DialogFragment {
 
         }
         else{
-            //the user has passwords and other fields and needs to be validated
+            //the user has passwords and other fields and the fields need to be validated
             boolean cancel = false;
 
-            String pass = signuppass.getText().toString();
-            if (isPasswordValid(pass) && pass.equals(mUser.getPassword())){
+            String oldpass = signupoldpass.getText().toString();
+            String newpass = signuppass.getText().toString();
+            if (!isPasswordValid(newpass) && !oldpass.equals(mUser.getPassword())){
                 signupoldpass.setError("Incorrect PassWord");
                 signupoldpass.requestFocus();
                 cancel=true;
 
             }
-            if(!isPasswordValid(pass)){
+            if(!isPasswordValid(newpass)){
                 //update
                 signuppass.setError("Invalid Password");
                 signuppass.requestFocus();
@@ -227,8 +228,8 @@ public class SignupDialog extends DialogFragment {
             }
 
             if(!cancel){
-
-                mUser.setPassword(pass);
+               // update user
+                mUser.setPassword(newpass);
 
                 updateUser(mUser);
             }
@@ -362,6 +363,7 @@ public class SignupDialog extends DialogFragment {
                     signupsignup.setText(R.string.action_update);
                     signupemail.setEnabled(false);
                     signupemail.setText(user.getEmail());
+                    signupnumber.setText(user.getNumber());
 
                 }
             }

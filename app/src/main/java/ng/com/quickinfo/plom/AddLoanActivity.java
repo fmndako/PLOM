@@ -30,7 +30,6 @@ import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
 
 import static ng.com.quickinfo.plom.Utils.Utilities.dateToString;
 import static ng.com.quickinfo.plom.Utils.Utilities.log;
-import static ng.com.quickinfo.plom.Utils.Utilities.makeToast;
 
 public class AddLoanActivity extends AppCompatActivity {
 

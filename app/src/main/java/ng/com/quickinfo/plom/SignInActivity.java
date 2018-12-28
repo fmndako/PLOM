@@ -279,6 +279,7 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
                 attemptLogin();
                 break;
             case R.id.signup:
+                showProgress(true);
                 openSignUpDialog(HomeActivity.userAddAction);
                 break;
         }

@@ -20,6 +20,7 @@ import android.transition.Explode;
 import android.transition.Slide;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -108,9 +109,6 @@ public class DetailActivity extends LifecycleLoggingActivity implements
     DetailReceiver myReceiver;
     IntentFilter intentFilter;
 
-    //TODO remove Notification receiver in production
-    NotificationReceiver notificationReceiver;
-
     // Extra name for the ID parameter
     public static final String EXTRA_PARAM_ID = "detail:_id";
 
@@ -178,7 +176,6 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         //create broadcast receivers
         myReceiver = new DetailReceiver();
         //add filters
-        notificationReceiver = new NotificationReceiver();
 
         intentFilter = new IntentFilter(offsetAddAction);
         intentFilter.addAction(offsetDeleteAction);
@@ -188,7 +185,6 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         intentFilter.addAction(loanClearedAction);
         //register
         LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver, intentFilter);
-        LocalBroadcastManager.getInstance(this).registerReceiver(notificationReceiver, intentFilter);
 
         //set loan view model
         mLoanViewModel = ViewModelProviders.of(this).get(LoanViewModel.class);
@@ -347,9 +343,65 @@ public class DetailActivity extends LifecycleLoggingActivity implements
                 updateClearedStatus();
                  }
             }
-
+        //set ontouch down listeners for all clickables and touch up
+        //setTouchListener(); // didnt work //next update
     }
-    //TODO separate concern
+
+//    private void setTouchListener() {
+//        //TODO setting on touch listeners
+//        ArrayList<ImageView> views = new ArrayList<ImageView>();
+//        views.add(ivDetailCall);
+//        views.add(ivDetailEmail);
+//        views.add(ivDetailMessage);
+//        for(View view: views){
+//            view.setOnTouchListener(new View.OnTouchListener() {
+//                @Override
+//                public boolean onTouch(View view, MotionEvent event) {
+//
+//                    if(event.getAction()== MotionEvent.ACTION_DOWN){
+//                        view.setBackground(getDrawable(R.drawable.rectangle_gray));
+//
+//                    }
+//                    else if (event.getAction()==MotionEvent.ACTION_UP){
+//                        view.setBackground(getDrawable(R.drawable.rectangle_white));
+//
+//                    }
+//
+//
+//                    return true;
+//                }
+//
+//
+//            });
+//
+//            //TODO remove if it doesnt respond
+//            view.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    switch (view.getId()){
+//                        case R.id.ivDetailCall:
+//                            startCallIntent();
+//                            break;
+//                        case R.id.ivDetailEmail:
+//                            //TODO remove afterwards, used for debugging
+//                            //sendNotificationBroadCast();
+//                            startMailIntent();
+//                            break;
+//                        case R.id.ivDetailMessage:
+//                            startSmsIntent();
+//                            break;
+//
+//                    }
+//
+//                }
+//            });
+//
+//
+//        }
+//
+//    }
+
+
     public void updateClearedStatus() {
 
         tvDetailClearedStatusValue.setText(R.string.cleared_status_cleared);
@@ -487,6 +539,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
                 startMailIntent();
                 break;
             case R.id.ivDetailMessage:
+                makeToast(mContext, "onClick");
                 startSmsIntent();
                 break;
         }
@@ -507,7 +560,12 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         smsIntent.setType("vnd.android-dir/mms-sms");
         smsIntent.putExtra("address", mLoan.getNumber());
         smsIntent.putExtra("sms_body", getMessage());
-        startActivity(smsIntent);
+        if (smsIntent.resolveActivity(getPackageManager()) != null){
+            startActivity(smsIntent);
+        } else {
+            makeToast(this, "SMS messaging service not available");
+
+        }
     }
 
     private void startMailIntent() {
@@ -522,6 +580,12 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         String phone = mLoan.getNumber();
         Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
         startActivity(intent);
+        if (intent.resolveActivity(getPackageManager()) != null){
+            startActivity(intent);
+        } else {
+            makeToast(this, "Dial service not available");
+
+        }
     }
 
     //********************** action bar ***************88
@@ -651,8 +715,6 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         super.onDestroy();
         //unregistering using local broadcast manager
         LocalBroadcastManager.getInstance(this).unregisterReceiver(myReceiver);
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(notificationReceiver);
-        notificationReceiver = null;
         //null the receivers to prevent ish
         myReceiver = null;
     }

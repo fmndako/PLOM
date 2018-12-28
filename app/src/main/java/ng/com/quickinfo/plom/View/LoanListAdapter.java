@@ -120,7 +120,7 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
             Date date = loan.getDateToRepay();
             //duesoon
             Boolean isOn = false;
-            String comment = "Due on: ";
+            String comment = "";
             int color = R.color.green;
 
             if(isToday(date)){
@@ -130,14 +130,14 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
             }
             else if (isDueSoon(date, reminderDays)){
                 isOn = true;
-                comment = "Due very soon: ";
+                comment = "Due Soon: ";
                 color = R.color.date_duesoon;
 
 
             }
             else if (isOverDue(date)){
                 isOn = true;
-                comment = "Due since: ";
+                comment = "Over Due: ";
                 color = R.color.date_overdue;
             }
             //notify

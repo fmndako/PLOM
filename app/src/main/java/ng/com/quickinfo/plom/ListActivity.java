@@ -285,7 +285,7 @@ public class ListActivity extends LifecycleLoggingActivity implements
             @Override
             public boolean onQueryTextChange(String newText) {
                 log(TAG, newText);
-                adapter.setLoans(FilterUtils.searchLoans(mLoans, newText));
+                adapter.setLoans(FilterUtils.searchLoans(mLoans, newText.toLowerCase()));
                 tvSize.setText(adapter.getItemCount()+ "Loans");
                 tvTotal.setText(currency + adapter.getItemSum());
 

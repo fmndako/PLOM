@@ -23,7 +23,7 @@ public interface LoanDao {
     @Query("select * from loan_table where user_id = :id")
     List<Loan> getLoans(long id);
 
-    @Query("select * from loan_table where user_id = :id")
+    @Query("select * from loan_table where user_id = :id ORDER BY dateToRepay")
     LiveData<List<Loan>>  getItembyUserId(long id);
 
     @Insert(onConflict = REPLACE)
