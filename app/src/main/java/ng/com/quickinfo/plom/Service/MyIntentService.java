@@ -102,7 +102,7 @@ public class MyIntentService extends IntentService {
             if(mUserId!=0 && sharedPref.getBoolean(ActivitySettings.Pref_Notification, true)) {
                 LoanRepo repo = new LoanRepo(this.getApplication());
                 log(TAG, "Should notify");
-                //TODO this works
+                //TODO this also works
                 //get loans that are due
 //                dueLoans = FilterUtils.Notifications(
 //                        repo.getLoans(mUserId), reminderDays);
@@ -143,9 +143,9 @@ public class MyIntentService extends IntentService {
                         message = "Over Due: ";
                     }
 
-                    message = message + name+ " " + currency + amount;
+                    message = message + name+ ", " + currency + amount;
                     NotificationCompat.Builder mBuilder = sendNotification(
-                            this, getString(R.string.notification_title), message, loan.getId() );
+                            this, getString(R.string.notificatin_title_soon), message, loan.getId() );
                     // notificationId is a unique int for each notification that you must define
                     notificationManager.notify(Integer.valueOf(loan.getId() + ""), mBuilder.build());
 

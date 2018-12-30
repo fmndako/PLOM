@@ -22,7 +22,7 @@
         <item quantity="other"> Loans</item>
     </plurals>
 
-    <string name="notificatin_title_soon"><b>Due Loans</b></string>
+    <string name="notificatin_title_soon"><b>Due loan</b></string>
     <string name="notification_messages">Hello, %1$s! You have %2$d new messages.</string>
 
     <!--home-->
