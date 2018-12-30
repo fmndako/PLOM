@@ -32,13 +32,13 @@ public class NotificationReceiver extends BroadcastReceiver {
 
 
         //starts activity
-        Utilities.makeToast(context, "On Receive Notification");
+        //Utilities.makeToast(context, "On Receive Notification");
         if(intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)){
             schedule(context);
 
         }else if(intent.getAction().equals((DetailActivity.offsetUpdateAction))){
             //TODO remove in production
-            schedule(context);
+            //schedule(context);
 
 //            context.startService(new Intent(context, MyIntentService.class));
 //            Utilities.makeToast(context, "detail screen notification received");
@@ -56,13 +56,13 @@ public class NotificationReceiver extends BroadcastReceiver {
                 Context.ALARM_SERVICE);
         long startTime = System.currentTimeMillis();
         long intervalTime =8*60* 60 *1000;
-        log("Receiver", "timer");
+        log("PLOM", "timer");
         //create intent and set alarm
 
         Intent intent = new Intent(context, MyIntentService.class);
         PendingIntent pendingIntent = PendingIntent.getService(context,
                 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        Utilities.makeToast(context, "detail screen notification received");
+        //Utilities.makeToast(context, "detail screen notification received");
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
                 startTime, intervalTime,pendingIntent );
 

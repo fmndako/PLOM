@@ -151,8 +151,17 @@ public class HomeActivity extends LifecycleLoggingActivity {
         editor = sharedPref.edit();
         currency = sharedPref.getString(ActivitySettings.Pref_Currency,"N" );
         reminderDays = sharedPref.getInt(ActivitySettings.Pref_ReminderDays, 7);
+
+        //modify layout to fit orientation
+        //TODO adjust view to fit orientation
+        Boolean is_landscape = mContext.getResources().getBoolean(R.bool.is_landscape);
+        if (is_landscape){
+            llBorrows.setVisibility(View.GONE);
+            llLends.setVisibility(View.GONE);
+        }
         //get id from intent
-    
+
+
         id = getIntent().getLongExtra("id", 0);
         //makeToast(mContext, id + "");
         showProgress(true, progressBar, mContext);
