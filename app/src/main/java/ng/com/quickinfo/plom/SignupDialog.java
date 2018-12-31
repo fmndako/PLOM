@@ -66,6 +66,12 @@ public class SignupDialog extends DialogFragment {
     TextView signupoldpass;
     @BindView(R.id.llOldPassword)
     LinearLayout llOldPassword;
+    @BindView(R.id.lluser)
+    LinearLayout lluser;
+    @BindView(R.id.llpass)
+    LinearLayout llpass;
+    @BindView(R.id.llconfirmpass)
+    LinearLayout llconfirmpass;
 
 
 
@@ -184,7 +190,7 @@ public class SignupDialog extends DialogFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.signupsignup:
-                 if(mAction!= HomeActivity.userAddAction){attemptUpdate();}
+                if(mAction!= HomeActivity.userAddAction){attemptUpdate();}
                 else{attemptSignUp();}
 
                 break;
@@ -228,15 +234,15 @@ public class SignupDialog extends DialogFragment {
             }
 
             if(!cancel){
-               // update user
+                // update user
                 mUser.setPassword(newpass);
 
                 updateUser(mUser);
             }
 
-            }
-
         }
+
+    }
 
     private void updateUser(User user) {
         //add user to database after credentials have been checked
@@ -248,7 +254,7 @@ public class SignupDialog extends DialogFragment {
         dismiss();
 
 
-}
+    }
 
 
     private void attemptSignUp() {
@@ -334,21 +340,21 @@ public class SignupDialog extends DialogFragment {
     }
 
     private void setProfile(long id) {
-            //**  @{ActivitySettings}
+        //**  @{ActivitySettings}
         //set profile for user profile edit
         userViewModel.getUserById(id).observe(this, new android.arch.lifecycle.Observer<User>() {
             @Override
             public void onChanged(@Nullable final User user) {
                 log(SignupDialog.this.getTag(), "edituser: setprofile");
                 if (user != null) {
-                //if user is not null, then the user has to be set
+                    //if user is not null, then the user has to be set
                     mUser = user;
                     //check if the user is through google or normal registration
                     if (user.getUserName().isEmpty()) {
                         //then the user is through google
-                        signupconfirmpass.setVisibility(View.GONE);
-                        signuppass.setVisibility(View.GONE);
-                        signupuser.setVisibility(View.GONE);
+                        llconfirmpass.setVisibility(View.GONE);
+                        llpass.setVisibility(View.GONE);
+                        lluser.setVisibility(View.GONE);
 
                     } else {
                         //user is normal so we need the password fields
@@ -373,14 +379,14 @@ public class SignupDialog extends DialogFragment {
     private void registerUser(String mUser, String password) {
         //register user after attempt signup
         User user = new User(mUser,signupnumber.getText().toString(),
-                    signupemail.getText().toString(), password);
-            mListener.onSignUp(this, user);
+                signupemail.getText().toString(), password);
+        mListener.onSignUp(this, user);
     }
 
     private boolean isEmailAvailable(String email) {
         //true if first timer else false
         return sharedPref.getBoolean(email, true);
-            }
+    }
 
     private boolean isUserAvailable(String name) {
         return sharedPref.getBoolean(name, true);
