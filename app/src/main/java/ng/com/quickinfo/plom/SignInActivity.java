@@ -93,7 +93,7 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
 
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         if (account != null) {
-            Log.d(TAG, "account is not  null" + account.getObfuscatedIdentifier());
+            Log.d(TAG, "account is not  null" + account.getEmail());
             checkCredentialsGoogle(account.getEmail());
         }
         //continue
@@ -139,7 +139,8 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail().requestIdToken(
-                        "255241179759-ekpv13bpufhdg2fr04e9csmmj7k5ja6b.apps.googleusercontent.com")
+                        "255241179759-bca4ct96jggak7cvuh5r7ism8stl4te3.apps.googleusercontent.com"
+                )
                 .build();
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
@@ -153,12 +154,12 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
         findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    switch (view.getId()) {
-                        case R.id.sign_in_button:
-                            signIn();
-                            break;
-                    }
-                    }
+                switch (view.getId()) {
+                    case R.id.sign_in_button:
+                        signIn();
+                        break;
+                }
+            }
         });
 
     }
@@ -191,12 +192,16 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
 
             // Signed in successfully, show authenticated UI.
             checkCredentialsGoogle(account.getEmail());
+            //remove
+            //makeToast(mContext, "sign in successful");
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
             log(TAG, "signInResult:failed code=" + getStatusCodeString(e.getStatusCode()));
             showProgress(false);
             makeToast(mContext, "Network Error");
+            // remove
+            //makeToast(mContext, "signInResult:failed code=" + getStatusCodeString(e.getStatusCode()));
 
         }
 
@@ -271,11 +276,15 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
         }
     }
 
-    
+
     @OnClick({R.id.login, R.id.signup})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.login:
+                //TODOremove; only here for testing firebase
+//                if(etUser.getText().toString().equals("user")){
+//                    checkCredentials("user", "password" );
+//                }
                 attemptLogin();
                 break;
             case R.id.signup:
@@ -335,7 +344,7 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
             checkCredentials(user, password);
 
 
-                        //showProgress(true);
+            //showProgress(true);
 
         }
     }
@@ -353,6 +362,8 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
             editor.putBoolean(email, false);
             editor.commit();
             log(TAG, "checkcredentialsgoogle: first timer email");
+            // remove
+            //makeToast(mContext, "first timer");
 
         } else {
             //not first timer
@@ -364,8 +375,8 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
                         goToHome(user.getUserId());
 
 
-                        }
-                                    }
+                    }
+                }
             });
 
 
@@ -419,7 +430,7 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
 
                 }
             });
-            }
+        }
 
 
 
@@ -481,7 +492,7 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
         public void onReceive(Context context, Intent intent) {
             switch (intent.getAction()){
                 case HomeActivity.userAddAction:
-                     //get id from intent and go to home screen
+                    //get id from intent and go to home screen
                     log(TAG, "onreceive: user added");
                     makeToast(context, "user added");
                     long id = intent.getLongExtra("id", 0);
