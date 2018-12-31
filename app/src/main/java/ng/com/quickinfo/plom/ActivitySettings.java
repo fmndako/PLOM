@@ -124,7 +124,7 @@ public class ActivitySettings extends LifecycleLoggingActivity implements
 
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         if (account != null) {
-            Log.d(TAG, "account is not  null" + account.getObfuscatedIdentifier());
+            Log.d(TAG, "account is not  null" + account.getEmail());
         }
         //continue
         //updateUI();
@@ -190,7 +190,7 @@ public class ActivitySettings extends LifecycleLoggingActivity implements
 
             }
         });
-    //switch notification
+        //switch notification
         sNotifications.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
@@ -220,7 +220,7 @@ public class ActivitySettings extends LifecycleLoggingActivity implements
                 editor.putString(Pref_Currency, getCurrency(array[i]));
                 editor.putInt(Pref_Currency_Value, i);
                 editor.commit();
-               // makeToast(mContext, getCurrency(array[i]));
+                // makeToast(mContext, getCurrency(array[i]));
 
 
 
@@ -236,10 +236,10 @@ public class ActivitySettings extends LifecycleLoggingActivity implements
     }
 
     public static String getCurrency(String s) {
-            Locale locale = new Locale("EN", s);
-            Currency currency = Currency.getInstance(locale);
-            String symbol = currency.getSymbol(locale);
-            return symbol;
+        Locale locale = new Locale("EN", s);
+        Currency currency = Currency.getInstance(locale);
+        String symbol = currency.getSymbol(locale);
+        return symbol;
 
 
     }
@@ -385,7 +385,7 @@ public class ActivitySettings extends LifecycleLoggingActivity implements
         mUserViewModel.getUserById(mUserId).observe(this, new android.arch.lifecycle.Observer <User>()  {
             @Override
             public void onChanged(@Nullable final User user) {
-               mUser = user;
+                mUser = user;
 
             }
         });
@@ -396,14 +396,14 @@ public class ActivitySettings extends LifecycleLoggingActivity implements
 //"""""""""listeners *********************8
 
     public void onDialogPositiveClick(DialogFragment d, int i){
-           if (mUser.getUserName().isEmpty()) {
+        if (mUser.getUserName().isEmpty()) {
 
-                //google delete user
-                revokeAccess();
+            //google delete user
+            revokeAccess();
 
 
-            }else{
-        deleteUser();}
+        }else{
+            deleteUser();}
     }
     public void onDialogNegativeClick(DialogFragment dialog, int action){
 
@@ -415,7 +415,7 @@ public class ActivitySettings extends LifecycleLoggingActivity implements
 
         new UserRepo.UserAsyncTask(mUserViewModel, HomeActivity.userUpdateAction).execute(user);
         //nothing
-}
+    }
 
 
 // receiver for receiving user updated and user logout abd deleted complete
