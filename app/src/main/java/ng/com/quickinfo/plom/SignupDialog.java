@@ -11,6 +11,7 @@ import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -72,8 +73,8 @@ public class SignupDialog extends DialogFragment {
     LinearLayout llpass;
     @BindView(R.id.llconfirmpass)
     LinearLayout llconfirmpass;
-    @BindView(R.id.llProfileImage)
-    LinearLayout llProfileImage;
+    @BindView(R.id.llProfileMain)
+    LinearLayout llProfileMain;
 
 
 
@@ -357,6 +358,8 @@ public class SignupDialog extends DialogFragment {
                         llconfirmpass.setVisibility(View.GONE);
                         llpass.setVisibility(View.GONE);
                         lluser.setVisibility(View.GONE);
+                        //TODO added
+                        llProfileMain.setGravity(Gravity.CENTER);
 
 
                     } else {
