@@ -373,8 +373,8 @@ public class SignupDialog extends DialogFragment {
                     signupemail.setEnabled(false);
                     signupemail.setText(user.getEmail());
                     signupnumber.setText(user.getNumber());
-                    //TODO remove logo
-                    llProfileImage.setVisibility(View.GONE);
+
+
 
                 }
             }
