@@ -343,23 +343,8 @@ public class ActivitySettings extends LifecycleLoggingActivity implements
         if(mDialog!= null){mDialog.dismiss();}
     }
     private void deleteAccount() {
-        makeToast(mContext, "deleting act");
-//        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-//        builder.setTitle("Delete Account").setMessage(
-//                "All your data will be deleted from the database" )
-//                .setPositiveButton(R.string.action_delete, new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int id) {
-//                        // Send the positive button event back to the host activity
-//                        onDialogPositiveClick();
-//                    }
-//                })
-//                .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int id) {
-//                        // Send the negative button event back to the host activity
-//                        dialog.dismiss();
-//                    }
-//                });
-//        builder.show();
+        //makeToast(mContext, "deleting act");
+
         DeleteDialog deleteDialog = new DeleteDialog();
         Bundle deletebundle = new Bundle();
         deletebundle.putString("action", HomeActivity.userDeleteAction);
