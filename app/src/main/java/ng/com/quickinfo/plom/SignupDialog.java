@@ -72,6 +72,8 @@ public class SignupDialog extends DialogFragment {
     LinearLayout llpass;
     @BindView(R.id.llconfirmpass)
     LinearLayout llconfirmpass;
+    @BindView(R.id.llProfileImage)
+    LinearLayout llProfileImage;
 
 
 
@@ -356,6 +358,7 @@ public class SignupDialog extends DialogFragment {
                         llpass.setVisibility(View.GONE);
                         lluser.setVisibility(View.GONE);
 
+
                     } else {
                         //user is normal so we need the password fields
                         llOldPassword.setVisibility(View.VISIBLE);
@@ -370,6 +373,8 @@ public class SignupDialog extends DialogFragment {
                     signupemail.setEnabled(false);
                     signupemail.setText(user.getEmail());
                     signupnumber.setText(user.getNumber());
+                    //TODO remove logo
+                    llProfileImage.setVisibility(View.GONE);
 
                 }
             }
