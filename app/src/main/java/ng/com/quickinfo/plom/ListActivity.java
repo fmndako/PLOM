@@ -22,12 +22,19 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -38,18 +45,22 @@ import butterknife.ButterKnife;
 import customfonts.MyTextView;
 import ng.com.quickinfo.plom.Model.Loan;
 import ng.com.quickinfo.plom.Model.LoanRepo;
+import ng.com.quickinfo.plom.Model.Offset;
 import ng.com.quickinfo.plom.Utils.FilterUtils;
 import ng.com.quickinfo.plom.Utils.Utilities;
-import ng.com.quickinfo.plom.View.LoanListAdapter;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
 
 import static ng.com.quickinfo.plom.DetailActivity.startSettings;
+import static ng.com.quickinfo.plom.Utils.FilterUtils.getTotalSum;
+import static ng.com.quickinfo.plom.Utils.FilterUtils.isDueSoon;
+import static ng.com.quickinfo.plom.Utils.FilterUtils.isOverDue;
+import static ng.com.quickinfo.plom.Utils.FilterUtils.isToday;
+import static ng.com.quickinfo.plom.Utils.Utilities.dateToString1;
 import static ng.com.quickinfo.plom.Utils.Utilities.intentToLoan;
 import static ng.com.quickinfo.plom.Utils.Utilities.log;
 import static ng.com.quickinfo.plom.Utils.Utilities.makeToast;
 
-public class ListActivity extends LifecycleLoggingActivity implements
-        LoanListAdapter.OnHandlerInteractionListener {
+public class ListActivity extends LifecycleLoggingActivity {
     //implemented a listener from the adapter to handle layout clicks
     //delare variables
     //intent for signout and revoke access
@@ -83,13 +94,13 @@ public class ListActivity extends LifecycleLoggingActivity implements
 
     //context
     private Context mContext;
-    //TODO remive
-    Activity activity;
-    //initiate viewmodel
+
     LoanViewModel mLoanViewModel;
     private long mUserId;
     //resources
     Resources resources;
+    //offset total
+    private  int sumtotal = 0;
 
 
     int loanType;
@@ -124,9 +135,6 @@ public class ListActivity extends LifecycleLoggingActivity implements
         mUserId = sharedPref.getLong(ActivitySettings.Pref_User, 1);
         loanType = getIntent().getIntExtra("loanType", 0);
 
-        activity = this;
-
-
         //register receiver
         registerMyReceivers();
 
@@ -136,8 +144,6 @@ public class ListActivity extends LifecycleLoggingActivity implements
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         loadRV(loanType);
-
-
         //setspinner filter
         spFilter.setSelection(loanType);
         setSpinnerListener();
@@ -148,7 +154,6 @@ public class ListActivity extends LifecycleLoggingActivity implements
                 addNewLoan();
             }
         });
-
     }
 
 
@@ -167,18 +172,9 @@ public class ListActivity extends LifecycleLoggingActivity implements
             }
         });
 
-//
-//
-
     }
     public boolean canTransition(){
         return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP);
-    }
-
-    public void onHandlerInteraction(long loan_id, View view) {
-        //my own listener created in the loanadapter class
-
-        startDetailActivity(loan_id, view);
     }
 
     private void startDetailActivity(long loan_id, View view) {
@@ -201,9 +197,6 @@ public class ListActivity extends LifecycleLoggingActivity implements
     }
 
     private void loadRV(final int loanType) {
-
-        //loads the RV
-
         //observer
         mLoanViewModel.getLoansByUserId(mUserId).observe(this, new Observer<List<Loan>>() {
             @Override
@@ -261,6 +254,27 @@ public class ListActivity extends LifecycleLoggingActivity implements
         Utilities.showProgress(false, mRegisterProgress, mContext);
     }
 
+    //get total offset
+    public int getOffsetTotal(long id) {
+        mLoanViewModel.getOffsetByLoanId(id).observe(this, new Observer<List<Offset>>() {
+            @Override
+            public void onChanged(@Nullable final List<Offset> offsets) {
+                // Update the cached copy of the loans in the adapter.
+                int total = 0;
+                for (Offset offset:offsets){
+                    total  += offset.getAmount();
+
+                }
+                sumtotal = total;
+            }
+
+
+        });
+
+
+
+        return sumtotal;
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -390,5 +404,200 @@ public class ListActivity extends LifecycleLoggingActivity implements
     // Now we can start the Activity, providing the activity options as a bundle
         ActivityCompat.startActivity(this, intent, activityOptions.toBundle());
     // END_INCLUDE(start_activity)
+    }
+
+
+
+    //list rv adapter
+    public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanViewHolder> {
+
+        private final LayoutInflater mInflater;
+
+        private List<Loan> mLoans; // Cached copy of loans
+        //transition
+        // Allows to remember the last item shown on screen
+        private int lastPosition = -1;
+
+        public LoanListAdapter(Context context) {
+            mInflater = LayoutInflater.from(context); }
+
+        @Override
+        public LoanViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View itemView = mInflater.inflate(R.layout.loan_rv, parent, false);
+            //shared pref
+            return new LoanListAdapter.LoanViewHolder(itemView);
+        }
+
+        @Override
+        public void onBindViewHolder(LoanListAdapter.LoanViewHolder holder, final int position) {
+            if (mLoans != null) {
+                int amount;
+                Loan loan = mLoans.get(position);
+                amount = loan.getAmount();
+                holder.nameView.setText(loan.getName());
+                holder.dateTakenView.setText(dateToString1(loan.getDateTaken()));
+                //TODO
+                //offset balance
+                int offsets = getOffsetTotal(loan.getId());
+                if (offsets !=0 ){
+                    //holder.balanceView.setText("Balance:" +" "+currency + (amount - offsets) );
+                    holder.balanceView.setVisibility(View.VISIBLE);
+                    amount = amount - offsets;
+                }
+
+                //amount
+                holder.amountView.setText(currency + amount + "");
+
+                //loantype
+                if(loan.getLoanType()!=0){
+//                holder.lendView.setImageResource(R.drawable.borrowing4);
+
+                    holder.lendView.setImageResource(R.drawable.borrowing);
+                    holder.lendView.setBackground(mContext.getDrawable(R.drawable.rectangle_borrowing));
+                }else{
+//                holder.lendView.setImageResource(R.drawable.giving4);
+
+                    holder.lendView.setImageResource(R.drawable.giving);
+                    holder.lendView.setBackground(mContext.getDrawable(R.drawable.rectangle_giving));
+                    //Picasso.with(mContext).load(person.getUri()).placeholder(R.mipmap.ic_launcher).into(holder.personImageImgV);
+
+                }
+
+                //clear
+                if(loan.getClearStatus()!=0){
+                    holder.llClear.setVisibility(View.VISIBLE);
+
+                } else {holder.llClear.setVisibility(View.GONE);}
+                Date date = loan.getDateToRepay();
+                //duesoon
+                Boolean isOn = false;
+                String comment = "";
+                int color = R.color.green;
+
+                if(isToday(date)){
+                    isOn = true;
+                    comment = "Due Today: ";
+                    color = R.color.date_due;
+                }
+                else if (isDueSoon(date, reminderDays)){
+                    isOn = true;
+                    comment = "Due Soon: ";
+                    color = R.color.date_duesoon;
+
+
+                }
+                else if (isOverDue(date)){
+                    isOn = true;
+                    comment = "Over Due: ";
+                    color = R.color.date_overdue;
+                }
+                //notify
+                //holder.llNotify.setVisibility(View.VISIBLE);
+                holder.commentView.setText(comment  + " " +
+                        dateToString1(loan.getDateToRepay()));
+                if(loan.getNotify()!=0){
+                    if(!isOn){holder.notifyOn.setImageResource(R.drawable.ic_notifications_black_24dp);}
+                    else{holder.notifyOn.setImageResource(R.drawable.bell_ring);}
+
+                }else{
+                    holder.notifyOn.setImageResource(R.drawable.bell_off);
+
+                }
+                setAnimation(holder.itemView, position);
+
+            } else {
+                // Covers the case of data not being ready yet.
+                holder.nameView.setText("No Loan");
+            }
+            //testing where to insert the interface listener to enable
+            //comm between RV and activity
+            Utilities.log(TAG, "onbindview" + "" + getItemCount() + getTotalSum(mLoans));
+
+            //set onclick listeners
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v){
+                    Utilities.log(TAG, "onclick name");
+                    startDetailActivity(mLoans.get(position).getId(), v);
+
+                }
+            });
+
+
+
+        }
+        private void setAnimation(View viewToAnimate, int position)
+        {
+            // If the bound view wasn't previously displayed on screen, it's animated
+            if (position > lastPosition)
+            {
+                Animation animation = AnimationUtils.loadAnimation(mContext, android.R.anim.slide_in_left);
+                viewToAnimate.startAnimation(animation);
+                lastPosition = position;
+            }
+        }
+
+
+
+        public void setLoans(List<Loan> loans){
+            //for all loans as returned by livedata from activity, uncomment //mLoans = loans;
+            //for active loans with cleared status false i.e 0
+            mLoans = loans;
+            notifyDataSetChanged();
+            //instantiate OnHandlerInteraction(created by me): useless for now.
+            //as an example of a listener
+
+
+        }
+
+
+        // getItemCount() is called many times, and when it is first called,
+        // mLoans has not been updated (means initially, it's null, and we can't return null).
+        @Override
+        public int getItemCount() {
+            return FilterUtils.getItemCount(mLoans);
+        }
+
+        public int getItemSum() {
+            return FilterUtils.getTotalSum(mLoans);
+        }
+
+
+
+        public void onViewDetachedFromWindow(LoanListAdapter.LoanViewHolder holder)
+        {
+            ((LoanListAdapter.LoanViewHolder)holder).itemView.clearAnimation();
+        }
+
+
+
+        class LoanViewHolder extends RecyclerView.ViewHolder {
+            private TextView nameView, amountView,  dateTakenView,commentView, balanceView;
+            private ImageView lendView, notifyOn;
+            private LinearLayout llClear, llNotify;
+
+            private LoanViewHolder(View itemView) {
+                super(itemView);
+                nameView = itemView.findViewById(R.id.tvLRVName);
+                amountView = itemView.findViewById(R.id.tvLRVAmount);
+                dateTakenView = itemView.findViewById(R.id.tvLRVDate);
+                commentView = itemView.findViewById(R.id.tvLRVtime);
+                balanceView = itemView.findViewById(R.id.tvBalanceGone);
+
+
+                lendView = itemView.findViewById(R.id.ivLoanType);
+                notifyOn= itemView.findViewById(R.id.ivLRVNotifyOn);
+
+                llClear = itemView.findViewById(R.id.llClearGone);
+                llNotify = itemView.findViewById(R.id.llNotifyGone);
+
+
+            }
+        }
+
+//        public interface OnHandlerInteractionListener{
+//            //interface to handle interation with the activity
+//            public void onHandlerInteraction(long loan_id, View view);
+//        }
     }
 }

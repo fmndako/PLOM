@@ -1,5 +1,10 @@
 package ng.com.quickinfo.plom.Utils;
 
+import android.arch.lifecycle.LifecycleOwner;
+import android.arch.lifecycle.Observer;
+import android.content.Context;
+import android.support.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -7,6 +12,8 @@ import java.util.Date;
 import java.util.List;
 
 import ng.com.quickinfo.plom.Model.Loan;
+import ng.com.quickinfo.plom.Model.Offset;
+import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
 
 import static android.service.autofill.Validators.or;
 import static ng.com.quickinfo.plom.Utils.Utilities.dateToString;
@@ -15,6 +22,7 @@ import static ng.com.quickinfo.plom.Utils.Utilities.log;
 import static ng.com.quickinfo.plom.Utils.Utilities.stringToDate;
 
 public class FilterUtils {
+
 
 
     //search
@@ -46,9 +54,12 @@ public class FilterUtils {
 
     public static int getTotalSum(List<Loan> mLoans){
         int sum = 0;
+        //TODO get offset sum
+        // int offset = 0;
         if (mLoans != null){
             for (int x = 0; x<mLoans.size(); x++ ){
                 sum += mLoans.get(x).getAmount();
+
             }
             return sum;
         }
