@@ -261,6 +261,7 @@ public class ListActivity extends LifecycleLoggingActivity {
             public void onChanged(@Nullable final List<Offset> offsets) {
                 // Update the cached copy of the loans in the adapter.
                 int total = 0;
+                sumtotal = total;
                 for (Offset offset:offsets){
                     total  += offset.getAmount();
 
