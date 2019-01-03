@@ -61,6 +61,15 @@
         android:layout_below="@+id/llTotal"
         android:orientation="vertical">
 
+        <!--<TextView-->
+            <!--android:id="@+id/tvNoLoans"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_margin="10dp"-->
+            <!--android:gravity="center"-->
+            <!--android:paddingLeft="10dp"-->
+            <!--android:text="@string/No_loans"-->
+            <!--android:visibility="gone" />-->
 
         <ProgressBar
             android:id="@+id/register_progress"

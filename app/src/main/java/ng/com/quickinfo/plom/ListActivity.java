@@ -28,6 +28,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -62,6 +63,7 @@ public class ListActivity extends LifecycleLoggingActivity implements
     MyTextView tvTotal;
     @BindView(R.id.spFilter)
     Spinner spFilter;
+
 
 
 
