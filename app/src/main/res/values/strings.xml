@@ -160,6 +160,4 @@
         (all loans that are due within it will be considered <b><i>due soon</i></b>)
          </string>
 
-    <!--list activity-->
-    <string name="No_loans">No Loans</string>
 </resources>
