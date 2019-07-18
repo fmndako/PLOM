@@ -104,7 +104,6 @@ public class AddLoanActivity extends AppCompatActivity {
         }
     }
 
-
     private void updateUI(Loan loan){
         //update UI from addreceiver intent
         actvName.setText(loan.getName());
@@ -160,9 +159,6 @@ public class AddLoanActivity extends AppCompatActivity {
 
     }
 
-
-
-
     @OnClick({R.id.actvName, R.id.ivContact, R.id.actvDateTaken, R.id.actvDatePromised, R.id.cbNotify, R.id.signUpBtn})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -195,17 +191,6 @@ public class AddLoanActivity extends AppCompatActivity {
         startActivityForResult(pickContactIntent, PICK_CONTACT_REQUEST);
     }
 
-    //edit text listener for done action
-//    edittext.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-//        @Override
-//        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-//            if (actionId == EditorInfo.IME_ACTION_DONE) {
-//                Toast.makeText(HelloFormStuff.this, edittext.getText(), Toast.LENGTH_SHORT).show();
-//                return true;
-//            }
-//            return false;
-//        }
-//    });
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Check which request it is that we're responding to
