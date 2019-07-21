@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.transition.Fade;
 import android.transition.Slide;
 import android.view.View;
 import android.view.Window;
@@ -127,7 +128,8 @@ public class HomeActivity extends LifecycleLoggingActivity {
         if (canTransition()) {
             // Apply activity transition
 
-            getWindow().setEnterTransition(new Slide().setDuration(900));
+            //getWindow().setEnterTransition(new Slide().setDuration(900));
+            getWindow().setEnterTransition(new Fade());
 
 
             getWindow().setExitTransition(new Slide());

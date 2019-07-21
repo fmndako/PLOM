@@ -302,7 +302,11 @@ public class ListActivity extends LifecycleLoggingActivity {
             public boolean onQueryTextChange(String newText) {
                 log(TAG, newText);
                 adapter.setLoans(FilterUtils.searchLoans(mLoans, newText.toLowerCase()));
-                tvSize.setText(adapter.getItemCount()+ " Loans");
+                int count = adapter.getItemCount();
+                //resourcesadb
+                tvSize.setText(count + " " + resources.getQuantityText(
+                        R.plurals.numberOfLoans,
+                        count));
                 tvTotal.setText(currency + adapter.getItemSum());
 
                 return false;
