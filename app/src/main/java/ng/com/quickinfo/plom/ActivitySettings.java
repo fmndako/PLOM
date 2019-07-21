@@ -81,6 +81,8 @@ public class ActivitySettings extends LifecycleLoggingActivity implements
     LinearLayout llSettings;
     @BindView(R.id.llProgress)
     LinearLayout llProgress;
+    @BindView(R.id.llSettingsProfile)
+    LinearLayout llSettingsProfile;
     @BindView(R.id.tvDeleteAccount)
     MyTextView tvDeleteAccount;
     @BindView(R.id.pbSettings)
@@ -105,10 +107,7 @@ public class ActivitySettings extends LifecycleLoggingActivity implements
     public static String Pref_Currency_Value = "ng.com.quickinfo.PLOM.currency.value";
     public static String Pref_Notification = "ng.com.quickinfo.PLOM.notification";
     public static String EXTRA_PARAM_user_delete = "settings:user:delete";
-    boolean keepMeIn;
-    boolean notification;
-    String currency;
-    int days;
+    public static String Pref_Is_Google_Sign_In = "ng.com.quickinfo.PLOM.is_google_sign_in";
     long mUserId;
     User mUser;
     //receiver
@@ -256,7 +255,10 @@ public class ActivitySettings extends LifecycleLoggingActivity implements
         }
         //TODO  set real value
         spCurrency.setSelection(sharedPref.getInt(Pref_Currency_Value, 0));
-
+        //remove profile update for google signins users
+        if(sharedPref.getBoolean(ActivitySettings.Pref_Is_Google_Sign_In, true)){
+            llSettingsProfile.setVisibility(View.GONE);
+        }
     }
 
 
@@ -289,6 +291,7 @@ public class ActivitySettings extends LifecycleLoggingActivity implements
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tvViewProfile:
+
                 SignupDialog profile = new SignupDialog();
                 Bundle bundle = new Bundle();
                 bundle.putLong(Pref_User, mUserId );

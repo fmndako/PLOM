@@ -372,7 +372,10 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
                 public void onChanged(@Nullable final User user) {
                     if (user != null){
                         log(TAG,  "checkcredentialsgoogle: Email exist");
+                        editor.putBoolean(ActivitySettings.Pref_Is_Google_Sign_In, true);
+                        editor.commit();
                         goToHome(user.getUserId());
+
 
 
                     }
@@ -416,6 +419,8 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
                         if(user.getPassword().equals(password)){
                             //showprogress(false)
                             log(TAG, "user password verified");
+                            editor.putBoolean(ActivitySettings.Pref_Is_Google_Sign_In, false);
+                            editor.commit();
                             goToHome(user.getUserId());
 
 

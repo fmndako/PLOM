@@ -142,12 +142,12 @@ public class MyIntentService extends IntentService {
                     }else{
                         message = "Over Due: ";
                     }
-
+                    long loan_id = loan.getId();
                     message = message + name+ ", " + currency + amount;
                     NotificationCompat.Builder mBuilder = sendNotification(
-                            this, getString(R.string.notificatin_title_soon), message, loan.getId() );
+                            this, getString(R.string.notificatin_title_soon), message, loan_id );
                     // notificationId is a unique int for each notification that you must define
-                    notificationManager.notify(Integer.valueOf(loan.getId() + ""), mBuilder.build());
+                    notificationManager.notify(Integer.valueOf(loan_id + ""), mBuilder.build());
 
 
 
@@ -189,9 +189,11 @@ public class MyIntentService extends IntentService {
     public NotificationCompat.Builder sendNotification(Context context, String title, String message , long id){
 
         // Create an explicit intent for an Activity in your app
-        Intent intent = new Intent(context, DetailActivity.class);
+        //Intent intent = new Intent(context, DetailActivity.class);
+        Intent intent = new Intent(context, ListActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        intent.putExtra(DetailActivity.EXTRA_PARAM_ID, id);
+        //intent.putExtra(DetailActivity.EXTRA_PARAM_ID, id);
+        intent.putExtra("loantype", 7);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
         Uri alarmsound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)

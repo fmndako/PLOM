@@ -14,6 +14,7 @@
         android:visibility="visible">
 
         <LinearLayout
+            android:id="@+id/llSettingsProfile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -139,7 +140,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <customfonts.MyTextView
                 android:id="@+id/tvSelectDaysText"
@@ -150,7 +151,7 @@
                 android:gravity="right"
                 android:maxLength="12"
                 android:padding="5dp"
-                android:text="Enter days:"
+                android:text="@string/reminder_days"
                 android:textColor="#a2a1b8"
                 android:textSize="12dp" />
 

@@ -154,8 +154,10 @@
     <string name="rv_amount">Amount</string>
     <string name="rv_remarks">Remarks</string>
 
+
     <!--settings-->
     <string name="reminder_days"><b>Enter number of days: </b>\n
         (all loans that are due within it will be considered <b><i>due soon</i></b>)
          </string>
+
 </resources>

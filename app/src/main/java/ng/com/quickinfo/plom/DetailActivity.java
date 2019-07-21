@@ -539,7 +539,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
                 startMailIntent();
                 break;
             case R.id.ivDetailMessage:
-                makeToast(mContext, "onClick");
+                //makeToast(mContext, "onClick");
                 startSmsIntent();
                 break;
         }

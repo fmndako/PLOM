@@ -120,11 +120,10 @@
                         android:id="@+id/tvBalanceGone"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginTop="7dp"
-                        android:layout_weight="2"
+                        android:layout_weight="1"
                         android:gravity="center"
-                        android:text="Balance:"
-                        android:textColor="@color/colorSub"
+                        android:text=" Balance: N8880080"
+                        android:textColor="@android:color/holo_blue_dark"
                         android:textSize="12sp"
                         android:visibility="gone" />
 
