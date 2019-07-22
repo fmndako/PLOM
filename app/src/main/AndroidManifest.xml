@@ -47,10 +47,14 @@
         <receiver
             android:name=".Receivers.NotificationReceiver"
             android:enabled="true"
-            android:exported="false">
+            android:exported="true">
             <intent-filter>
+
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name=".DetailActivity.offsetUpdateAction" />
+                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+
+
+                <!--<action android:name="com.ng.quickinfo.plom.DetailActivity.offsetUpdateAction" />-->
             </intent-filter>
         </receiver>
         <service

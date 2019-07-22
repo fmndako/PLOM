@@ -109,6 +109,10 @@ public class DetailActivity extends LifecycleLoggingActivity implements
     DetailReceiver myReceiver;
     IntentFilter intentFilter;
 
+//    //notif
+//    NotificationReceiver notificationReceiver;
+//    IntentFilter notifFilter;
+
     // Extra name for the ID parameter
     public static final String EXTRA_PARAM_ID = "detail:_id";
 
@@ -128,6 +132,9 @@ public class DetailActivity extends LifecycleLoggingActivity implements
     public static final String offsetAddAction = "package ng.com.quickinfo.plom.OFFSET_ADDED";
     public static final String offsetDeleteAction = "package ng.com.quickinfo.plom.OFFSET_DELETED";
     public static final String offsetUpdateAction = "package ng.com.quickinfo.plom.OFFSET_UPDATED";
+
+    //notif
+    public static final String notifAction = "package ng.com.quickinfo.plom.NOTIFICATION";
 
     private static final int UPDATE_ACTIVITY_REQUEST_CODE = 13;
 
@@ -177,6 +184,13 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         myReceiver = new DetailReceiver();
         //add filters
 
+//        //notification
+//        notificationReceiver = new NotificationReceiver();
+//        notifFilter = new IntentFilter(notifAction);
+//        //notif
+//        LocalBroadcastManager.getInstance(this).registerReceiver(notificationReceiver, notifFilter);
+
+
         intentFilter = new IntentFilter(offsetAddAction);
         intentFilter.addAction(offsetDeleteAction);
         intentFilter.addAction(offsetUpdateAction);
@@ -185,7 +199,6 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         intentFilter.addAction(loanClearedAction);
         //register
         LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver, intentFilter);
-
         //set loan view model
         mLoanViewModel = ViewModelProviders.of(this).get(LoanViewModel.class);
 
@@ -535,8 +548,8 @@ public class DetailActivity extends LifecycleLoggingActivity implements
                 break;
             case R.id.ivDetailEmail:
                 //TODO remove afterwards, used for debugging
-                sendNotificationBroadCast();
-                //startMailIntent();
+                //sendNotificationBroadCast();
+                startMailIntent();
                 break;
             case R.id.ivDetailMessage:
                 //makeToast(mContext, "onClick");
@@ -547,7 +560,7 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
     private void sendNotificationBroadCast() {
         Intent intent = new Intent();
-        intent.setAction(offsetUpdateAction);
+        intent.setAction(notifAction);
         LocalBroadcastManager.getInstance(
                 this).sendBroadcast(intent);
 
@@ -717,7 +730,11 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         LocalBroadcastManager.getInstance(this).unregisterReceiver(myReceiver);
         //null the receivers to prevent ish
         myReceiver = null;
+//        //notif
+//        LocalBroadcastManager.getInstance(this).unregisterReceiver(notificationReceiver);
+//        notificationReceiver = null;
     }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();

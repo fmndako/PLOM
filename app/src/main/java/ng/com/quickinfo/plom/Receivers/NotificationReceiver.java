@@ -57,9 +57,10 @@ public class NotificationReceiver extends BroadcastReceiver {
         AlarmManager alarmManager = (AlarmManager)context.getSystemService(
                 Context.ALARM_SERVICE);
         long startTime = System.currentTimeMillis();
-        long intervalTime =8*60* 60 *1000;
+        //+ 60 * 1000;
+        long intervalTime = 8 * 60 * 60 *1000;
         log("PLOM", "timer");
-        //create intent and set alarm
+        //create intent and set alarm 8*60
 
         Intent intent = new Intent(context, MyIntentService.class);
         PendingIntent pendingIntent = PendingIntent.getService(context,
