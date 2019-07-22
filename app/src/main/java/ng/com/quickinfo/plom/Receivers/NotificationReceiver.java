@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.google.android.gms.common.util.DataUtils;
 
@@ -35,10 +36,11 @@ public class NotificationReceiver extends BroadcastReceiver {
         //Utilities.makeToast(context, "On Receive Notification");
         if(intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)){
             schedule(context);
-
+            Log.d("NOTIFICATIONRECEIVER", "action boot completed");
         }else if(intent.getAction().equals((DetailActivity.offsetUpdateAction))){
             //TODO remove in production
-            //schedule(context);
+            schedule(context);
+            Log.d("NOTIFICATIONRECEIVER", "action from detail activity");
 
 //            context.startService(new Intent(context, MyIntentService.class));
 //            Utilities.makeToast(context, "detail screen notification received");

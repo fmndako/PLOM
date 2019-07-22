@@ -535,8 +535,8 @@ public class DetailActivity extends LifecycleLoggingActivity implements
                 break;
             case R.id.ivDetailEmail:
                 //TODO remove afterwards, used for debugging
-                //sendNotificationBroadCast();
-                startMailIntent();
+                sendNotificationBroadCast();
+                //startMailIntent();
                 break;
             case R.id.ivDetailMessage:
                 //makeToast(mContext, "onClick");
