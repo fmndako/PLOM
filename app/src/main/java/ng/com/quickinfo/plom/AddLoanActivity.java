@@ -2,6 +2,7 @@ package ng.com.quickinfo.plom;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -30,6 +31,7 @@ import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
 
 import static ng.com.quickinfo.plom.Utils.Utilities.dateToString;
 import static ng.com.quickinfo.plom.Utils.Utilities.log;
+import static ng.com.quickinfo.plom.Utils.Utilities.makeToast;
 
 public class AddLoanActivity extends AppCompatActivity {
 
@@ -87,6 +89,30 @@ public class AddLoanActivity extends AppCompatActivity {
         //action type check either add or update
         loan_id = getIntent().getLongExtra("loan_id", -1);
 
+
+        actvDateTaken.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if(!b){
+
+                }
+                else{
+                    setArgs(R.id.actvDateTaken);
+                }
+            }
+        });
+
+        actvDatePromised.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if(!b){
+
+                }
+                else{
+                    setArgs(R.id.actvDatePromised);
+                }
+            }
+        });
         //setSpinner();//not needed
         if (loan_id != -1) {
             // loan data observer
@@ -167,8 +193,10 @@ public class AddLoanActivity extends AppCompatActivity {
                 //pickContact(view);
                 break;
             case R.id.actvDateTaken:
+                setArgs(R.id.actvDateTaken);
                 break;
             case R.id.actvDatePromised:
+                setArgs(R.id.actvDatePromised);
                 break;
             case R.id.cbNotify:
                 break;
@@ -180,6 +208,12 @@ public class AddLoanActivity extends AppCompatActivity {
                 pickContact(view);
                 break;
         }
+    }
+
+    private void setArgs(int actvDateTaken) {
+        Bundle args1 = new Bundle();
+        args1.putInt("key", R.id.actvDateTaken);
+        pickDate(args1);
     }
 
     //contacts name and number
@@ -302,6 +336,16 @@ public class AddLoanActivity extends AppCompatActivity {
     }
 
 
+
+    //******************** AddLoanReceiver ********************
+    public class AddLoanReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+
+         makeToast(mContext, "intent received");
+        }
+    }
 
 }
 
