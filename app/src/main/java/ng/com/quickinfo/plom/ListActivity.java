@@ -447,8 +447,8 @@ public class ListActivity extends LifecycleLoggingActivity {
                 int offsets = getOffsetTotal(loan.getId());
                 if (offsets !=0 ){
                     //holder.balanceView.setText("Balance:" +" "+currency + (amount - offsets) );
-                    holder.balanceView.setVisibility(View.VISIBLE);
-                    amount = amount - offsets;
+                    //holder.balanceView.setVisibility(View.VISIBLE);
+                    //amount = amount - offsets;
                 }
 
                 //amount
