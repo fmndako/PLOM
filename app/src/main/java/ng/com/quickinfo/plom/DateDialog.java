@@ -92,20 +92,22 @@ public class DateDialog extends DialogFragment implements DatePickerDialog.OnDat
         populateSetDate(yy, mm+1, dd);
     }
 
+    // populate date
     public void populateSetDate(int year, int month, int day) {
         String date = singleToDoubleDigit(day)+"/"+ singleToDoubleDigit(month)+"/"+year;
         dateView = getActivity().findViewById(id);
         if (dateView == null){
-
             log("DateDialog", "dateview null");
             sendResults(date);
-        }else{
+            }
+        else{
 
             dateView.setText(date);
 
-        }
+            }
          }
 
+    //returning activity on result
     private void sendResults(String date) {
 
         if(getTargetFragment() == null){
@@ -116,6 +118,7 @@ public class DateDialog extends DialogFragment implements DatePickerDialog.OnDat
 
     }
 
+    //intent to return activity on result
     public static Intent newIntent(String message){
         Intent intent = new Intent();
         intent.putExtra(OffsetDialog.SELECTED_DATE, message);
@@ -123,6 +126,7 @@ public class DateDialog extends DialogFragment implements DatePickerDialog.OnDat
 
 
     }
+    //static instantiate datedialog
     public static DateDialog getInstance(){
         DateDialog frag = new DateDialog();
         return frag;

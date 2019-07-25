@@ -70,6 +70,8 @@ public class OffsetDialog extends DialogFragment {
         unbinder = ButterKnife.bind(this, view);
         new DateInputMask(etOffsetDate);
         etOffsetDate.setText(dateToString(Calendar.getInstance().getTime()));
+
+        //focus listener
         etOffsetDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
@@ -157,16 +159,8 @@ public class OffsetDialog extends DialogFragment {
 //        unbinder.unbind();
 //    }
 
-    @OnClick(R.id.etOffsetDate)
-    public void onViewClicked() {
 
-    }
 
-    public static OffsetDialog getInstance(){
-        OffsetDialog frag = new OffsetDialog();
-        return frag;
-
-    }
 
 
 

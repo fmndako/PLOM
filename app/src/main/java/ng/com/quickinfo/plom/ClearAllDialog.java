@@ -3,6 +3,7 @@ package ng.com.quickinfo.plom;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
@@ -21,6 +22,8 @@ import butterknife.Unbinder;
 import ng.com.quickinfo.plom.Utils.DateInputMask;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
 
+import static android.app.Activity.RESULT_OK;
+import static ng.com.quickinfo.plom.OffsetDialog.SELECTED_DATE;
 import static ng.com.quickinfo.plom.Utils.Utilities.dateToString;
 import static ng.com.quickinfo.plom.Utils.Utilities.stringToDate;
 
@@ -52,9 +55,22 @@ public class ClearAllDialog extends DialogFragment {
 
         //butterknife
         unbinder = ButterKnife.bind(this, view);
-
-        new DateInputMask(etClearDate);
+//        //Input mask
+//        new DateInputMask(etClearDate);
         etClearDate.setText(dateToString(Calendar.getInstance().getTime()));
+        //focus listener
+        etClearDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if(!b){
+
+                }
+                else{
+                    setArgs(R.id.etClearDate);
+                }
+            }
+        });
+
 
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
@@ -63,9 +79,41 @@ public class ClearAllDialog extends DialogFragment {
         return builder.create();
     }
 
+
+    //date editview
+    private void setArgs(int actv) {
+        Bundle args1 = new Bundle();
+        args1.putInt("key", actv);
+        pickDate(args1);
+    }
+    //date
+    public void pickDate(Bundle args) {
+        DialogFragment dateFragment = DateDialog.getInstance();
+        dateFragment.setArguments(args);
+        dateFragment.setTargetFragment(ClearAllDialog.this, R.id.etClearDate);
+        dateFragment.show(getFragmentManager(), "Offset DatePicker");
+
+    }
+
+    //on activity result from date dialog
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent){
+        super.onActivityResult(requestCode, resultCode, intent);
+
+        if (requestCode == R.id.etOffsetDate && resultCode == RESULT_OK) {
+            etClearDate.setText(intent.getStringExtra(SELECTED_DATE));
+
+        }
+
+    }
+
+
+
     private Date getValues(){
         return stringToDate(etClearDate.getText().toString());
     }
+
+
 
     // Override the Fragment.onAttach() method to instantiate the OffsetDialogListener
     @Override
