@@ -1,8 +1,10 @@
 package ng.com.quickinfo.plom;
 
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
@@ -19,11 +21,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import customfonts.MyEditText;
 import ng.com.quickinfo.plom.Model.Offset;
 import ng.com.quickinfo.plom.Utils.DateInputMask;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
 
+import static android.app.Activity.RESULT_OK;
 import static ng.com.quickinfo.plom.Utils.Utilities.dateToString;
+import static ng.com.quickinfo.plom.Utils.Utilities.makeToast;
 import static ng.com.quickinfo.plom.Utils.Utilities.stringToDate;
 
 
@@ -36,7 +41,7 @@ public class OffsetDialog extends DialogFragment {
     @BindView(R.id.etOffsetAmount)
     EditText etOffsetAmount;
     @BindView(R.id.etOffsetDate)
-    EditText etOffsetDate;
+    MyEditText etOffsetDate;
     @BindView(R.id.etOffsetRemarks)
     EditText etOffsetRemarks;
 
@@ -48,6 +53,7 @@ public class OffsetDialog extends DialogFragment {
     @BindView(R.id.dlgcancel)
     TextView dlgcancel;
 
+    public static final String SELECTED_DATE = "ng.com.quickinfo.plom.date_selected";
     //Override on create
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -59,11 +65,22 @@ public class OffsetDialog extends DialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_offset, null);
 
+
         //butterknife
         unbinder = ButterKnife.bind(this, view);
-
         new DateInputMask(etOffsetDate);
         etOffsetDate.setText(dateToString(Calendar.getInstance().getTime()));
+        etOffsetDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if(!b){
+
+                }
+                else{
+                    setArgs(R.id.etOffsetDate);
+                }
+            }
+        });
         //get from args
         Bundle bundle = getArguments();
         mAction = bundle.getString("action");
@@ -76,6 +93,7 @@ public class OffsetDialog extends DialogFragment {
             etOffsetRemarks.setText(bundle.getString("remarks", ""));
             etOffsetDate.setText(bundle.getString("date", ""));
         }
+
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
         builder.setView(view);
@@ -83,10 +101,38 @@ public class OffsetDialog extends DialogFragment {
         return builder.create();
     }
 
-    private Offset getValues() {
-        return new Offset(Integer.valueOf((etOffsetAmount.getText()).toString()), stringToDate(etOffsetDate.getText().toString()), etOffsetRemarks.getText().toString(), 0);
+    private Offset getValues(String amount) {
+
+
+        return new Offset(Integer.valueOf(amount), stringToDate(etOffsetDate.getText().toString()), etOffsetRemarks.getText().toString(), 0);
     }
 
+    //date editview
+    private void setArgs(int actv) {
+        Bundle args1 = new Bundle();
+        args1.putInt("key", actv);
+        pickDate(args1);
+    }
+    //date
+    public void pickDate(Bundle args) {
+        DialogFragment dateFragment = DateDialog.getInstance();
+        dateFragment.setArguments(args);
+        dateFragment.setTargetFragment(OffsetDialog.this, R.id.etOffsetDate);
+        dateFragment.show(getFragmentManager(), "Offset DatePicker");
+
+    }
+
+    //on activity result from date dialog
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent){
+        super.onActivityResult(requestCode, resultCode, intent);
+
+        if (requestCode == R.id.etOffsetDate && resultCode == RESULT_OK) {
+            etOffsetDate.setText(intent.getStringExtra(SELECTED_DATE));
+
+        }
+
+    }
     // Override the Fragment.onAttach() method to instantiate the OffsetDialogListener
     @Override
     public void onAttach(Context context) {
@@ -116,7 +162,11 @@ public class OffsetDialog extends DialogFragment {
 
     }
 
+    public static OffsetDialog getInstance(){
+        OffsetDialog frag = new OffsetDialog();
+        return frag;
 
+    }
 
 
 
@@ -126,8 +176,13 @@ public class OffsetDialog extends DialogFragment {
             case R.id.dlgoffset:
                //Send the positive button event back to the host activity
                     //add offset
-                    Offset offset = getValues();
+                String amount =  etOffsetAmount.getText().toString();
+
+                if (!amount.equals("")){
+                    Offset offset = getValues(amount);
                     mListener.onDialogPositiveClick(OffsetDialog.this, offset, mAction);
+
+                }else{ etOffsetAmount.setError("enter a valid input");}
 
                break;
             case R.id.dlgcancel:
@@ -143,4 +198,8 @@ public class OffsetDialog extends DialogFragment {
 
         public void onDialogNegativeClick(DialogFragment dialog, int action);
     }
+
+
+
 }
+

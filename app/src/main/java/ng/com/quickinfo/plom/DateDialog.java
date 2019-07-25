@@ -44,11 +44,16 @@ package ng.com.quickinfo.plom;
 //
 //}
 //
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
@@ -58,12 +63,12 @@ import java.util.Calendar;
 
 import customfonts.MyEditText;
 
+import static ng.com.quickinfo.plom.Utils.Utilities.log;
 
 public class DateDialog extends DialogFragment implements DatePickerDialog.OnDateSetListener {
     public MyEditText dateView;
     Context context;
     int id;
-
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -75,9 +80,12 @@ public class DateDialog extends DialogFragment implements DatePickerDialog.OnDat
 
         //get the R.id of the textview to set the date from args
         id = getArguments().getInt("key");
-        dateView = getActivity().findViewById(id);
+
+
 
         return new DatePickerDialog(context, this, yy, mm, dd);
+
+
     }
 
     public void onDateSet(DatePicker view, int yy, int mm, int dd) {
@@ -85,14 +93,53 @@ public class DateDialog extends DialogFragment implements DatePickerDialog.OnDat
     }
 
     public void populateSetDate(int year, int month, int day) {
-        dateView.setText(singleToDouble(day)+"/"+ singleToDouble(month)+"/"+year);
+        String date = singleToDoubleDigit(day)+"/"+ singleToDoubleDigit(month)+"/"+year;
+        dateView = getActivity().findViewById(id);
+        if (dateView == null){
+
+            log("DateDialog", "dateview null");
+            sendResults(date);
+        }else{
+
+            dateView.setText(date);
+
+        }
+         }
+
+    private void sendResults(String date) {
+
+        if(getTargetFragment() == null){
+            return;
+        }
+       Intent intent = newIntent(date);
+        getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
+
     }
-    public String singleToDouble(int value){
+
+    public static Intent newIntent(String message){
+        Intent intent = new Intent();
+        intent.putExtra(OffsetDialog.SELECTED_DATE, message);
+        return intent;
+
+
+    }
+    public static DateDialog getInstance(){
+        DateDialog frag = new DateDialog();
+        return frag;
+
+    }
+
+    public String singleToDoubleDigit(int value){
         String valueString = String.valueOf(value);
         if (valueString.length() == 1){
             valueString = "0"+valueString;
         }
         return valueString;
     }
+
+ public void fragmentDate(){
+
+ }
+
 
 }

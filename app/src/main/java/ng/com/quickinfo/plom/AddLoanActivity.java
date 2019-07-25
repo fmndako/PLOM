@@ -210,9 +210,9 @@ public class AddLoanActivity extends AppCompatActivity {
         }
     }
 
-    private void setArgs(int actvDateTaken) {
+    private void setArgs(int actv) {
         Bundle args1 = new Bundle();
-        args1.putInt("key", R.id.actvDateTaken);
+        args1.putInt("key", actv);
         pickDate(args1);
     }
 
