@@ -97,11 +97,11 @@ public class DateDialog extends DialogFragment implements DatePickerDialog.OnDat
         String date = singleToDoubleDigit(day)+"/"+ singleToDoubleDigit(month)+"/"+year;
         dateView = getActivity().findViewById(id);
         if (dateView == null){
-            log("DateDialog", "dateview null");
+            //date requested from dialog clear and offset
             sendResults(date);
             }
         else{
-
+            //date requested from activity
             dateView.setText(date);
 
             }
