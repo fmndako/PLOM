@@ -45,12 +45,12 @@ import ng.com.quickinfo.plom.ViewModel.UserViewModel;
 import static com.google.android.gms.auth.api.signin.GoogleSignInStatusCodes.getStatusCodeString;
 import static ng.com.quickinfo.plom.Utils.Utilities.log;
 import static ng.com.quickinfo.plom.Utils.Utilities.makeToast;
-
+import static ng.com.quickinfo.plom.Token;
 public class SignInActivity extends LifecycleLoggingActivity implements SignupDialog.SignupDialogListener {
 
     //register Broadcast receivers
     public static final String userRegisteredAction = "ng.com.quickinfo.plom.Sign_in";
-
+    
     SignInReceiver myReceiver;
     IntentFilter myFilter;
     @BindView(R.id.user)
@@ -65,6 +65,7 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
 
     //keep signed in
     int keepSignIn;
+    String token;
 
     private Context mContext;
     //ViewModel
@@ -119,7 +120,7 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
         myFilter.addAction(HomeActivity.userAddAction);
         LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver, myFilter);
 
-
+        token = Token.googleAuthenticationToken;
         //shared pref
         sharedPref = Utilities.MyPref.getSharedPref(mContext);
         editor = sharedPref.edit();
@@ -138,8 +139,8 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail().requestIdToken(
-                        "255241179759-bca4ct96jggak7cvuh5r7ism8stl4te3.apps.googleusercontent.com"
+                .requestEmail().requestIdToken( token
+                        
                 )
                 .build();
         // Build a GoogleSignInClient with the options specified by gso.
