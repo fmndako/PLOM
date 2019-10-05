@@ -260,9 +260,10 @@ public class ActivitySettings extends LifecycleLoggingActivity implements
         //TODO  set real value
         spCurrency.setSelection(sharedPref.getInt(Pref_Currency_Value, 0));
         //remove profile update for google signins users
-        if(sharedPref.getBoolean(ActivitySettings.Pref_Is_Google_Sign_In, true)){
-            llSettingsProfile.setVisibility(View.GONE);
-        }
+
+//        if(sharedPref.getBoolean(ActivitySettings.Pref_Is_Google_Sign_In, true)){
+//            llSettingsProfile.setVisibility(View.GONE);
+//        }
     }
 
 
