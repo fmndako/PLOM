@@ -128,7 +128,7 @@ public class HomeActivity extends LifecycleLoggingActivity {
         if (canTransition()) {
             // Apply activity transition
 
-            getWindow().setEnterTransition(new Slide().setDuration(900));
+            //getWindow().setEnterTransition(new Slide().setDuration(900));
             //getWindow().setEnterTransition(new Fade());
 
 
