@@ -43,9 +43,9 @@ import ng.com.quickinfo.plom.Utils.Utilities;
 import ng.com.quickinfo.plom.ViewModel.UserViewModel;
 
 import static com.google.android.gms.auth.api.signin.GoogleSignInStatusCodes.getStatusCodeString;
+import static ng.com.quickinfo.plom.Token.googleAuthenticationToken;
 import static ng.com.quickinfo.plom.Utils.Utilities.log;
 import static ng.com.quickinfo.plom.Utils.Utilities.makeToast;
-import static ng.com.quickinfo.plom.Token;
 public class SignInActivity extends LifecycleLoggingActivity implements SignupDialog.SignupDialogListener {
 
     //register Broadcast receivers
@@ -120,7 +120,7 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
         myFilter.addAction(HomeActivity.userAddAction);
         LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver, myFilter);
 
-        token = Token.googleAuthenticationToken;
+        token = googleAuthenticationToken;
         //shared pref
         sharedPref = Utilities.MyPref.getSharedPref(mContext);
         editor = sharedPref.edit();

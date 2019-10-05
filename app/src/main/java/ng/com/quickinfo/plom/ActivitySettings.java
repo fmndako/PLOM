@@ -47,11 +47,11 @@ import ng.com.quickinfo.plom.Receivers.NotificationReceiver;
 import ng.com.quickinfo.plom.Utils.Utilities;
 import ng.com.quickinfo.plom.ViewModel.UserViewModel;
 
+import static ng.com.quickinfo.plom.Token.googleAuthenticationToken;
 import static ng.com.quickinfo.plom.Utils.Utilities.log;
 import static ng.com.quickinfo.plom.Utils.Utilities.makeToast;
 import static ng.com.quickinfo.plom.Utils.Utilities.showProgress;
 import static ng.com.quickinfo.plom.Utils.Utilities.showProgressToggler;
-
 
 public class ActivitySettings extends LifecycleLoggingActivity implements
         SignupDialog.SignupDialogListener, DeleteDialog.DeleteDialogListener{
@@ -108,11 +108,14 @@ public class ActivitySettings extends LifecycleLoggingActivity implements
     public static String Pref_Notification = "ng.com.quickinfo.PLOM.notification";
     public static String EXTRA_PARAM_user_delete = "settings:user:delete";
     public static String Pref_Is_Google_Sign_In = "ng.com.quickinfo.PLOM.is_google_sign_in";
+
+
     long mUserId;
     User mUser;
     //receiver
     SettingsReceiver myReceiver;
     IntentFilter intentFilter;
+    String token;
 
     @Override
     protected void onStart() {
@@ -145,6 +148,7 @@ public class ActivitySettings extends LifecycleLoggingActivity implements
         intentFilter = new IntentFilter(HomeActivity.userDeleteAction);
         intentFilter.addAction(HomeActivity.userUpdateAction);
         LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver, intentFilter);
+        token = googleAuthenticationToken;
 
         //shared pref
         sharedPref = Utilities.MyPref.getSharedPref(mContext);
@@ -161,7 +165,7 @@ public class ActivitySettings extends LifecycleLoggingActivity implements
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail().requestIdToken(
-                        "255241179759-ekpv13bpufhdg2fr04e9csmmj7k5ja6b.apps.googleusercontent.com")
+                        token)
                 .build();
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
