@@ -47,6 +47,10 @@ public class UserRepo {
     public LiveData<User> getUserByName(String user){
         return mUserDao.getUserByName(user);
     }
+    public User getUserByUsername(String user){
+        return mUserDao.getUserByUsername(user);
+    }
+
     //insert user
     public long insert (User user) {
         return mUserDao.addUser(user);

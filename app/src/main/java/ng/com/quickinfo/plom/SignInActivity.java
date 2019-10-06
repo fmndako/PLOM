@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.ActivityOptions;
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -46,11 +47,17 @@ import static com.google.android.gms.auth.api.signin.GoogleSignInStatusCodes.get
 import static ng.com.quickinfo.plom.Token.googleAuthenticationToken;
 import static ng.com.quickinfo.plom.Utils.Utilities.log;
 import static ng.com.quickinfo.plom.Utils.Utilities.makeToast;
-public class SignInActivity extends LifecycleLoggingActivity implements SignupDialog.SignupDialogListener {
+
+public class SignInActivity extends LifecycleLoggingActivity implements SignupDialog.SignupDialogListener,
+        ResetDialog.ResetDialogListener {
 
     //register Broadcast receivers
     public static final String userRegisteredAction = "ng.com.quickinfo.plom.Sign_in";
-    
+    public static final String userResetPasswordAction = "ng.com.quickinfo.plom.reset";
+    public static final String userTokenAction = "ng.com.quickinfo.plom.token";
+
+    public static final String PREF_PASSWORD_RESET = "ng.com.quickinfo.plom.pref_reset";
+
     SignInReceiver myReceiver;
     IntentFilter myFilter;
     @BindView(R.id.user)
@@ -66,6 +73,8 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
     //keep signed in
     int keepSignIn;
     String token;
+    @BindView(R.id.resetPwd)
+    TextView resetPwd;
 
     private Context mContext;
     //ViewModel
@@ -124,12 +133,21 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
         //shared pref
         sharedPref = Utilities.MyPref.getSharedPref(mContext);
         editor = sharedPref.edit();
+        if (sharedPref.getBoolean(SignInActivity.PREF_PASSWORD_RESET, false)) {
 
-        if(sharedPref.getBoolean(ActivitySettings.Pref_Keeper, false)){
+            ResetDialog profile = new ResetDialog();
+            Bundle bundle = new Bundle();
+            bundle.putString("action", SignInActivity.userTokenAction);
+            profile.setArguments(bundle);
+            profile.show(getSupportFragmentManager(), "Reset Token Fragment");
+
+        }
+
+        if (sharedPref.getBoolean(ActivitySettings.Pref_Keeper, false)) {
             //TODO uncomment after debugging
             log(TAG, "keep me log in is True");
             long id = sharedPref.getLong(ActivitySettings.Pref_User, 0);
-            if(id!=0){
+            if (id != 0) {
                 goToHome(id);
                 log("TAG", "keepmesignin:oncreateview");
 
@@ -139,8 +157,8 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail().requestIdToken( token
-                        
+                .requestEmail().requestIdToken(token
+
                 )
                 .build();
         // Build a GoogleSignInClient with the options specified by gso.
@@ -278,7 +296,7 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
     }
 
 
-    @OnClick({R.id.login, R.id.signup})
+    @OnClick({R.id.login, R.id.signup, R.id.resetPwd })
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.login:
@@ -292,9 +310,16 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
                 showProgress(true);
                 openSignUpDialog(HomeActivity.userAddAction);
                 break;
+            case R.id.resetPwd:
+                ResetDialog reset = new ResetDialog();
+                Bundle bundle = new Bundle();
+                bundle.putString("action", userResetPasswordAction);
+                reset.setArguments(bundle);
+                reset.show(getSupportFragmentManager(), "ResetDialog");
+                Utilities.log("reset", "reset");
+                break;
         }
     }
-
 
 
     private void attemptLogin() {
@@ -338,8 +363,10 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            log(TAG, "threading" );
-            try{ Thread.sleep(2000);}catch (InterruptedException e){
+            log(TAG, "threading");
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
 
             }
             checkCredentials(user, password);
@@ -353,7 +380,7 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
     private void checkCredentialsGoogle(final String email) {
         //google checking credentials. signup if it doesnt exist
 
-        if(sharedPref.getBoolean(email, true)){
+        if (sharedPref.getBoolean(email, true)) {
             //first timer
             User newUser = new User("", "", email, "");
             mEmail = email;
@@ -368,15 +395,14 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
 
         } else {
             //not first timer
-            mUserViewModel.getUserByEmail(email).observe(this, new android.arch.lifecycle.Observer <User>()  {
+            mUserViewModel.getUserByEmail(email).observe(this, new Observer<User>() {
                 @Override
                 public void onChanged(@Nullable final User user) {
-                    if (user != null){
-                        log(TAG,  "checkcredentialsgoogle: Email exist");
+                    if (user != null) {
+                        log(TAG, "checkcredentialsgoogle: Email exist");
                         editor.putBoolean(ActivitySettings.Pref_Is_Google_Sign_In, true);
                         editor.commit();
                         goToHome(user.getUserId());
-
 
 
                     }
@@ -401,31 +427,33 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
 
     private void checkCredentials(final String name, final String password) {
         //showprogess
-        if(sharedPref.getBoolean(name, true)) {
+        if (sharedPref.getBoolean(name, true)) {
             //first timer
             makeToast(mContext, "Please register!");
             log(TAG, "checkcredential: first timer user");
             showProgress(false);
 
 
+        } else {
 
-        }
-        else{
-
-            mUserViewModel.getUserByName(name).observe(this, new android.arch.lifecycle.Observer <User>()  {
+            mUserViewModel.getUserByName(name).observe(this, new Observer<User>() {
                 @Override
                 public void onChanged(@Nullable final User user) {
-                    if (user != null){
+                    if (user != null) {
                         log(TAG, "not first timer, " + name);
-                        if(user.getPassword().equals(password)){
+                        if (user.getPassword().equals(password)) {
                             //showprogress(false)
                             log(TAG, "user password verified");
                             editor.putBoolean(ActivitySettings.Pref_Is_Google_Sign_In, false);
+                            //cancel out pref password reset and prevent the entertokn dlg from opening
+                            editor.putBoolean(PREF_PASSWORD_RESET, false);
+
                             editor.commit();
+
                             goToHome(user.getUserId());
 
 
-                        }else{
+                        } else {
                             //TODO change
                             etPassword.setText("");
                             etPassword.requestFocus();
@@ -437,9 +465,6 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
                 }
             });
         }
-
-
-
 
 
     }
@@ -454,31 +479,36 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
         /*pass email and Id to mainActivity*/
         Intent intent = new Intent(this, HomeActivity.class);
 
-        intent.putExtra("id", id );
+        intent.putExtra("id", id);
         editor.putLong(ActivitySettings.Pref_User, id);
         editor.putBoolean(ActivitySettings.Pref_Keeper, true);
+        editor.putBoolean(PREF_PASSWORD_RESET, false);
         editor.commit();
         log(TAG, "gotohome");
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-        if(canTransition()){
+        if (canTransition()) {
             startActivity(intent,
-                    ActivityOptions.makeSceneTransitionAnimation(this).toBundle());}
-        else{startActivity(intent);
+                    ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+        } else {
+            startActivity(intent);
 
         }
     }
 
-    public boolean canTransition(){
+    public boolean canTransition() {
         return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP);
     }
     //****************** sign up dialog listener **********
-
-    public void onSignUp(DialogFragment dialog, User user){
+    public void onDismiss(DialogFragment dlg){
+        showProgress(false);
+        dlg.dismiss();
+    }
+    public void onSignUp(DialogFragment dialog, User user) {
         dialog.dismiss();
         //try{Thread.sleep(2000);}catch (Exception e){}
         editor.putBoolean(user.getEmail(), false);
-        if (!user.getUserName().isEmpty()){
+        if (!user.getUserName().isEmpty()) {
             editor.putBoolean(user.getUserName(), false);
 
         }
@@ -491,19 +521,32 @@ public class SignInActivity extends LifecycleLoggingActivity implements SignupDi
 
     }
 
+    public void onReset(DialogFragment dialog, User user) {
+
+        makeToast(getApplicationContext(), "new password successfully created");
+        editor.putBoolean(PREF_PASSWORD_RESET, false);
+        editor.commit();
+        new UserRepo.UserAsyncTask(mUserViewModel,
+                HomeActivity.userAddAction).execute(user);
+        dialog.dismiss();
+
+        //gotohome
+
+    }
+
 
     //******************** SignInReceiver ********************
     public class SignInReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            switch (intent.getAction()){
+            switch (intent.getAction()) {
                 case HomeActivity.userAddAction:
                     //get id from intent and go to home screen
                     log(TAG, "onreceive: user added");
                     makeToast(context, "user added");
                     long id = intent.getLongExtra("id", 0);
 
-                    if(id!=0){
+                    if (id != 0) {
                         setPreferences(id);
                         goToHome(id);
                     }

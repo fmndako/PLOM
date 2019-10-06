@@ -198,7 +198,8 @@ public class SignupDialog extends DialogFragment {
 
                 break;
             case R.id.signuplogin:
-                dismiss();
+                mListener.onDismiss(this);
+
                 break;
         }
     }
@@ -412,6 +413,7 @@ public class SignupDialog extends DialogFragment {
     //*********** interface *************
     public interface SignupDialogListener {
         public void onSignUp(DialogFragment dialog, User user);
+        public void onDismiss(DialogFragment dialog);
 
     }
 }

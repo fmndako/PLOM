@@ -39,5 +39,9 @@ public class UserViewModel extends AndroidViewModel {
     public LiveData<User> getUserByName(String name) {
         return mUserRepo.getUserByName(name);
     }
+    public User getUserByUsername(String name) {
+        return mUserRepo.getUserByUsername(name);
+    }
+
     public  void delete(User user){mUserRepo.delete(user);}
 }

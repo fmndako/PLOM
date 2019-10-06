@@ -147,6 +147,7 @@
                     android:layout_marginBottom="10dp"
                     android:letterSpacing="0.2"/>
 
+
                 <TextView
                     android:id="@+id/or"
                     android:layout_width="match_parent"
@@ -179,10 +180,19 @@
                     android:gravity="center"
 
                     android:letterSpacing="0.1"
-                    android:paddingBottom="16dp"
-                    android:paddingTop="16dp"
                     android:text="Create Account ? Signup"
                     android:textColor="#d9e5f3" />
+                <TextView
+                    android:id="@+id/resetPwd"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:letterSpacing="0.1"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
+                    android:text="Forgot Password ?"
+                    android:textColor="#d9e5f3" />
+
 
 
             </LinearLayout>

@@ -65,6 +65,9 @@
     <string name="login">LOGIN</string>
     <string name="show_pwd">Show Password</string>
     <string name="rem_pass">Remember Password</string>
+    <string name="forgot_pwd_username">Username</string>
+    <string name="forgot_token">Token</string>
+    <string name="new_pwd">New Password</string>
 
     <string name="hide_pwd">Hide Password</string>
     <string name="forgot">Forgot password?</string>

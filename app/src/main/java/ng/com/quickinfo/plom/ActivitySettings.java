@@ -409,6 +409,9 @@ public class ActivitySettings extends LifecycleLoggingActivity implements
         new UserRepo.UserAsyncTask(mUserViewModel, HomeActivity.userUpdateAction).execute(user);
         //nothing
     }
+    public void onDismiss(DialogFragment dlg){
+
+    }
 
 
 // receiver for receiving user updated and user logout abd deleted complete
