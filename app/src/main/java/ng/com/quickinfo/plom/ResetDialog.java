@@ -120,6 +120,7 @@ public class ResetDialog extends DialogFragment {
         myReceiver = new ResetReceiver();
         intentFilter= new IntentFilter(HomeActivity.userUpdateAction);
         LocalBroadcastManager.getInstance(mContext).registerReceiver(myReceiver, intentFilter);
+        etForgotTokenUser.requestFocus();
         if (mAction.equals(SignInActivity.userResetPasswordAction)) {
             //action from settings-- update user
             log(this.getTag(), "oncreateview: to reset user");
@@ -281,14 +282,14 @@ public class ResetDialog extends DialogFragment {
         final String token = RandomStringUtils.randomAlphanumeric(8).toUpperCase();
         final String username = user.getUserName();
         log("RESET", "sending mail");
+        showProgress(false);
         BackgroundMail.newBuilder(mContext)
                 .withUsername(Token.EMAIL)
                 .withPassword(Token.PWD)
                 .withMailto(user.getEmail())
                 .withType(BackgroundMail.TYPE_PLAIN)
                 .withSubject("PLOM password reset")
-                .withProcessVisibility(false)
-                .withBody("Username: " + username +"Token: " + token)
+                .withBody("Username: " + username +"   Token: " + token)
                 .withOnSuccessCallback(new BackgroundMail.OnSuccessCallback() {
                     @Override
                     public void onSuccess() {
@@ -297,7 +298,6 @@ public class ResetDialog extends DialogFragment {
                         editor.commit();
                         makeToast(mContext, "Token sent to your email");
                         showToken(true);
-                        showProgress(false);
 
 
                     }
@@ -305,7 +305,7 @@ public class ResetDialog extends DialogFragment {
                 .withOnFailCallback(new BackgroundMail.OnFailCallback() {
                     @Override
                     public void onFail() {
-                        showProgress(false);
+                        makeToast(mContext, "fail to send mail");
 
                     }
                 })
@@ -411,21 +411,6 @@ public class ResetDialog extends DialogFragment {
 
             try {
                 String email = result.getEmail();
-                if(dlgconfirm.getText().equals("RESET")){
-                    String token = new Token(result.getUserName()).getToken();
-                    Utilities.log("RESET", "user not null in REset" + result.getEmail());
-                    if(isOnline()) {
-                        sendEmail(result);
-                    }else{
-
-                        makeToast(mContext, "no internet service");
-                    }
-                } else {
-
-                    updateUser(result);
-
-
-                }
 
             }
             catch (NullPointerException err){
@@ -433,6 +418,21 @@ public class ResetDialog extends DialogFragment {
                 etForgotTokenUser.requestFocus();
                 showProgress(false);
                 log("RESET", err.getMessage());
+            }
+            if(result!=null) {
+                if (dlgconfirm.getText().equals("RESET")) {
+                    Utilities.log("RESET", "user not null in REset" + result.getEmail());
+                    if (isOnline()) {
+                        sendEmail(result);
+                    } else {
+
+                        makeToast(mContext, "no internet service");
+                        showProgress(false);
+                    }
+                } else {
+
+                    updateUser(result);
+                }
             }
         }
 
@@ -450,6 +450,8 @@ public class ResetDialog extends DialogFragment {
     public class ResetReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
+            editor.putBoolean(SignInActivity.PREF_PASSWORD_RESET, false);
+            editor.commit();
             dismiss();
             makeToast(mContext, "Password reset successful, Login");
         }
