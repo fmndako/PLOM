@@ -28,9 +28,15 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Switch;
 
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,6 +46,7 @@ import ng.com.quickinfo.plom.Model.Loan;
 import ng.com.quickinfo.plom.Model.LoanRepo.LoanAsyncTask;
 import ng.com.quickinfo.plom.Model.Offset;
 import ng.com.quickinfo.plom.Receivers.NotificationReceiver;
+import ng.com.quickinfo.plom.Service.NotificationWorker;
 import ng.com.quickinfo.plom.Utils.Utilities;
 import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
 import ng.com.quickinfo.plom.View.OffsetAdapter;
@@ -110,8 +117,10 @@ public class DetailActivity extends LifecycleLoggingActivity implements
     IntentFilter intentFilter;
 
 //    //notif
-//    NotificationReceiver notificationReceiver;
-//    IntentFilter notifFilter;
+    NotificationReceiver notificationReceiver;
+    IntentFilter notifFilter;
+    WorkManager mWorkManager;
+    PeriodicWorkRequest mRequest;
 
     // Extra name for the ID parameter
     public static final String EXTRA_PARAM_ID = "detail:_id";
@@ -185,10 +194,11 @@ public class DetailActivity extends LifecycleLoggingActivity implements
         //add filters
 
 //        //notification
-//        notificationReceiver = new NotificationReceiver();
-//        notifFilter = new IntentFilter(notifAction);
+        notificationReceiver = new NotificationReceiver();
+        notifFilter = new IntentFilter(notifAction);
+
 //        //notif
-//        LocalBroadcastManager.getInstance(this).registerReceiver(notificationReceiver, notifFilter);
+        LocalBroadcastManager.getInstance(this).registerReceiver(notificationReceiver, notifFilter);
 
 
         intentFilter = new IntentFilter(offsetAddAction);
@@ -210,7 +220,15 @@ public class DetailActivity extends LifecycleLoggingActivity implements
 
         editor = Utilities.MyPref.getEditor();
         currency = myPref.getString(ActivitySettings.Pref_Currency, "N");
+        mWorkManager = WorkManager.getInstance();
 
+        log(TAG, PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS + "");
+        mRequest =
+        new PeriodicWorkRequest.Builder(NotificationWorker.class, 24, TimeUnit.HOURS)
+                // Constraints
+                .build();
+
+        log(TAG, "worker scheduled 2");
         //        ********LISTVIEW***********
         listview = (ExpandableHeightListView)findViewById(R.id.listview);
         //setlistener
@@ -243,6 +261,15 @@ public class DetailActivity extends LifecycleLoggingActivity implements
             }
         });
         //loadRV(mLoanId);
+        mWorkManager.getWorkInfoByIdLiveData(mRequest.getId()).observe(this, new Observer<WorkInfo>() {
+            @Override
+            public void onChanged(@Nullable WorkInfo workInfo) {
+                if (workInfo != null) {
+                    WorkInfo.State state = workInfo.getState();
+                    log(TAG, state.toString() + "\n");
+                }
+            }
+        });
     }
 
     public boolean canTransition(){
@@ -548,8 +575,8 @@ public class DetailActivity extends LifecycleLoggingActivity implements
                 break;
             case R.id.ivDetailEmail:
                 //TODO remove afterwards, used for debugging
-                //sendNotificationBroadCast();
-                startMailIntent();
+                sendNotificationBroadCast();
+//                startMailIntent();
                 break;
             case R.id.ivDetailMessage:
                 //makeToast(mContext, "onClick");
@@ -559,10 +586,12 @@ public class DetailActivity extends LifecycleLoggingActivity implements
     }
 
     private void sendNotificationBroadCast() {
-        Intent intent = new Intent();
-        intent.setAction(notifAction);
-        LocalBroadcastManager.getInstance(
-                this).sendBroadcast(intent);
+
+        mWorkManager.enqueue(mRequest);
+//        Intent intent = new Intent();
+//        intent.setAction(offsetUpdateAction);
+//        LocalBroadcastManager.getInstance(
+//                this).sendBroadcast(intent);
 
 
 

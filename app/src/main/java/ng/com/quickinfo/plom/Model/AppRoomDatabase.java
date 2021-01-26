@@ -26,6 +26,12 @@ public abstract class AppRoomDatabase extends RoomDatabase {
         }
         return INSTANCE;
     }
+
+    @Override
+    public void clearAllTables() {
+
+    }
+
     public abstract LoanDao loanDao();
     public abstract UserDao userDao();
     public abstract OffsetDao offsetDao();

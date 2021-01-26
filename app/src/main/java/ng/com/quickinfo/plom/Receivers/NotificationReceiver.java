@@ -18,7 +18,6 @@ import ng.com.quickinfo.plom.ViewModel.LoanViewModel;
 import static ng.com.quickinfo.plom.Utils.Utilities.log;
 
 public class NotificationReceiver extends BroadcastReceiver {
-
     //shared pref
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
@@ -28,48 +27,26 @@ public class NotificationReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        // TODO: This method is called when the BroadcastReceiver is receiving
-        // an Intent broadcast.
-
-
-        //starts activity
-        //Utilities.makeToast(context, "On Receive Notification");
         if(intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)){
             schedule(context);
             Log.d("NOTIFICATIONRECEIVER", "action boot completed");
-        }else if(intent.getAction().equals((DetailActivity.offsetUpdateAction))){
+        }else if(intent.getAction().equals((DetailActivity.notifAction))){
             //TODO remove in production
             schedule(context);
             Log.d("NOTIFICATIONRECEIVER", "action from detail activity");
-
-//            context.startService(new Intent(context, MyIntentService.class));
-//            Utilities.makeToast(context, "detail screen notification received");
-
         }
-
-
-
-
-
     }
 
     private void schedule(Context context) {
         AlarmManager alarmManager = (AlarmManager)context.getSystemService(
                 Context.ALARM_SERVICE);
         long startTime = System.currentTimeMillis();
-        //+ 60 * 1000;
         long intervalTime = 8 * 60 * 60 *1000;
         log("PLOM", "timer");
-        //create intent and set alarm 8*60
-
         Intent intent = new Intent(context, MyIntentService.class);
         PendingIntent pendingIntent = PendingIntent.getService(context,
                 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        //Utilities.makeToast(context, "detail screen notification received");
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
                 startTime, intervalTime,pendingIntent );
-
-
     }
-
 }
